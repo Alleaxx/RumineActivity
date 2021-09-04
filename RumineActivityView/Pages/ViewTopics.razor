@@ -1,0 +1,37 @@
+﻿@page "/topics/view"
+
+<div class="topics-editing">
+    <h2>Редактирование тем</h2>
+    <hr />
+    <span>Всего @Topics.Count() постов</span>
+    <table class="topics-editing-table">
+        <tr>
+            <th class="id-header">ID</th>
+            <th class="name-header">Название</th>
+            <th class="name-header">Чат?</th>
+            <th>Действия</th>
+        </tr>
+        @foreach (var topic in Topics)
+        {
+            <tr class="topic-item">
+                <td class="id-edit"><input type="number" @bind-value="(topic.ID)" /></td>
+                <td class="name-edit"><input type="text" @bind-value="(topic.Name)" /></td>
+                <td class="name-edit"><input type="checkbox" @bind-value="(topic.IsChat)" /></td>
+                <td class="actions-list">
+                    <ul>
+                        <li>
+                            <input class="action-save" type="button" value="Сохранить" />
+                        </li>
+                        <li>
+                            <input class="action-delete" type="button" value="Удалить" @onclick="(() => StatApp.App.Remove(topic))" />
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+
+@code{
+    public IEnumerable<Topic> Topics => StatApp.App.Topics;
+}

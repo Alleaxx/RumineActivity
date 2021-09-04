@@ -1,0 +1,69 @@
+﻿<style>
+    .menu-list-link {
+        display: block;
+        padding: 4px 0;
+        border-radius: 2px;
+        text-decoration: none;
+        color: black;
+    }
+
+        .menu-list-link:hover {
+            background-color: gainsboro;
+        }
+</style>
+<nav class="menu">
+    <ul class="menu-list">
+        <li class="menu-list-item">
+            <NavLink href="" Match="NavLinkMatch.All" class="menu-list-link">
+                О сайте
+            </NavLink>
+        </li>
+    </ul>
+    <h2 class="menu-header">Данные</h2>
+    <ul class="menu-list">
+        <li class="menu-list-item">
+            <NavLink href="add" class="menu-list-link">
+                Добавить
+            </NavLink>
+        </li>
+        <li class="menu-list-item">
+            <NavLink href="posts/view" class="menu-list-link">
+                Посты
+            </NavLink>
+        </li>
+        <li class="menu-list-item">
+            <NavLink href="topics/view" class="menu-list-link">
+                Темы
+            </NavLink>
+        </li>
+    </ul>
+    <h2 class="menu-header">Статистика</h2>
+    <ul class="menu-list">
+        <li class="menu-list-item">
+            <NavLink href="statistics" class="menu-list-link">
+                Статистика (анализ)
+            </NavLink>
+        </li>
+        <li class="menu-list-item">
+            <NavLink href="statistics/compare" class="menu-list-link">
+                Сравнение
+            </NavLink>
+        </li>
+        @*<li class="menu-list-item">
+            <a href="#">Анализ по темам</a>
+        </li>
+        <li class="menu-list-item">
+            <a href="#">Подробный анализ</a>
+        </li>
+        <li class="menu-list-item">
+            <a href="#"></a>
+        </li>*@
+    </ul>
+    <footer class="menu-footer">
+        <label>
+            <span>Оффлайн-режим</span>
+            <input type="checkbox" @bind-value="StatApp.App.OfflineMode" />
+        </label>
+        <p>Дополнительно</p>
+    </footer>
+</nav>

@@ -1,0 +1,41 @@
+﻿.menu {
+    grid-area: menu;
+    min-width: 8em;
+    border-right: 1px solid var(--border-brush);
+    padding: var(--inner-padding);
+    text-align: center;
+    background-color: var(--headers-color);
+}
+
+.menu-header {
+    font-size: 1.25em;
+}
+
+.menu-list {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.menu-footer {
+    border-top: 1px solid var(--border-brush);
+    padding-top: 5px;
+}
+
+
+.menu-list-link {
+    display: block;
+    padding: 4px 0;
+    border-radius: 2px;
+    text-decoration: none;
+    color: black;
+}
+.menu-list-link.active{
+    border-left: 4px solid var(--selected-color);
+}
+
+    .menu-list-link:hover {
+        background-color: gainsboro;
+    }

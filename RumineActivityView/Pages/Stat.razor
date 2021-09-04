@@ -1,0 +1,204 @@
+﻿@page "/statistics"
+
+
+<div class="statistics-posts-options">
+    <form class="statistics-options">
+        <h3>Настройка</h3>
+        <div>
+            <label>
+                С даты
+                <input type="date" @bind-value="(Options.Period.From)"/>
+            </label>
+            <label>
+                По дату
+                <input type="date" @bind-value="(Options.Period.To)"/>
+            </label>
+        </div>
+        <div>
+            Период<br />
+            <label>
+                Год:
+                <select>
+                    <option>Все года</option>
+                    <option>2011</option>
+                    <option>2012</option>
+                    <option>2013</option>
+                    <option>2014</option>
+                </select>
+            </label>
+            <label>
+                Месяц:
+                <select>
+                    <option>Все</option>
+                    <option>Январь</option>
+                    <option>Февраль</option>
+                    <option>Март</option>
+                </select>
+            </label>
+        </div>
+        <div>
+            <p>Количество исходных данных для периода: 100</p>
+        </div>
+        <hr />
+        <div>
+            <label>
+                Промежуток (период) отчетов:<br />
+                <select>
+                    <option>Год</option>
+                    <option>Месяц</option>
+                    <option>Неделя</option>
+                    <option>День</option>
+                </select>
+            </label>
+        </div>
+        <div>
+            <label>
+                Количество отчетов:<br />
+                <input type="number" />
+            </label>
+        </div>
+        <hr />
+        <div>
+            <label>
+                Измерять в: <br />
+                <select>
+                    <option>Посты</option>
+                    <option>Страницы</option>
+                    <option>Старые страницы</option>
+                </select>
+            </label>
+        </div>
+        <div>
+            Тип вывода: <br />
+            <label>
+                ~ В день
+                <input type="radio" value="Тест" name="тест" />
+            </label>
+            <label>
+                ~ В месяц
+                <input type="radio" value="Тест" name="тест" />
+            </label>
+            <label>
+                Суммарно
+                <input type="radio" value="Тест" name="тест" />
+            </label>
+        </div>
+        <div>
+            Разделение ФЧ и форума: <br />
+            <label>
+                Только форум
+                <input type="radio" value="Тест" name="тест" />
+            </label>
+            <label>
+                Только ФЧ
+                <input type="radio" value="Тест" name="тест" />
+            </label>
+            <label>
+                ФЧ и форум вместе
+                <input type="radio" value="Тест" name="тест" />
+            </label>
+        </div>
+        <input type="submit" />
+    </form>
+
+    <button @onclick="CreateDefaultReport">
+        Создать отчет
+    </button>
+
+    @if (StatReport != null)
+    {
+        <div class="statistics-data">
+            <h4>@StatReport.Name</h4>
+            <ul>
+                <li>Период: @StatReport.Period</li>
+                <li>Источник: @StatReport.Source</li>
+                <li>Всего записей: @StatReport.Count</li>
+            </ul>
+            <div class="statistics-view-options">
+                <label>
+                    <span>Точность округления:</span>
+                    <br />
+                    <input type="number" value="3" />
+                </label>
+            </div>
+            @if (!StatReport.IsEmpty)
+            {
+                <table class="statistics-data-table">
+                    <caption>Значения</caption>
+                    <tr>
+                        <th>Период</th>
+                        <th>Значение</th>
+                    </tr>
+                    @foreach (var entry in StatReport.Entries)
+                    {
+                        <tr>
+                            <td>@entry.Name</td>
+                            <td>@entry.Value</td>
+                        </tr>
+
+                    }
+                </table>
+            }
+            <table class="statistics-summary">
+                <caption>Сводная статистика</caption>
+                <tr>
+                    <th>Самый...</th>
+                    <th>Период</th>
+                    <th>Значение</th>
+                </tr>
+                <tr>
+                    <td>Активный</td>
+                    @if (StatReport.MostActive == null)
+                    {
+                        <td colspan="2">-</td>
+                    }
+                    else
+                    {
+
+                        <td>@StatReport.MostActive.Name</td>
+                        <td>@StatReport.MostActive.Value</td>
+                    }
+                </tr>
+                <tr>
+                    <td>Тухлый</td>
+                    @if (StatReport.MostInactive == null)
+                    {
+                        <td colspan="2">-</td>
+                    }
+                    else
+                    {
+
+                        <td>@StatReport.MostInactive.Name</td>
+                        <td>@StatReport.MostInactive.Value</td>
+                    }
+                </tr>
+                <tr>
+                    <td colspan="2">В среднем</td>
+                    <td>@StatReport.AverageValue</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="statistics-sheme">
+            <h4>Схема, графики</h4>
+        </div>
+    }
+</div>
+
+@code{
+    private ReportOptions Options { get; set; } = new ReportOptions();
+    private string AllowedTopics { get; set; }
+
+
+
+    private StatReport StatReport { get; set; }
+
+    private void CreateDefaultReport()
+    {
+        StatReport = new ReportAll(StatApp.App.Posts, StatApp.App.Topics).Create();
+    }
+    private void CreateReportWithOptions()
+    {
+        StatReport = new ReportAll(StatApp.App.Posts, StatApp.App.Topics, Options).Create();
+    }
+}

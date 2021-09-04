@@ -1,0 +1,80 @@
+﻿@page "/posts/view"
+
+<div class="posts-editing">
+    <h2>Редактирование постов</h2>
+    <section>
+        <header>
+
+            <h3>
+                Настройки
+            </h3>
+        </header>
+        <div>
+            <label>
+                <span>Название вместо ID тем</span>
+                <input type="checkbox" @bind-value="ShowTopicNames"/>
+            </label>
+        </div>
+    </section>
+    <hr />
+    <span>Всего @Posts.Count() постов</span>
+    <table class="posts-editing-table">
+        <tr>
+            <th class="id-header">ID</th>
+            <th class="name-header" colspan="2">Дата</th>
+            <th>@(ShowTopicNames ? "Имя темы" : "ID темы")</th>
+            <th>Позиция в теме</th>
+            <th>Имя темы</th>
+            <th>Действия</th>
+        </tr>
+        @foreach (var post in Posts)
+        {
+            <tr class="topic-item">
+                <td><input type="number" @bind-value="(post.ID)" /></td>
+                <td><input type="date" @bind-value="(post.Date)"/></td>
+                <td><input type="time" @bind-value="(post.Date)"/></td>
+                <td>
+                    @if (ShowTopicNames)
+                    {
+                        <span>@GetTopicName(post.TopicID)</span>
+                    }
+                    else
+                    {
+                        <input type="number" @bind-value="(post.TopicID)" />
+                    }
+                </td>
+                <td><input type="number" @bind-value="(post.TopicIndex)" /></td>
+                <td><input type="text" value="Имя темы" /></td>
+                <td class="actions-list">
+                    <ul>
+                        <li>
+                            <input class="action-save" type="button" value="Сохранить" />
+                        </li>
+                        <li>
+                            <input class="action-delete" type="button" value="Удалить" @onclick="(() => StatApp.App.Remove(post))"/>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>
+
+@code{
+    public IEnumerable<Post> Posts => StatApp.App.Posts;
+
+    public bool ShowTopicNames { get; set; } = false;
+    public string GetTopicName(int topicId)
+    {
+        var foundTopic = StatApp.App.Topics.First(t => t.ID == topicId);
+        if(foundTopic != null)
+        {
+            return foundTopic.Name;
+        }
+        else
+        {
+            return "<неизвестно>";
+        }
+    }
+}

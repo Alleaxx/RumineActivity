@@ -1,0 +1,45 @@
+﻿
+.statistics-posts-options {
+    display: grid;
+    grid-template-columns: 4fr 1fr;
+    grid-template-rows: auto auto;
+    grid-template-areas: "stat-options stat-options"
+        "stat-data stat-sheme";
+}
+
+.statistics-options {
+    grid-area: stat-options;
+    padding: 1em;
+    border: 1px solid var(--border-brush);
+}
+
+.statistics-data {
+    grid-area: stat-data;
+    padding: 1em;
+    border: 1px solid var(--border-brush);
+}
+
+.statistics-sheme {
+    grid-area: stat-sheme;
+    padding: 1em;
+    border: 1px solid var(--border-brush);
+}
+
+.statistics-data-table {
+    border: 1px solid var(--border-brush);
+}
+
+.statistics-view-options {
+    padding: 1em;
+}
+
+.statistics-summary {
+    border: 1px solid var(--border-brush);
+}
+
+.statistics-data-table caption, .statistics-summary caption{
+    font-size: 1.5em;
+}
+.statistics-data-table td, .statistics-summary-td {
+    padding: 4px 2px;
+}

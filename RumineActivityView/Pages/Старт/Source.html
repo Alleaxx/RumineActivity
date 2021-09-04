@@ -1,0 +1,668 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <title>Макет анализа активности Румине</title>
+    <style>
+        :root {
+            --border-brush: gainsboro;
+            --inner-padding: 0.5em 1em;
+            --selected-color: orange;
+            --background-color: white;
+            --headers-color: whitesmoke;
+            --content-color: white;
+        }
+
+        body {
+            background-color: var(--background-color);
+            font-family: 'Segoe UI';
+        }
+
+        .container {
+            display: grid;
+            grid-template-rows: auto auto auto;
+            grid-auto-columns: 3fr 9fr;
+            grid-template-areas:
+                "logo logo"
+                "menu content"
+                "footer footer";
+            margin: 0 5em;
+            background-color: white;
+            border: 2px solid var(--border-brush);
+            border-radius: 3px;
+            max-width: 1280px;
+        }
+
+
+        .logo {
+            grid-area: logo;
+            border-bottom: 1px solid var(--border-brush);
+            background-color: var(--headers-color);
+            padding: var(--inner-padding);
+        }
+
+        .menu {
+            grid-area: menu;
+            min-width: 8em;
+            border-right: 1px solid var(--border-brush);
+            padding: var(--inner-padding);
+            text-align: center;
+            background-color: var(--headers-color);
+        }
+
+        .container > main {
+            grid-area: content;
+            padding: var(--inner-padding);
+        }
+
+        .container > footer {
+            grid-area: footer;
+            border-top: 1px solid var(--border-brush);
+            text-align: center;
+            padding: var(--inner-padding);
+            background-color: var(--headers-color);
+        }
+
+        .logo-link {
+            display: flex;
+            align-items: center;
+            color: black;
+            text-decoration: none;
+        }
+
+        .logo-image {
+            height: 60px;
+            margin: 0 1em;
+        }
+
+
+        .menu-header {
+            font-size: 1.25em;
+        }
+
+        .menu-list {
+            display: flex;
+            flex-direction: column;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .menu-footer {
+            border-top: 1px solid var(--border-brush);
+            padding-top: 5px;
+        }
+
+        .menu-list-item a {
+            display: block;
+            padding: 4px 0;
+            border-radius: 2px;
+            text-decoration: none;
+            color: black;
+        }
+
+            .menu-list-item a:hover {
+                background-color: gainsboro;
+            }
+    </style>
+
+    <style>
+        .stat-adding {
+            display: none;
+        }
+
+        .form-add {
+            margin: 0 1em;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+
+        .options-item {
+            flex: 3;
+            min-width: 150px;
+            margin-right: 1em;
+        }
+
+        .options-link-info {
+            max-width: 400px;
+        }
+
+
+        .options-header {
+            font-weight: 600;
+        }
+
+        .options-item label {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .option-property-list {
+            list-style: none;
+            padding: 0;
+            margin: 4px 0;
+            margin-left: 2em;
+        }
+
+        .option-property {
+            margin: 3px 0;
+        }
+
+            .option-property input {
+                margin-right: 5px;
+            }
+
+
+        .option-post-info {
+            display: flex;
+        }
+
+        .option-topic-info {
+        }
+
+        .option-property-name {
+            margin: 3px 0;
+        }
+
+        .paste-results {
+            color: gray;
+        }
+
+        .required {
+            color: black;
+        }
+
+        .non-required {
+            color: gray;
+        }
+
+        .filled-correct {
+        }
+
+        .filled-non-correct {
+        }
+
+        .not-filled {
+        }
+    </style>
+
+    <style>
+        .posts-editing {
+            display: none;
+        }
+    </style>
+
+    <style>
+                .topics-editing {
+                    display: none;
+                }
+
+                .topics-editing-table {
+                    border-collapse: collapse;
+                }
+
+                    .topics-editing-table td {
+                        /*            border-top: 1px solid var(--border-brush);
+        */ padding: 5px 0;
+                    }
+
+                .id-header {
+                }
+
+                .name-header {
+                }
+
+                .name-edit {
+                }
+
+                .id-edit {
+                    width: 50px;
+                }
+
+                .actions-list ul {
+                    list-style: none;
+                    margin: 0;
+                    padding: 0;
+                    display: flex;
+                }
+
+                .action-save {
+                    border-color: green;
+                }
+
+                .action-delete {
+                    border-color: red;
+                }
+    </style>
+
+    <style>
+        .statistics-posts-preset {
+        }
+    </style>
+
+    <style>
+        .statistics-posts-options {
+            display: grid;
+            grid-template-columns: 3fr 7fr;
+            grid-template-rows: auto auto;
+            grid-template-areas: "stat-options stat-options"
+                "stat-data stat-sheme";
+        }
+
+        .statistics-options{
+            grid-area: stat-options;
+
+            padding: 1em;
+            border: 1px solid var(--border-brush);
+        }
+
+        .statistics-data {
+            grid-area: stat-data;
+            display: flex;
+            flex-wrap: wrap;
+            padding: 1em;
+            border: 1px solid var(--border-brush);
+        }
+        .statistics-sheme {
+            grid-area: stat-sheme;
+            padding: 1em;
+            border: 1px solid var(--border-brush);
+        }
+
+        .statistics-data-table {
+        }
+        .statistics-view-options {
+            padding: 1em;
+        }
+        .statistics-summary {
+            padding: 1em;
+        }
+
+    </style>
+
+    <style>
+        .statistics-topics {
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="logo">
+            <a class="logo-link" href="#">
+                <img class="logo-image" src="D:\Users\Allexx\Documents\Румайн\Румынский Союз\Руминская Конфедерация\Герб.png" />
+                <h1>Активность ru-minecraft.ru</h1>
+            </a>
+        </header>
+        <nav class="menu">
+            <ul class="menu-list">
+                <li class="menu-list-item">
+                    <a href="#">О сайте</a>
+                </li>
+            </ul>
+            <h2 class="menu-header">Данные</h2>
+            <ul class="menu-list">
+                <li class="menu-list-item">
+                    <a href="#">Добавление</a>
+                </li>
+                <li class="menu-list-item">
+                    <a href="#">Посты</a>
+                </li>
+                <li class="menu-list-item">
+                    <a href="#">Темы</a>
+                </li>
+            </ul>
+            <h2 class="menu-header">Статистика</h2>
+            <ul class="menu-list">
+                <li class="menu-list-item">
+                    <a href="#">Анализ</a>
+                </li>
+                <li class="menu-list-item">
+                    <a href="#">Сравнение</a>
+                </li>
+                <li class="menu-list-item">
+                    <a href="#">Анализ по темам</a>
+                </li>
+                <li class="menu-list-item">
+                    <a href="#">Подробный анализ</a>
+                </li>
+                <li class="menu-list-item">
+                    <a href="#"></a>
+                </li>
+            </ul>
+            <footer class="menu-footer">
+                <p>Дополнительно</p>
+            </footer>
+        </nav>
+        <main>
+            <header>
+                <h2>Контент</h2>
+            </header>
+            <div class="stat-adding">
+                <p>Добавление записей</p>
+                <form class="form-add">
+                    <div class="options-item options-link-info">
+                        <header class="options-header">
+                            <span>Заголовок</span>
+                        </header>
+                        <ul class="option-property-list">
+                            <li class="option-property">
+                                <label>
+                                    <span class="option-property-name">Ссылка</span>
+                                    <input type="text" placeholder="https://ru-minecraft.ru/forum/showtopic-15361/page-9323/" />
+                                </label>
+                                <div>
+                                    <input type="button" value="В" />
+                                    <span class="paste-results">Результаты вставки</span>
+                                </div>
+                            </li>
+                            <li class="option-property">
+                                <label>
+                                    <span class="option-property-name">Информация в теме</span>
+                                    <input type="text" placeholder="#186454 | Сегодня, 14:23" />
+                                </label>
+                                <div>
+                                    <input type="button" value="В" />
+                                    <span class="paste-results">Результаты вставки</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="options-list">
+                        <div class="options-item">
+                            <header class="options-header">
+                                <span>Пост *</span>
+                            </header>
+                            <ul class="option-property-list">
+                                <li class="option-property option-post-info">
+                                    <label>
+                                        <span class="option-property-name">ID:</span>
+                                        <input type="number" width="20" />
+                                    </label>
+                                    <label>
+                                        <span class="option-property-name">Дата:</span>
+                                        <input type="date" />
+                                    </label>
+                                    <label>
+                                        <span class="option-property-name">Время:</span>
+                                        <input type="time" />
+                                    </label>
+                                </li>
+                                <li class="option-property">
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="options-item">
+                            <header class="options-header">
+                                <span>Тема</span>
+                            </header>
+                            <ul class="option-property-list">
+                                <li class="option-property option-post-info">
+                                    <label class="non-required">
+                                        <span class="option-property-name">ID:</span>
+                                        <input type="number" />
+                                    </label>
+                                    <label class="non-required">
+                                        <span class="option-property-name">Позиция поста в теме:</span>
+                                        <input type="number" />
+                                    </label>
+                                </li>
+                                <li class="option-property">
+                                    <label class="non-required">
+                                        <span class="option-property-name">Название:</span>
+                                        <input type="text" />
+                                    </label>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+                    <input type="submit" name="Подтвердить" />
+                    <p>
+                        Сообщение успешно (или не очень) добавлено!
+                    </p>
+                </form>
+            </div>
+
+            <div class="posts-editing">
+                <p>Редактирование постов</p>
+                <table class="posts-editing-table">
+                    <tr>
+                        <th class="id-header">ID</th>
+                        <th class="name-header" colspan="2">Дата</th>
+                        <th>ID темы</th>
+                        <th>Позиция в теме</th>
+                        <th>Имя темы</th>
+                        <th>Действия</th>
+                    </tr>
+                    <tr class="topic-item">
+                        <td><input type="number" value="100" /></td>
+                        <td><input type="date" /></td>
+                        <td><input type="time" /></td>
+                        <td><input type="number" value="100" /></td>
+                        <td><input type="number" value="100" /></td>
+                        <td><input type="text" value="Имя темы" /></td>
+                        <td class="actions-list">
+                            <ul>
+                                <li>
+                                    <input class="action-save" type="button" value="Сохранить" />
+                                </li>
+                                <li>
+                                    <input class="action-delete" type="button" value="Удалить" />
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="topics-editing">
+                <p>Редактирование тем</p>
+                <table class="topics-editing-table">
+                    <tr>
+                        <th class="id-header">ID</th>
+                        <th class="name-header">Название</th>
+                        <th>Действия</th>
+                    </tr>
+                    <tr class="topic-item">
+                        <td class="id-edit"><input type="number" value="100" /></td>
+                        <td class="name-edit"><input type="text" value="Название" /></td>
+                        <td class="actions-list">
+                            <ul>
+                                <li>
+                                    <input class="action-save" type="button" value="Сохранить" />
+                                </li>
+                                <li>
+                                    <input class="action-delete" type="button" value="Удалить" />
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr class="topic-item">
+                        <td class="id-edit"><input type="number" value="100" /></td>
+                        <td class="name-edit"><input type="text" value="Название" /></td>
+                        <td class="actions-list">
+                            <ul>
+                                <li>
+                                    <input class="action-save" type="button" value="Сохранить" />
+                                </li>
+                                <li>
+                                    <input class="action-delete" type="button" value="Удалить" />
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="statistics-posts-options">
+                <form class="statistics-options">
+                    <h3>Настройка</h3>
+                    <div>
+                        <label>
+                            С даты
+                            <input type="date" />
+                        </label>
+                        <label>
+                            По дату
+                            <input type="date" />
+                        </label>
+                    </div>
+                    <div>
+                        Период<br />
+                        <label>
+                            Год:
+                            <select>
+                                <option>Все года</option>
+                                <option>2011</option>
+                                <option>2012</option>
+                                <option>2013</option>
+                                <option>2014</option>
+                            </select>
+                        </label>
+                        <label>
+                            Месяц:
+                            <select>
+                                <option>Все</option>
+                                <option>Январь</option>
+                                <option>Февраль</option>
+                                <option>Март</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div>
+                        <p>Количество исходных данных для периода: 100</p>
+                    </div>
+                    <hr />
+                    <div>
+                        <label>
+                            Промежуток (период) отчетов:<br />
+                            <select>
+                                <option>Год</option>
+                                <option>Месяц</option>
+                                <option>Неделя</option>
+                                <option>День</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            Количество отчетов:<br />
+                            <input type="number" />
+                        </label>
+                    </div>
+                    <hr />
+                    <div>
+                        <label>
+                            Измерять в: <br />
+                            <select>
+                                <option>Посты</option>
+                                <option>Страницы</option>
+                                <option>Старые страницы</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div>
+                        Тип вывода: <br />
+                        <label>
+                            ~ В день
+                            <input type="radio" value="Тест" name="тест" />
+                        </label>
+                        <label>
+                            ~ В месяц
+                            <input type="radio" value="Тест" name="тест" />
+                        </label>
+                        <label>
+                            Суммарно
+                            <input type="radio" value="Тест" name="тест" />
+                        </label>
+                    </div>
+                    <div>
+                        Разделение ФЧ и форума: <br />
+                        <label>
+                            Только форум
+                            <input type="radio" value="Тест" name="тест" />
+                        </label>
+                        <label>
+                            Только ФЧ
+                            <input type="radio" value="Тест" name="тест" />
+                        </label>
+                        <label>
+                            ФЧ и форум вместе
+                            <input type="radio" value="Тест" name="тест" />
+                        </label>
+                    </div>
+                    <input type="submit" />
+                </form>
+                <div class="statistics-data">
+                    <h4>Данные</h4>
+                    <div class="statistics-view-options">
+                        <label>
+                            <span>Точность округления:</span>
+                            <br />
+                            <input type="number" value="3" />
+                        </label>
+                    </div>
+
+                    <table class="statistics-data-table">
+                        <tr>
+                            <th>Период</th>
+                            <th>Значение (постов / еще чего-то)</th>
+                        </tr>
+                        <tr>
+                            <td>Месяц</td>
+                            <td>100</td>
+                        </tr>
+                        <tr>
+                            <td>Месяц</td>
+                            <td>300</td>
+                        </tr>
+                        <caption>Значения</caption>
+                    </table>
+
+                    <table class="statistics-summary">
+                        <tr>
+                            <th>Самый...</th>
+                            <th>Период</th>
+                            <th>Значение</th>
+                        </tr>
+                        <tr>
+                            <td>Активный период</td>
+                            <td>Май 2012</td>
+                            <td>100</td>
+                        </tr>
+                        <tr>
+                            <td>Тухлый период</td>
+                            <td>Июнь 2012</td>
+                            <td>100</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">В среднем</td>
+                            <td>100</td>
+                        </tr>
+                        <caption>Сводная статистика</caption>
+                    </table>
+                </div>
+                <div class="statistics-sheme">
+                    <h4>Схема, графики</h4>
+                </div>
+            </div>
+            <div class="statistics-posts-options">
+                <p>Статистика c настройкой</p>
+            </div>
+            <div class="statistics-posts-options">
+                <p>По темам</p>
+            </div>
+
+
+        </main>
+        <footer>
+            <p>Футер</p>
+        </footer>
+    </div>
+</body>
+</html>

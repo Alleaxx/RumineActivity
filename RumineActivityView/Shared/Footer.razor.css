@@ -1,0 +1,9 @@
+﻿
+
+.site-footer {
+    grid-area: footer;
+    border-top: 1px solid var(--border-brush);
+    text-align: center;
+    padding: var(--inner-padding);
+    background-color: var(--headers-color);
+}
