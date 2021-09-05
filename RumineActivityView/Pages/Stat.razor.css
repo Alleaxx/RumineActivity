@@ -3,26 +3,35 @@
     display: grid;
     grid-template-columns: 4fr 1fr;
     grid-template-rows: auto auto;
-    grid-template-areas: "stat-options stat-options"
+    grid-template-areas:
+        "stat-options stat-options"
         "stat-data stat-sheme";
 }
 
 .statistics-options {
     grid-area: stat-options;
     padding: 1em;
-    border: 1px solid var(--border-brush);
+    border-bottom: 1px solid var(--border-brush);
+}
+.statistics-options h2{
+    background-color: whitesmoke;
+    padding: 10px 0;
+}
+.statistics-options h3{
+    text-align: center;
+    padding: 5px 0;
+    border-bottom: 1px solid silver;
 }
 
 .statistics-data {
     grid-area: stat-data;
     padding: 1em;
-    border: 1px solid var(--border-brush);
+    border-right: 1px solid var(--border-brush);
 }
 
 .statistics-sheme {
     grid-area: stat-sheme;
     padding: 1em;
-    border: 1px solid var(--border-brush);
 }
 
 .statistics-data-table {
@@ -33,13 +42,88 @@
     padding: 1em;
 }
 
-.statistics-summary {
+
+.statistics-data-table, .statistics-summary {
     border: 1px solid var(--border-brush);
+    border-collapse: collapse;
+    width: 100%;
+}
+.statistics-summary h2{
+    margin: 8px 0;
 }
 
 .statistics-data-table caption, .statistics-summary caption{
     font-size: 1.5em;
+    padding: 8px 0;
+    background-color: whitesmoke;
 }
-.statistics-data-table td, .statistics-summary-td {
-    padding: 4px 2px;
+.statistics-data-table td, .statistics-summary td {
+    padding: 10px;
+    border: 1px solid gainsboro;
+    text-align: center;
 }
+    .statistics-data-table th, .statistics-summary th {
+        font-weight: 500;
+        padding: 10px;
+        font-style: italic;
+    }
+
+
+.options-list-header{
+
+}
+.options-list{
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    margin: 6px 0;
+    padding-left: 1.25em;
+}
+.option-item {
+    display: block;
+    padding: 6px 12px;
+
+    border: 1px solid transparent;
+    border-radius: 2px;
+
+    cursor: pointer;
+    color: rgb(64,64,64);
+}
+    .option-item:hover {
+        background-color: whitesmoke;
+    }
+
+.option-item.selected{
+    background-color: whitesmoke;
+    border: 1px solid var(--border-brush);
+}
+
+.option-accuracy{
+    margin: 14px 0;
+}
+.option-accuracy input{
+
+}
+
+.entry-interval-input{
+    margin: 0 6px;
+    width: 50px;
+}
+
+.creation{
+    display: flex;
+    justify-content: left;
+    margin: 14px 8px;
+}
+
+.btn-create-report{
+    padding: 5px 10px;
+    margin: 5px;
+    font-size: 1em;
+    background-color: transparent;
+    border-color: lightgreen;
+    cursor: pointer;
+}
+    .btn-create-report:hover {
+        background-color: lightgreen;
+    }

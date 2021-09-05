@@ -11,6 +11,11 @@ html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
+.column{
+    display: flex;
+    flex-direction: column;
+}
+
 #blazor-error-ui {
     background: lightyellow;
     bottom: 0;
