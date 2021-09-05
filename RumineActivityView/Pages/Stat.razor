@@ -1,209 +1,296 @@
 ﻿@page "/statistics"
 
-<div class="statistics-posts-options">
-    <section class="statistics-options">
-        <h2>Настройка</h2>
-        <div>
-            <label>
-                <span>Тип отчета</span>
-                <select>
-                    <option>По имеющимся записям</option>
-                    <option>С равными промежутками и достроением</option>
-                </select>
-            </label>
-            <br />
-        </div>
+<div class="statistics">
 
-        <div>
+    <section class="options">
+        <h2>Настройка отчета</h2>
+
+        <section>
             <header>
                 <h3>Даты</h3>
             </header>
             <div>
                 <label>
-                    <input type="date" @bind-value="(Options.Period.From)" />
+                    <input type="date" @bind-value="(Options.DateRange.From)" />
                 </label>
                 <span> - </span>
                 <label>
-                    <input type="date" @bind-value="(Options.Period.To)" />
+                    <input type="date" @bind-value="(Options.DateRange.To)" />
                 </label>
 
             </div>
             <br />
-            <span>Год / месяц:</span>
-            <ul class="options-list">
-                @foreach (var year in Years)
-                {
-                    <li class="@($"option-item {GetCssClassYear(year)}")" @onclick="(() => SetYear(year))">
-                        @if (year == 0)
-                        {
-                            <span>Все года</span>
-                        }
-                        else
-                        {
+            <section class="options-section">
+                <h4 class="options-list-header">Год / месяц:</h4>
+                <ul class="options-list">
+                    @foreach (var year in Years)
+                    {
+                        <li class="@($"option-item {GetCssClassYear(year)}")" @onclick="(() => SetYear(year))">
+                            @if (year == 0)
+                            {
+                                <span>Все года</span>
+                            }
+                            else
+                            {
 
-                            @year
-                        }
-                    </li>
-                }
-            </ul>
-            <ul class="options-list">
-                @foreach (var month in Months)
-                {
-                    <li class="@($"option-item {GetCssClassMonth(month)}")" @onclick="(() => SetMonth(month))">
-                        @if (month == 0)
-                        {
-                            <span>Все месяцы</span>
-                        }
-                        else
-                        {
+                                @year
+                            }
+                        </li>
+                    }
+                </ul>
+                <ul class="options-list">
+                    @foreach (var month in Months)
+                    {
+                        <li class="@($"option-item {GetCssClassMonth(month)}")" @onclick="(() => SetMonth(month))">
+                            @if (month == 0)
+                            {
+                                <span>Все месяцы</span>
+                            }
+                            else
+                            {
 
-                            @(new DateTime(2011, month, 1).ToString("MMM"))
-                        }
-                    </li>
-                }
-            </ul>
-            <span>
-                Интервал записей:
-            </span>
-            <ul class="options-list">
-                @foreach (var interval in Intervals)
-                {
-                    <li class="@($"option-item {GetCssClass(interval)}")" @onclick="(() => Set(interval))">
-                        <span>@interval.Name</span>
-                        @if (interval.Name == "Свой")
+                                @(new DateTime(2011, month, 1).ToString("MMM"))
+                            }
+                        </li>
+                    }
+                </ul>
+
+            </section>
+            <section class="options-section">
+                <h4 class="options-list-header">Интервал записей:</h4>
+                <ul class="options-list">
+                    @foreach (var interval in Intervals)
+                    {
+                        <li class="@($"option-item {GetCssClass(interval)}")" @onclick="(() =>Set(interval))">
+                            <span>@interval.Name</span>
+                            @if (interval.Name == "Свой")
+                            {
+                                <input class="entry-interval-input" type="number" min="0.001" max="10000" @bind-value="@(interval.Days)" />
+                            }
+                        </li>
+                    }
+                </ul>
+
+            </section>
+
+
+        </section>
+
+        <section>
+            <details>
+                <summary>Источник</summary>
+                <section class="options-section">
+                    <h4 class="options-list-header">Охват:</h4>
+                    <select size="4" class="select-options" @onchange="SetTopicMode">
+                        @foreach (var mode in TopicModes)
                         {
-                            <input class="entry-interval-input" type="number" min="0.001" max="10000" @bind-value="@(interval.Days)" />
+                            <option value="@(mode.Mode)">@mode.Name</option>
                         }
-                    </li>
+                    </select>
+                </section>
+                @if (Options.TopicMode.Mode == TopicsModes.Topics)
+                {
+                    <section class="options-section">
+                        <h4 class="options-list-header">Список тем:</h4>
+                        <input type="text" placeholder="100; 200; 300" @bind-value="@(Options.TopicMode.TopicsText)" />
+                        <label>
+                            <span>Добавить тему:</span>
+                            <select @onchange="AddTopic">
+                                @foreach (var topic in StatApp.App.Topics.Except<Topic>(TopicOptions))
+                                {
+                                    <option value="@topic.ID">[@topic.ID] @topic.Name</option>
+                                }
+                            </select>
+                        </label>
+                    </section>
                 }
-            </ul>
-        </div>
+            </details>
+        </section>
 
         <div class="creation">
-            <button class="btn-create-report" @onclick="CreateDefaultReport">
+            <button class="btn-create-report" @onclick="CreateReportWithOptions">
                 Создать отчет
             </button>
-            <button class="btn-create-report" @onclick="CreateReportWithOptions">
-                Создать отчет с опциями
+            <button class="btn-create-report" @onclick="CreateReportWithOptionsPeriod">
+                Создать отчет по периодам
             </button>
         </div>
 
     </section>
-    @if (StatReport != null)
-    {
-<div class="statistics-data">
-    <table class="statistics-summary">
-        <caption><h2>@StatReport.Name</h2></caption>
-        <tr>
-            <th>Показатель</th>
-            <th>@MeasureUnit.Name @MeasureMethod.Name.ToLower()</th>
-        </tr>
-        <tr>
-            <td>Записей</td>
-            <td>@StatReport.Count</td>
-        </tr>
-        <tr>
-            <td>Всего</td>
-            <td>@StatReport.SumValue.ToString("#,0")</td>
-        </tr>
-        <tr>
-            <td>В среднем</td>
-            <td>@StatReport.AverageValue.ToString("#,0")</td>
-        </tr>
-        <tr>
-            <td>Самый активный период</td>
-            @if (StatReport.MostActive == null)
-            {
-                <td>-</td>
-            }
-            else
-            {
 
-                <td>@StatReport.MostActive.Name | @FormatEntry(StatReport.MostActive)</td>
-            }
-        </tr>
-        <tr>
-            <td>Самый тухлый период</td>
-            @if (StatReport.MostInactive == null)
-            {
-                <td>-</td>
-            }
-            else
-            {
 
-                <td>@StatReport.MostInactive.Name | @FormatEntry(StatReport.MostInactive)</td>
-            }
-        </tr>
-    </table>
-    @if (!StatReport.IsEmpty)
+    @if (Report != null)
     {
-        <table class="statistics-data-table">
-            <caption>Значения</caption>
-            <tr>
-                <th>Период</th>
-                <th>@MeasureUnit.Name @MeasureMethod.Name.ToLower()</th>
-            </tr>
-            @foreach (var entry in StatReport.Entries)
-            {
+        <div class="statistics-data">
+            <table class="statistics-summary">
+                <caption><h2>@Report.Name</h2></caption>
                 <tr>
-                    <td>@entry.Name</td>
-                    <td>@FormatEntry(entry)</td>
+                    <th>Показатель</th>
+                    <th>@MeasureUnit.Name @MeasureMethod.Name.ToLower()</th>
                 </tr>
+                <tr>
+                    <td>Записей</td>
+                    <td>@Report.Count</td>
+                </tr>
+                <tr>
+                    <td>Всего сообщений</td>
+                    <td>@Report.SumValue.ToString("#,0")</td>
+                </tr>
+                <tr>
+                    <td>В среднем за период</td>
+                    <td>@Report.AverageValue.ToString("#,0")</td>
+                </tr>
+                <tr>
+                    <td>Самый активный период</td>
+                    @if (Report.MostActive == null)
+                    {
+                        <td>-</td>
+                    }
+                    else
+                    {
 
+                        <td>@Report.MostActive.Name | @FormatEntry(Report.MostActive)</td>
+                    }
+                </tr>
+                <tr>
+                    <td>Самый мертвецкий период</td>
+                    @if (Report.MostInactive == null)
+                    {
+                        <td>-</td>
+                    }
+                    else
+                    {
+                        <td>@Report.MostInactive.Name | @FormatEntry(Report.MostInactive)</td>
+                    }
+                </tr>
+            </table>
+            @if (!Report.IsEmpty)
+            {
+                <table class="statistics-data-table">
+                    <caption>Значения</caption>
+                    <tr>
+                        <th colspan="2">Период</th>
+                        <th>@MeasureUnit.Name @MeasureMethod.Name.ToLower()</th>
+                    </tr>
+                    @foreach (var entry in Report.Entries)
+                    {
+                        <tr>
+                            @if (entry.SeparateDates)
+                            {
+                                <td>@entry.Range.From.ToString("dd-MM-yyyy")</td>
+                                <td>@entry.Range.To.ToString("dd-MM-yyyy")</td>
+                            }
+                            else
+                            {
+
+                                <td colspan="2">@entry.Name</td>
+                            }
+                            <td>@FormatEntry(entry)</td>
+                        </tr>
+
+                    }
+                </table>
             }
-        </table>
-    }
-</div>
+        </div>
 
-<div class="statistics-sheme">
-    <header>
-        <h3>Измерение</h3>
-    </header>
-    <span>Единицы измерения:</span>
-    <ul class="options-list column" style="position:sticky">
-        @foreach (var unit in Units)
+        <div class="statistics-sheme">
+            <Diagram Report="@Report" />
+        </div>
+
+        <div class="statistics-rules">
+            <header>
+                <h3>Измерение</h3>
+            </header>
+            <section class="options-section">
+                <h4 class="options-list-header">Единицы измерения:</h4>
+                <ul class="options-list column" style="position:sticky">
+                    @foreach (var unit in Units)
+                    {
+                        <li class="@($"option-item {GetCssClass(unit)}")" @onclick="(() => Set(unit))">
+                            @unit.Name
+                        </li>
+                    }
+                </ul>
+            </section>
+            <section class="options-section">
+                <h4 class="options-list-header">Метод измерения:</h4>
+                <ul class="options-list column">
+                    @foreach (var method in Methods)
+                    {
+                        <li class="@($"option-item {GetCssClass(method)}")" @onclick="(() => Set(method))">
+                            @method.Name
+                        </li>
+                    }
+                </ul>
+            </section>
+            <div class="option-accuracy">
+                <label>
+                    <span>Точность округления: </span><br />
+                    <input type="number" @bind-value="RoundAccuracy" />
+                    <span>знака</span>
+                </label>
+            </div>
+
+            <h4>
+                Правила
+            </h4>
+        </div>
+        @if (Options.DateInterval.Type == Dates.Month)
         {
-            <li class="@($"option-item {GetCssClass(unit)}")" @onclick="(() => Set(unit))">
-                @unit.Name
-            </li>
+            <table>
+                <tr>
+                    <th>Год</th>
+                    @foreach (var m in Enumerable.Range(1, 12).Select(i => new DateTime(2011, i, 1)))
+                    {
+                        <td>@m.ToString("MMMM")</td>
+                    }
+                </tr>
+                @foreach (var year in Report.Entries.GroupBy(e => e.Range.From.Year))
+                {
+            <tr>
+                <td>
+                    @year.Key
+                </td>
+                @for (int i = 1; i < 13; i++)
+                {
+                    if (!year.Any(e => e.Range.From.Month == i))
+                    {
+                        <td></td>
+                    }
+                    else
+                    {
+
+                        <td>
+                            @year.First(e => e.Range.From.Month == i).ValueRelative.ToString("0.00")
+                        </td>
+                    }
+                }
+            </tr>
+                }
+            </table>
+
         }
-    </ul>
-    <span>Метод измерения:</span>
-    <ul class="options-list column">
-        @foreach (var method in Methods)
-        {
-            <li class="@($"option-item {GetCssClass(method)}")" @onclick="(() => Set(method))">
-                @method.Name
-            </li>
-        }
-    </ul>
-    <div class="option-accuracy">
-        <label>
-            <span>Точность округления: </span>
-            <input type="number" @bind-value="RoundAccuracy" />
-            <span>знака после запятой</span>
-        </label>
-    </div>
-</div>
     }
+
 </div>
 
 @code{
     private ReportOptions Options { get; set; } = new ReportOptions();
-    private StatReport StatReport { get; set; }
+    private StatisticsReport Report { get; set; }
+    private IEnumerable<Topic> TopicOptions =>
+        Options.TopicMode.Topics.Select(id => StatApp.App.Topics.FirstOrDefault(t => t.ID == id)).Where(t => t != null);
 
-    private void CreateDefaultReport()
-    {
-        StatReport = new ReportDefault(new AppReportSource(), new ReportOptions()).Create();
-    }
     private void CreateReportWithOptions()
     {
-        StatReport = new ReportDefault(new AppReportSource(), Options).Create();
+        Report = new ReportDefault(new ReportSourceApp(), Options).Create();
+    }
+    private void CreateReportWithOptionsPeriod()
+    {
+        Report = new ReportPeriods(new ReportSourceApp(), Options).Create();
     }
 
 
-    public DateInterval DateInterval { get; set; } = new DateInterval(0, 0);
-    public EntryInterval EntryInterval { get; set; } = new EntryInterval("День", 1);
+    public YearMonthDateSelector DateInterval { get; set; } = new YearMonthDateSelector(0, 0);
 
     //Представление числовых данных
     private int RoundAccuracy { get; set; } = 2;
@@ -214,68 +301,71 @@
 
     public string FormatEntry(Entry entry)
     {
-        double value = entry.Value;
-        switch (MeasureMethod.Method)
+        double value = MeasureMethod.GetValue(entry);
+        if (value == 0)
         {
-            case MeasureMethods.ByDay:
-                value = entry.ValuePerDay;
-                break;
-            case MeasureMethods.ByHour:
-                value = entry.ValuePerHour;
-                break;
-            case MeasureMethods.ByMonth:
-                value = entry.ValuePerMonth;
-                break;
+            return "???";
         }
-        value /= MeasureUnit.Value;
-        return value.ToString("#,0.0");
+        else
+        {
+            value /= MeasureUnit.Value;
+            string zeros = string.Join("", Enumerable.Repeat("0", RoundAccuracy));
+            return value.ToString($"#,0.{zeros}");
+        }
     }
 
 
-    private MeasureUnit[] Units { get; set; } = new MeasureUnit[]
-    {
-        new MeasureUnit(MeasureUnits.Messages),
-        new MeasureUnit(MeasureUnits.Pages),
-        new MeasureUnit(MeasureUnits.OldPages)
-    };
-    private MeasureMethod[] Methods { get; set; } = new MeasureMethod[]
-    {
-        new MeasureMethod(MeasureMethods.Total),
-        new MeasureMethod(MeasureMethods.ByHour),
-        new MeasureMethod(MeasureMethods.ByDay),
-        new MeasureMethod(MeasureMethods.ByMonth)
-    };
-    private EntryInterval[] Intervals { get; set; } = new EntryInterval[]
-     {
-        new EntryInterval("День", 1), new EntryInterval("Неделя", 7), new EntryInterval("Месяц", 30),new EntryInterval("Год",365), new EntryInterval("Свой",1)
-     };
+    private TopicsMode[] TopicModes { get; set; } = Enum.GetValues<TopicsModes>().Select(u => new TopicsMode(u)).ToArray();
+    private MeasureUnit[] Units { get; set; } = Enum.GetValues<MeasureUnits>().Select(u => new MeasureUnit(u)).ToArray();
+    private MeasureMethod[] Methods { get; set; } = Enum.GetValues<MeasureMethods>().Select(u => new MeasureMethod(u)).ToArray();
+    private DateInterval[] Intervals { get; set; } = Enum.GetValues<Dates>().Select(d => new DateInterval(d)).ToArray();
     private int[] Years { get; set; } = new int[] { 0, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021 };
-    private int[] Months { get; set; } = Enumerable.Range(0, 12).ToArray();
+    private int[] Months { get; set; } = Enumerable.Range(0, 13).ToArray();
 
 
     const string SelectedClass = "selected";
     const string SelectableClass = "selectable";
     private string GetCssClass(MeasureUnit unit) => unit.Unit == MeasureUnit.Unit ? SelectedClass : SelectableClass;
     private string GetCssClass(MeasureMethod method) => method.Method == MeasureMethod.Method ? SelectedClass : SelectableClass;
-    private string GetCssClass(EntryInterval method) => method.Name == EntryInterval.Name ? SelectedClass :SelectableClass;
+    private string GetCssClass(DateInterval method) => method.Type == Options.DateInterval.Type ? SelectedClass :SelectableClass;
+    private string GetCssClass(TopicsMode topic) => topic.Mode == Options.TopicMode.Mode ? SelectedClass : SelectableClass;
     private string GetCssClassYear(int year) => year == DateInterval.Year ? SelectedClass : SelectableClass;
     private string GetCssClassMonth(int month) => month == DateInterval.Month ? SelectedClass : SelectableClass;
-    private void Set(MeasureUnit unit) => MeasureUnit = unit;
-    private void Set(MeasureMethod method) => MeasureMethod = method;
-    private void Set(EntryInterval interval)
+    private void Set(MeasureUnit unit)
     {
-        EntryInterval = interval;
-        Options.TimeInterval = new TimeSpan((int)interval.Days, 0, 0, 0);
+        MeasureUnit = unit;
+    }
+    private void Set(MeasureMethod method)
+    {
+        MeasureMethod = method;
+    }
+    private void Set(DateInterval interval)
+    {
+        Options.DateInterval = interval;
+    }
+    private void SetTopicMode(ChangeEventArgs e)
+    {
+        if (e.Value is string str)
+        {
+            Options.TopicMode = TopicModes.Where(t => t.Mode.ToString() == str).First();
+        }
+    }
+    private void AddTopic(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int id))
+        {
+            Options.TopicMode.Topics.Add(id);
+        }
     }
     private void SetYear(int year)
     {
         DateInterval.Year = year;
-        Options.Period = DateInterval.Dates;
+        Options.DateRange = DateInterval.Dates;
     }
     private void SetMonth(int month)
     {
         DateInterval.Month = month;
-        Options.Period = DateInterval.Dates;
+        Options.DateRange = DateInterval.Dates;
     }
 
 }

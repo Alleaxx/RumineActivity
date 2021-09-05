@@ -140,5 +140,21 @@ namespace RumineActivityView
 
             }
         }
+
+
+        public void SetDebugSource()
+        {
+            Topics.Clear();
+            Posts.Clear();
+            Add(new Topic() { ID = 1, IsChat = true, Name = "Форумный чат" });
+            Add(new Topic() { ID = 2, IsChat = false, Name = "Не чат" });
+
+            Add(new Post() { ID = 0, TopicID = 1, TopicIndex = 1, Date = new DateTime(2012, 9, 1) });
+            Add(new Post() { ID = 50, TopicID = 1, TopicIndex = 1, Date = new DateTime(2012, 9, 15) });
+            Add(new Post() { ID = 75, TopicID = 1, TopicIndex = 1, Date = new DateTime(2012, 9, 30) });
+            Add(new Post() { ID = 100, TopicID = 1, TopicIndex = 1, Date = new DateTime(2012, 10, 10) });
+            Add(new Post() { ID = 110, TopicID = 1, TopicIndex = 1, Date = new DateTime(2012, 10, 20) });
+            Add(new Post() { ID = 115, TopicID = 1, TopicIndex = 1, Date = new DateTime(2012, 10, 30) });
+        }
     }
 }

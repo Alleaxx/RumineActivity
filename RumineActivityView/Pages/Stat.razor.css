@@ -1,38 +1,45 @@
 ﻿
-.statistics-posts-options {
+.statistics {
     display: grid;
     grid-template-columns: 4fr 1fr;
-    grid-template-rows: auto auto;
+    grid-template-rows: auto auto auto;
     grid-template-areas:
         "stat-options stat-options"
-        "stat-data stat-sheme";
+        "stat-sheme stat-sheme"
+        "stat-data stat-rules";
 }
 
-.statistics-options {
+.options {
     grid-area: stat-options;
     padding: 1em;
-    border-bottom: 1px solid var(--border-brush);
+    border-bottom: 1px solid silver;
 }
 .statistics-options h2{
     background-color: whitesmoke;
     padding: 10px 0;
-}
-.statistics-options h3{
     text-align: center;
-    padding: 5px 0;
-    border-bottom: 1px solid silver;
 }
+    .statistics-options h3 {
+        padding: 5px 0;
+        border-bottom: 1px solid var(--border-brush);
+    }
 
 .statistics-data {
     grid-area: stat-data;
     padding: 1em;
-    border-right: 1px solid var(--border-brush);
+    border-right: 1px solid silver;
 }
 
 .statistics-sheme {
     grid-area: stat-sheme;
     padding: 1em;
 }
+.statistics-rules {
+    grid-area: stat-rules;
+    padding: 1em;
+    font-size: 0.9em;
+}
+
 
 .statistics-data-table {
     border: 1px solid var(--border-brush);
@@ -69,8 +76,9 @@
     }
 
 
-.options-list-header{
-
+h4.options-list-header{
+    font-weight: 500;
+    margin: 10px 0;
 }
 .options-list{
     display: flex;
@@ -102,7 +110,8 @@
     margin: 14px 0;
 }
 .option-accuracy input{
-
+    width: 30%;
+    margin-left: 10px;
 }
 
 .entry-interval-input{

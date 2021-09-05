@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31613.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RumineActivity", "RumineActivity\RumineActivity.csproj", "{CFEC9921-1CA9-412F-A698-084BA5404203}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RumineActivityView", "RumineActivityView\RumineActivityView.csproj", "{7D649758-F645-4C36-8F64-DF4154FB808C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RumineActivityView", "RumineActivityView\RumineActivityView.csproj", "{7D649758-F645-4C36-8F64-DF4154FB808C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

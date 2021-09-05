@@ -15,6 +15,9 @@
                 <input type="checkbox" @bind-value="ShowTopicNames"/>
             </label>
         </div>
+        <button @onclick="() => StatApp.App.SetDebugSource()">
+            Установить данные отладки
+            </button>
     </section>
     <hr />
     <span>Всего @Posts.Count() постов</span>
