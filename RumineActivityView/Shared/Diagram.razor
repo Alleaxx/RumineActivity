@@ -1,73 +1,147 @@
-﻿<h3>Диаграмма</h3>
-<section>
-    <b>Настройки диаграммы</b>
-    <select class="options" @onchange="@(test => Mode = test.Value.ToString())">
-        @foreach (var mode in Modes)
+﻿@inherits ReportComponent
+
+<section class="data-view">
+    <ul class="tabber">
+        @foreach(var mode in Modes)
         {
-            <option>@mode</option>
+            <li class="@(Mode == mode ? "selected" : "")" @onclick="() => Change(new ChangeEventArgs() { Value = mode })"><span>@mode</span></li>
         }
-    </select>
-    <label>
-        <span>Ширина</span>
-        <input type="number" @bind-value="@Options.Width" />
-    </label>
-    <label>
-        <span>Высота</span>
-        <input type="number" @bind-value="@(Options.Height)" />
-    </label>
-    <label>
-        <span>Цвет</span>
-        <input type="text" @bind-value="@Options.Color" />
-    </label>
+    </ul>
+
+    @*<section>
+        <select class="options" @onchange="@Change">
+            @foreach (var mode in Modes)
+            {
+                <option>@mode</option>
+            }
+        </select>
+        <label>
+            Ширина:
+            <input type="number" @bind-value="Options.Width" />
+        </label>
+        <label>
+            Высота:
+            <input type="number" @bind-value="Options.Height" />
+        </label>
+    </section>*@
+
+    <div class="content">
+        <style>
+            .text-name {
+                font-size: 0.7em;
+                max-width: 50px;
+                text-wrap: normal;
+                color: gray;
+            }
+
+            .text-value {
+                font-size: 0.8em;
+                max-width: 50px;
+            }
+
+            .g-entry:hover {
+                color: red;
+            }
+
+            .gistogramm {
+                width: 100%;
+                border: 0px solid silver;
+                border-radius: 2px;
+                padding: 5px;
+                margin: 10px 0;
+            }
+
+            .activity-line {
+                fill: #ffd8a8;
+                stroke: #e3830e;
+            }
+        </style>
+        @if (Mode == "Гистограмма" && Gistogramm != null)
+        {
+            <svg class="gistogramm" height="@Options.Height" viewBox="@($"0 0 {Options.Width} {Options.Height}")">
+                @foreach (var entry in Gistogramm.Rectangles)
+                {
+                    <g title="@entry.Entry.ToString()">
+                        <rect x="@entry.Empty.X" y="@entry.Empty.Y" height="@entry.Empty.Height" width="@entry.Empty.Width" fill="transparent" stroke="transparent" />
+                        <rect x="@entry.Filled.X" y="@entry.Filled.Y" height="@entry.Filled.Height" width="@entry.Filled.Width" fill="@View.CheckEntry(entry.Entry).Color" stroke="gray" />
+                        @if (Report.Count < 13 || entry.Index % (Report.Count / 9) == 0)
+                        {
+                            <g>
+                                <text class="text-name" x="@entry.Empty.X" y="@(entry.Filled.Y + entry.Filled.Height + 20)">@entry.Entry.Name</text>
+                                <text class="text-value" x="@entry.Empty.X" y="@(entry.Filled.Y + entry.Filled.Height + 40)">@entry.Entry.Value.ToString("#,0")</text>
+                            </g>
+                        }
+                    </g>
+                }
+            </svg>
+
+        }
+        else if (Mode == "График" && Graphic != null)
+        {
+            <svg class="gistogramm" height="@Options.Height" viewBox="@($"0 0 {Options.Width} {Options.Height}")">
+                <line x1="0" x2="@Options.Width" y1="@(Options.Height - 50)" y2="@(Options.Height - 50)" stroke="gainsboro" stroke-width="1" />
+                @foreach (var entry in Graphic.Lines)
+                {
+                    <g title="@entry.Entry.ToString()">
+                        <line x1="@(entry.Line.X1)" x2="@(entry.Line.X1)" y1="@(entry.Line.Y1)" y2="@(Options.Height - 50)" stroke="gainsboro" stroke-width="1" />
+                        <line x1="@entry.Line.X1" x2="@entry.Line.X2" y1="@entry.Line.Y1" y2="@entry.Line.Y2" stroke="orange" stroke-width="2" />
+                        @if (Report.Count < 13 || entry.Index % (Report.Count / 9) == 0)
+                        {
+                            <g>
+                                <text class="text-name" x="@entry.Line.X1" y="@(Options.Height - 40)">@entry.Entry.Name</text>
+                                <text class="text-value" x="@entry.Line.X1" y="@(Options.Height - 20)">@entry.Entry.Value.ToString("#,0")</text>
+                            </g>
+                        }
+                    </g>
+                }
+            </svg>
+        }
+        else if (Mode == "График с заливкой")
+        {
+
+            <svg class="gistogramm" height="@Options.Height" viewBox="@($"0 0 {Options.Width} {Options.Height}")">
+                <g>
+                    <path class="activity-line" d="@Graphic.Path" fill="#ffd8a8" stroke="#e3830e" />
+                </g>
+            </svg>
+        }
+        else if (Mode == "Таблица")
+        {
+            <ClassicTable Report="Report" />
+        }
+        else if (Mode == "Список значений")
+        {
+            <TableEntries Report="Report" />
+        }
+        else
+        {
+            <p>Что-то</p>
+        }
+
+    </div>
+
+
 </section>
-
-@*<svg>
-    <rect cx="0" cy="0" width="100" height="5" fill="green" stroke="lightgreen" />
-</svg>*@
-
-@if (Mode == "Гистограмма")
-{
-    <p>Гистограмма</p>
-    <svg width="100" height="70">
-        <rect x="0" y="0" height="50" width="10" fill="transparent" stroke="transparent"/>
-        <rect x="0" y="40" height="10" width="10" fill="green" stroke="blue" />
-
-        <rect x="10" y="0" height="50" width="10" fill="transparent" stroke="transparent"/>
-        <rect x="10" y="30" height="20" width="10" fill="green" stroke="blue" />
-
-        <rect x="10" y="0" height="50" width="10" fill="transparent" stroke="transparent"/>
-        <rect x="10" y="20" height="30" width="10" fill="green" stroke="blue" />
-
-        <rect x="20" y="0" height="50" width="10" fill="transparent" stroke="transparent"/>
-        <rect x="20" y="10" height="40" width="10" fill="green" stroke="blue" />
-    </svg>
-}
-else if (Mode == "Гистограмма горизонтальная")
-{
-
-}
-else if (Mode == "Круги")
-{
-
-}
-else if (Mode == "График")
-{
-    <p>Круги</p>
-}
-else
-{
-    <p>Что-то</p>
-}
 
 
 @code {
-    public string Mode { get; set; } = "Гистограмма";
-    public string[] Modes { get; set; } = new string[] { "Гистограмма", "Гистограмма горизонтальная", "Круги", "График" };
-
+    public string Fill { get; set; } = "green";
+    public string Stroke { get; set; } = "green";
+    public string Path { get; set; } = "M 0 0 L 100 100";
 
     [Parameter]
-    public StatisticsReport Report { get; set; }
+    public string Mode { get; set; }
+    public string[] Modes { get; set; } = new string[] { "Список значений", "Гистограмма", "График", "График с заливкой" , "Таблица" };
+
+
     public DiagramOptions Options { get; set; } = new DiagramOptions();
 
-    private IEnumerable<DataEntry> Entries => Report.Entries.Select((e, index) => new DataEntry(index, e, Report, Options));
+    public Gistogramm Gistogramm => new Gistogramm(Report, Options);
+    public Graphic Graphic => new Graphic(Report, Options);
+
+
+    private void Change(ChangeEventArgs e)
+    {
+        Mode = e.Value.ToString();
+    }
 }

@@ -1,0 +1,29 @@
+﻿
+.statistics-data-table, .statistics-summary {
+    border: 1px solid var(--border-brush);
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 0.85em;
+}
+
+    .statistics-summary h2 {
+        margin: 8px 0;
+    }
+
+    .statistics-data-table caption, .statistics-summary caption {
+        font-size: 1.5em;
+        padding: 8px 0;
+        background-color: whitesmoke;
+    }
+
+    .statistics-data-table td, .statistics-summary td {
+        padding: 10px;
+        border: 1px solid gainsboro;
+        text-align: center;
+    }
+
+    .statistics-data-table th, .statistics-summary th {
+        font-weight: 500;
+        padding: 10px;
+        font-style: italic;
+    }

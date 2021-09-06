@@ -1,0 +1,56 @@
+﻿@inherits ReportComponent
+
+<table class="table-activity">
+    <caption>Классическая таблица</caption>
+    <tr>
+        <th class="title">Год</th>
+        <th class="year-sum-title">всего</th>
+        @foreach (var month in Months)
+        {
+            <th class="month">@month</th>
+        }
+    </tr>
+    @foreach (var year in GroupedYear)
+    {
+<tr>
+    <th class="year">@year.Key</th>
+    <td class="year-sum">@year.Sum(e => e.Value).ToString("#,0")</td>
+    @foreach (var entry in CreateEntries(year))
+    {
+        if (entry == null)
+        {
+            <td class="month-unknown">?</td>
+
+        }
+        else
+        {
+            <td class="month-posts" title="@($"{entry.Range.From:MMMM yyyy}")" style="@($"background-color: {View.CheckEntry(entry).Color}")">
+                @entry.Value.ToString("#,0")
+            </td>
+        }
+    }
+</tr>
+    }
+</table>
+
+@code {
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        if (Report == null)
+        {
+
+        }
+    }
+
+    private IEnumerable<IGrouping<int, Entry>> GroupedYear => Report.Entries.GroupBy(e => e.Range.From.Year);
+
+    private string[] Months => Enumerable.Range(1, 12).Select(m => GetMonth(m)).ToArray();
+    private string GetMonth(int month) => new DateTime(2011, month, 1).ToString("MMMM");
+
+    public Entry FirstMonthEntry(int month, IGrouping<int, Entry> yearGroup)
+        => yearGroup.Where(e => e.Range.From.Month == month).FirstOrDefault();
+
+    public Entry[] CreateEntries(IGrouping<int, Entry> yearGroup)
+        => Enumerable.Range(1, 12).Select(m => FirstMonthEntry(m, yearGroup)).ToArray();
+}

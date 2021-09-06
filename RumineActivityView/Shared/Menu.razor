@@ -5,8 +5,18 @@
         border-radius: 2px;
         text-decoration: none;
         color: black;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 1px solid transparent;
+        border-bottom: 1px solid transparent;
     }
 
+        .menu-list-link.active {
+            border-left: 5px solid var(--selected-color);
+            border-right: 5px solid var(--selected-color);
+            border-top: 1px solid silver;
+            border-bottom: 1px solid silver;
+        }
         .menu-list-link:hover {
             background-color: gainsboro;
         }
@@ -15,7 +25,7 @@
     <ul class="menu-list">
         <li class="menu-list-item">
             <NavLink href="" Match="NavLinkMatch.All" class="menu-list-link">
-                О сайте
+                А это как?
             </NavLink>
         </li>
     </ul>
@@ -40,14 +50,13 @@
     <h2 class="menu-header">Статистика</h2>
     <ul class="menu-list">
         <li class="menu-list-item">
-            <NavLink href="statistics" class="menu-list-link">
+            <NavLink href="statistics" Match="NavLinkMatch.All" class="menu-list-link">
                 Статистика (анализ)
             </NavLink>
-            <NavLink href="statistics" class="menu-list-link">
-                Статистика по темам
-            </NavLink>
-            <NavLink href="statistics" class="menu-list-link">
-                Традиционная таблица
+        </li>
+        <li class="menu-list-item">
+            <NavLink href="classic" class="menu-list-link">
+                Классическая таблица
             </NavLink>
         </li>
         <li class="menu-list-item">

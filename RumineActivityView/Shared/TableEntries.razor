@@ -1,0 +1,56 @@
+﻿@inherits ReportComponent
+
+<table class="statistics-summary">
+    @*<caption><span>Рекорды</span></caption>*@
+    <tr>
+        <td>Самый активный период</td>
+        @if (Report.MostActive == null)
+        {
+            <td>-</td>
+        }
+        else
+        {
+
+            <td>@Report.MostActive.Name | @FormatEntry(Report.MostActive)</td>
+        }
+    </tr>
+    <tr>
+        <td>Самый мертвецкий период</td>
+        @if (Report.MostInactive == null)
+        {
+            <td>-</td>
+        }
+        else
+        {
+            <td>@Report.MostInactive.Name | @FormatEntry(Report.MostInactive)</td>
+        }
+    </tr>
+</table>
+<table class="statistics-data-table">
+    @*<caption>Значения</caption>*@
+    <tr>
+        <th colspan="2">Период</th>
+        <th>@View.MeasureUnit.Name @View.MeasureMethod.Name.ToLower()</th>
+    </tr>
+    @foreach (var entry in Report.Entries)
+    {
+        <tr>
+            @if (entry.SeparateDates)
+            {
+                <td>@entry.Range.From.ToString("dd-MM-yyyy")</td>
+                <td>@entry.Range.To.ToString("dd-MM-yyyy")</td>
+            }
+            else
+            {
+
+                <td colspan="2">@entry.Name</td>
+            }
+            <td style="@($"background-color: {View.CheckEntry(entry).Color}")">@FormatEntry(entry)</td>
+        </tr>
+
+    }
+</table>
+
+@code {
+
+}

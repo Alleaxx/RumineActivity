@@ -1,15 +1,38 @@
-﻿@page "/statistics"
+﻿@inherits StatComponent
+@page "/statistics"
 
 <div class="statistics">
 
     <section class="options">
+
         <h2>Настройка отчета</h2>
 
-        <section>
-            <header>
+        <div class="content">
+
+            <section>
+                <h4 class="options-list-header">Тип отчета: </h4>
+                <section style="margin-left:20px">
+                    <label for="report1">фактический</label>
+                    <input @onchange="(e => { ReportType = Reports.Fact; CreateReport(); })" type="radio" name="report" id="report1" value="Fact" />
+
+                    <label for="report2">периодический</label>
+                    <input @onchange="(e => { ReportType = Reports.Periodical; CreateReport(); })" type="radio" name="report" id="report2" value="Periodical" checked />
+
+
+                    @*<div class="creation">
+                    <button class="btn-create-report" @onclick="CreateReport">
+                        <span>-></span>
+                    </button>
+                </div>*@
+                </section>
+
+            </section>
+
+            <section class="dates">
+                @*<header>
                 <h3>Даты</h3>
-            </header>
-            <div>
+            </header>*@
+                @*<div>
                 <label>
                     <input type="date" @bind-value="(Options.DateRange.From)" />
                 </label>
@@ -17,45 +40,73 @@
                 <label>
                     <input type="date" @bind-value="(Options.DateRange.To)" />
                 </label>
+            </div>*@
+                <section class="options-section">
+                    <h4 class="options-list-header">Год / месяц:</h4>
+                    <div>
+                        <ul class="options-list">
+                            @foreach (var year in Years)
+                            {
+                                <li class="@($"option-item {GetCssClassYear(year)}")" @onclick="(() => SetYear(year))">
+                                    @if (year == 0)
+                                    {
+                                        <span>Все</span>
+                                    }
+                                    else
+                                    {
 
-            </div>
-            <br />
-            <section class="options-section">
-                <h4 class="options-list-header">Год / месяц:</h4>
-                <ul class="options-list">
-                    @foreach (var year in Years)
-                    {
-                        <li class="@($"option-item {GetCssClassYear(year)}")" @onclick="(() => SetYear(year))">
-                            @if (year == 0)
-                            {
-                                <span>Все года</span>
+                                        @year
+                                    }
+                                </li>
                             }
-                            else
-                            {
+                        </ul>
+                        @if (DateInterval.Year != 0)
+                        {
 
-                                @year
-                            }
-                        </li>
-                    }
-                </ul>
-                <ul class="options-list">
-                    @foreach (var month in Months)
-                    {
-                        <li class="@($"option-item {GetCssClassMonth(month)}")" @onclick="(() => SetMonth(month))">
-                            @if (month == 0)
-                            {
-                                <span>Все месяцы</span>
-                            }
-                            else
-                            {
+                            <ul class="options-list">
+                                @foreach (var month in Months)
+                                {
+                                    <li class="@($"option-item {GetCssClassMonth(month)}")" @onclick="(() => SetMonth(month))">
+                                        @if (month == 0)
+                                        {
+                                            <span>Все</span>
+                                        }
+                                        else
+                                        {
 
-                                @(new DateTime(2011, month, 1).ToString("MMM"))
-                            }
-                        </li>
-                    }
-                </ul>
+                                            @(new DateTime(2011, month, 1).ToString("MMM"))
+                                        }
+                                    </li>
+                                }
+                            </ul>
+                        }
+                        @if (DateInterval.Month != 0 && DateInterval.Year != 0)
+                        {
+
+                            <ul class="options-list">
+                                @foreach (var day in Days(DateInterval.Year, DateInterval.Month))
+                                {
+                                    <li class="@($"option-item {GetCssClassDay(day)}")" @onclick="(() => SetDay(day))">
+                                        @if (day.from == 0 || day.to == 0)
+                                        {
+                                            <span>Все</span>
+                                        }
+                                        else
+                                        {
+                                            <span>@day.from - @day.to</span>
+                                        }
+                                    </li>
+                                }
+                            </ul>
+                        }
+
+                    </div>
+
+                </section>
+
 
             </section>
+
             <section class="options-section">
                 <h4 class="options-list-header">Интервал записей:</h4>
                 <ul class="options-list">
@@ -70,27 +121,23 @@
                         </li>
                     }
                 </ul>
-
             </section>
 
-
-        </section>
-
-        <section>
-            <details>
+            <details class="source" open>
                 <summary>Источник</summary>
                 <section class="options-section">
-                    <h4 class="options-list-header">Охват:</h4>
-                    <select size="4" class="select-options" @onchange="SetTopicMode">
-                        @foreach (var mode in TopicModes)
+                    <ul class="options-list">
+                        @foreach (var interval in TopicModes)
                         {
-                            <option value="@(mode.Mode)">@mode.Name</option>
+                            <li class="@($"option-item {GetCssClass(interval)}")" @onclick="(() =>Set(interval))">
+                                <span>@interval.Name</span>
+                            </li>
                         }
-                    </select>
+                    </ul>
                 </section>
-                @if (Options.TopicMode.Mode == TopicsModes.Topics)
-                {
-                    <section class="options-section">
+                <section class="options-section" style="margin-left: 20px">
+                    @if (Options.TopicMode.Mode == TopicsModes.Topics)
+                    {
                         <h4 class="options-list-header">Список тем:</h4>
                         <input type="text" placeholder="100; 200; 300" @bind-value="@(Options.TopicMode.TopicsText)" />
                         <label>
@@ -102,105 +149,101 @@
                                 }
                             </select>
                         </label>
-                    </section>
-                }
+                    }
+                </section>
             </details>
-        </section>
 
-        <div class="creation">
-            <button class="btn-create-report" @onclick="CreateReportWithOptions">
-                Создать отчет
-            </button>
-            <button class="btn-create-report" @onclick="CreateReportWithOptionsPeriod">
-                Создать отчет по периодам
-            </button>
+            <div>
+                <style>
+                    .param {
+                        color: black;
+                    }
+
+                    .date {
+                        color: black;
+                    }
+
+                    .report-text {
+                        color: gray;
+                        font-size: 1.1em;
+                        font-family: Consolas;
+                    }
+                </style>
+                <p class="report-text">
+                    <span class="param">@ReportType</span> отчет
+                    с <span class="date">@Options.DateRange.From.ToString("dd.MM.yyyy").ToUpper()</span>
+                    по <span class="date">@Options.DateRange.To.ToString("dd.MM.yyyy").ToUpper()</span>
+                    периодичностью в <span class="param">@Options.DateInterval.Name.ToUpper()</span>
+                    учитывающий <span class="param">@Options.TopicMode.Name.ToUpper()</span>
+                </p>
+            </div>
+
         </div>
 
     </section>
 
+    <div class="report">
 
-    @if (Report != null)
-    {
-        <div class="statistics-data">
-            <table class="statistics-summary">
-                <caption><h2>@Report.Name</h2></caption>
-                <tr>
-                    <th>Показатель</th>
-                    <th>@MeasureUnit.Name @MeasureMethod.Name.ToLower()</th>
-                </tr>
-                <tr>
-                    <td>Записей</td>
-                    <td>@Report.Count</td>
-                </tr>
-                <tr>
-                    <td>Всего сообщений</td>
-                    <td>@Report.SumValue.ToString("#,0")</td>
-                </tr>
-                <tr>
-                    <td>В среднем за период</td>
-                    <td>@Report.AverageValue.ToString("#,0")</td>
-                </tr>
-                <tr>
-                    <td>Самый активный период</td>
-                    @if (Report.MostActive == null)
-                    {
-                        <td>-</td>
-                    }
-                    else
-                    {
+        <h2>@Report.Name</h2>
 
-                        <td>@Report.MostActive.Name | @FormatEntry(Report.MostActive)</td>
-                    }
-                </tr>
-                <tr>
-                    <td>Самый мертвецкий период</td>
-                    @if (Report.MostInactive == null)
-                    {
-                        <td>-</td>
-                    }
-                    else
-                    {
-                        <td>@Report.MostInactive.Name | @FormatEntry(Report.MostInactive)</td>
-                    }
-                </tr>
-            </table>
-            @if (!Report.IsEmpty)
-            {
-                <table class="statistics-data-table">
-                    <caption>Значения</caption>
-                    <tr>
-                        <th colspan="2">Период</th>
-                        <th>@MeasureUnit.Name @MeasureMethod.Name.ToLower()</th>
-                    </tr>
-                    @foreach (var entry in Report.Entries)
-                    {
-                        <tr>
-                            @if (entry.SeparateDates)
-                            {
-                                <td>@entry.Range.From.ToString("dd-MM-yyyy")</td>
-                                <td>@entry.Range.To.ToString("dd-MM-yyyy")</td>
-                            }
-                            else
-                            {
+        <div class="content">
 
-                                <td colspan="2">@entry.Name</td>
-                            }
-                            <td>@FormatEntry(entry)</td>
-                        </tr>
+            <div class="report-info">
 
+                <style>
+                    .stat {
+                        display: flex;
+                        margin: 1em;
                     }
-                </table>
-            }
+
+                    .parameter {
+                        display: flex;
+                        align-items: center;
+                        margin: 0 1em;
+                    }
+
+                        .parameter span:first-child {
+                            margin: 0 8px;
+                            font-size: 1.1em;
+                            color: gray;
+                        }
+
+                        .parameter span:last-child {
+                            font-size: 1.6em;
+                        }
+                </style>
+                <section class="stat">
+                    <div class="parameter">
+                        <span>Записей:</span>
+                        <span>@Report.Count</span>
+                    </div>
+                    <div class="parameter">
+                        <span>Дней:</span>
+                        <span>@Report.DateRange.Diff.TotalDays.ToString("#,0.0")</span>
+                    </div>
+                    <div class="parameter">
+                        <span>Сообщений:</span>
+                        <span>@Report.SumValue.ToString("#,0")</span>
+                    </div>
+                </section>
+            </div>
+
+            <div class="sheme">
+                @if (!Report.IsEmpty)
+                {
+                    <Diagram Mode="Список значений" Report="@Report" />
+                }
+            </div>
+
         </div>
 
-        <div class="statistics-sheme">
-            <Diagram Report="@Report" />
-        </div>
-
-        <div class="statistics-rules">
-            <header>
-                <h3>Измерение</h3>
-            </header>
+    </div>
+    
+    <div class="rules">
+        <header>
+            <h2>Измерение</h2>
+        </header>
+        <div class="content">
             <section class="options-section">
                 <h4 class="options-list-header">Единицы измерения:</h4>
                 <ul class="options-list column" style="position:sticky">
@@ -226,93 +269,93 @@
             <div class="option-accuracy">
                 <label>
                     <span>Точность округления: </span><br />
-                    <input type="number" @bind-value="RoundAccuracy" />
+                    <input type="number" @bind-value="View.RoundAccuracy" />
                     <span>знака</span>
                 </label>
             </div>
 
             <h4>
-                Правила
+                Правила:
             </h4>
-        </div>
-        @if (Options.DateInterval.Type == Dates.Month)
-        {
-            <table>
-                <tr>
-                    <th>Год</th>
-                    @foreach (var m in Enumerable.Range(1, 12).Select(i => new DateTime(2011, i, 1)))
-                    {
-                        <td>@m.ToString("MMMM")</td>
-                    }
-                </tr>
-                @foreach (var year in Report.Entries.GroupBy(e => e.Range.From.Year))
-                {
-            <tr>
-                <td>
-                    @year.Key
-                </td>
-                @for (int i = 1; i < 13; i++)
-                {
-                    if (!year.Any(e => e.Range.From.Month == i))
-                    {
-                        <td></td>
-                    }
-                    else
-                    {
-
-                        <td>
-                            @year.First(e => e.Range.From.Month == i).ValueRelative.ToString("0.00")
-                        </td>
-                    }
+            <style>
+                .rules {
                 }
-            </tr>
+
+                    .rules th {
+                        font-weight: 500;
+                        font-style: italic;
+                    }
+
+                    .rules input {
+                        max-width: 100%;
+                    }
+
+                    .rules .color-example {
+                        width: 10px;
+                        height: 10px;
+                    }
+
+                .rule-range {
+                    max-width: 35px;
+                }
+
+                .rule-color {
+                    max-width: 50px;
+                }
+            </style>
+            <table class="rules">
+                <tr>
+                    <th>От</th>
+                    <th>До</th>
+                    <th>Цвет</th>
+                </tr>
+                @foreach (var rule in View.Rules.OfType<RuleRanged>().OrderBy(r => r.Min))
+                {
+                    <tr>
+                        <td style="@($"border-left: 10px solid {rule.Color}")" class="rule-range"><input type="number" @bind-value="rule.Min"></td>
+                        <td class="rule-range"><input type="number" @bind-value="rule.Max"></td>
+                        <td class="rule-color">
+                            <input type="text" @bind-value="rule.Color">
+                        </td>
+                    </tr>
                 }
             </table>
 
-        }
-    }
-
+        </div>
+    </div>
 </div>
 
 @code{
     private ReportOptions Options { get; set; } = new ReportOptions();
-    private StatisticsReport Report { get; set; }
+    private StatisticsReport Report { get; set; } = new ReportDefault(new ReportSourceApp(), new ReportOptions()).Create();
     private IEnumerable<Topic> TopicOptions =>
         Options.TopicMode.Topics.Select(id => StatApp.App.Topics.FirstOrDefault(t => t.ID == id)).Where(t => t != null);
 
-    private void CreateReportWithOptions()
-    {
-        Report = new ReportDefault(new ReportSourceApp(), Options).Create();
-    }
-    private void CreateReportWithOptionsPeriod()
-    {
-        Report = new ReportPeriods(new ReportSourceApp(), Options).Create();
-    }
 
+    enum Reports
+    {
+        Fact, Periodical
+    }
+    private Reports ReportType { get; set; } = Stat.Reports.Periodical;
+
+    private void CreateReport()
+    {
+        switch (ReportType)
+        {
+            case Reports.Fact:
+                Report = new ReportDefault(new ReportSourceApp(), Options).Create();
+                break;
+            case Reports.Periodical:
+                Report = new ReportPeriods(new ReportSourceApp(), Options).Create();
+                break;
+        }
+    }
 
     public YearMonthDateSelector DateInterval { get; set; } = new YearMonthDateSelector(0, 0);
 
     //Представление числовых данных
-    private int RoundAccuracy { get; set; } = 2;
 
 
-    private MeasureUnit MeasureUnit { get; set; } = new MeasureUnit(MeasureUnits.Messages);
-    private MeasureMethod MeasureMethod { get;  set; } = new MeasureMethod(MeasureMethods.Total);
-
-    public string FormatEntry(Entry entry)
-    {
-        double value = MeasureMethod.GetValue(entry);
-        if (value == 0)
-        {
-            return "???";
-        }
-        else
-        {
-            value /= MeasureUnit.Value;
-            string zeros = string.Join("", Enumerable.Repeat("0", RoundAccuracy));
-            return value.ToString($"#,0.{zeros}");
-        }
-    }
 
 
     private TopicsMode[] TopicModes { get; set; } = Enum.GetValues<TopicsModes>().Select(u => new TopicsMode(u)).ToArray();
@@ -321,27 +364,42 @@
     private DateInterval[] Intervals { get; set; } = Enum.GetValues<Dates>().Select(d => new DateInterval(d)).ToArray();
     private int[] Years { get; set; } = new int[] { 0, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021 };
     private int[] Months { get; set; } = Enumerable.Range(0, 13).ToArray();
+    private (int from, int to)[] Days(int year, int month)
+    {
+        var days = new (int from, int to)[]
+        {
+                (0,0),(1,7),(7,14),(14,21),(21,28)
+        };
+        return days;
+    }
 
 
     const string SelectedClass = "selected";
     const string SelectableClass = "selectable";
-    private string GetCssClass(MeasureUnit unit) => unit.Unit == MeasureUnit.Unit ? SelectedClass : SelectableClass;
-    private string GetCssClass(MeasureMethod method) => method.Method == MeasureMethod.Method ? SelectedClass : SelectableClass;
+    private string GetCssClass(MeasureUnit unit) => unit.Unit == View.MeasureUnit.Unit ? SelectedClass : SelectableClass;
+    private string GetCssClass(MeasureMethod method) => method.Method == View.MeasureMethod.Method ? SelectedClass : SelectableClass;
     private string GetCssClass(DateInterval method) => method.Type == Options.DateInterval.Type ? SelectedClass :SelectableClass;
     private string GetCssClass(TopicsMode topic) => topic.Mode == Options.TopicMode.Mode ? SelectedClass : SelectableClass;
     private string GetCssClassYear(int year) => year == DateInterval.Year ? SelectedClass : SelectableClass;
     private string GetCssClassMonth(int month) => month == DateInterval.Month ? SelectedClass : SelectableClass;
+    private string GetCssClassDay((int from, int to) day) => day.from == DateInterval.Day.from && day.to == DateInterval.Day.to ? SelectedClass : SelectableClass;
     private void Set(MeasureUnit unit)
     {
-        MeasureUnit = unit;
+        View.MeasureUnit = unit;
     }
     private void Set(MeasureMethod method)
     {
-        MeasureMethod = method;
+        View.MeasureMethod = method;
+    }
+    private void Set(TopicsMode mode)
+    {
+        Options.TopicMode = mode;
+        CreateReport();
     }
     private void Set(DateInterval interval)
     {
         Options.DateInterval = interval;
+        CreateReport();
     }
     private void SetTopicMode(ChangeEventArgs e)
     {
@@ -355,17 +413,28 @@
         if (int.TryParse(e.Value.ToString(), out int id))
         {
             Options.TopicMode.Topics.Add(id);
+            CreateReport();
         }
     }
     private void SetYear(int year)
     {
         DateInterval.Year = year;
-        Options.DateRange = DateInterval.Dates;
+        UpdateDateRange();
     }
     private void SetMonth(int month)
     {
         DateInterval.Month = month;
+        UpdateDateRange();
+    }
+    private void SetDay((int,int) day)
+    {
+        DateInterval.Day = day;
+        UpdateDateRange();
+    }
+    private void UpdateDateRange()
+    {
         Options.DateRange = DateInterval.Dates;
+        CreateReport();
     }
 
 }

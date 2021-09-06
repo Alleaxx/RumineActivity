@@ -1,1 +1,29 @@
-﻿
+﻿.data-view{
+    border: 1px solid gainsboro;
+    border-radius: 2px;
+}
+.data-view .content{
+    padding: 1em;
+}
+
+
+.tabber {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    border-bottom: 1px solid gainsboro;
+}
+    .tabber li {
+        display: block;
+        padding: 8px 10px;
+        border-right: 1px solid gainsboro;
+        cursor: pointer;
+        font-size: 1.05em;
+    }
+    .tabber li:hover{
+        background-color: gainsboro;
+    }
+    .tabber li.selected{
+        background-color: gainsboro;
+        cursor: default;
+    }

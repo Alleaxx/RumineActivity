@@ -14,6 +14,9 @@ namespace RumineActivityView
         public NewPost EditingPost { get; private set; }
 
 
+        public ViewOptions ViewOptions { get; private set; } = new ViewOptions();
+
+
         public List<Post> Posts { get; private set; }
         public List<Topic> Topics { get; private set; }
 
@@ -137,7 +140,6 @@ namespace RumineActivityView
                 Add(new Post() { ID = 1453470, TopicID = 15361, TopicIndex = 182857, Date = new DateTime(2021, 6, 1) });
                 Add(new Post() { ID = 1455267, TopicID = 15361, TopicIndex = 184201, Date = new DateTime(2021, 7, 1) });
                 Add(new Post() { ID = 1456509, TopicID = 15361, TopicIndex = 185060, Date = new DateTime(2021, 8, 1) });
-
             }
         }
 

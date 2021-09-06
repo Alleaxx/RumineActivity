@@ -36,7 +36,7 @@ namespace RumineActivityView
                 case Dates.Day:
                     Name = "День";
                     TimeInterval = new TimeSpan(1, 0, 0, 0, 0);
-                    DateFormat = "dd MMM yyyy";
+                    DateFormat = "dd.MM.yyyy";
                     break;
                 case Dates.Week:
                     Name = "Неделя";
@@ -90,6 +90,7 @@ namespace RumineActivityView
     {
         public int Year { get; set; } = 0;
         public int Month { get; set; } = 0;
+        public (int from, int to) Day { get; set; } = (0, 0);
         public DateRange Dates
         {
             get
@@ -106,7 +107,14 @@ namespace RumineActivityView
                     }
                     else
                     {
-                        return new DateRange(new DateTime(Year, Month, 1), new DateTime(Year, Month, DateTime.DaysInMonth(Year, Month)));
+                        if(Day.from == 0 || Day.to == 0)
+                        {
+                            return new DateRange(new DateTime(Year, Month, 1), new DateTime(Year, Month, DateTime.DaysInMonth(Year, Month)));
+                        }
+                        else
+                        {
+                            return new DateRange(new DateTime(Year, Month, Day.from), new DateTime(Year, Month, Day.to));
+                        }
                     }
                 }
             }

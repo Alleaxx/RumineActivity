@@ -46,14 +46,13 @@ namespace RumineActivityView
                     else
                         return e.Value * fraction;
                 }
-                Console.WriteLine(entry);
                 newEntries.Add(entry);
 
                 fromDate = toDate;
             }
             while (dateRange.IsDateInside(toDate));
 
-            return new StatisticsReport($"Отчет по периодам:\n {Options.DateRange.ToString("dd.MM.yyyy", "-")}", newEntries);
+            return new StatisticsReport($"Отчет по периодам", newEntries, Options.DateRange);
         }
     }
 

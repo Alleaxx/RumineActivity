@@ -1,0 +1,136 @@
+﻿@inherits StatComponent
+
+<style>
+    .options-list {
+        display: flex;
+        flex-wrap: wrap;
+        list-style: none;
+        margin: 6px 0;
+        padding-left: 1.25em;
+    }
+
+    .option-item {
+        display: block;
+        padding: 6px 12px;
+        border: 1px solid transparent;
+        border-radius: 2px;
+        cursor: pointer;
+        color: rgb(64,64,64);
+    }
+
+        .option-item:hover {
+            background-color: whitesmoke;
+        }
+
+        .option-item.selected {
+            background-color: whitesmoke;
+            border: 1px solid var(--border-brush);
+        }
+
+    .option-accuracy {
+        margin: 14px 0;
+    }
+
+        .option-accuracy input {
+            width: 30%;
+            margin-left: 10px;
+        }
+</style>
+
+<div class="rules">
+    <header>
+        <h2>Измерение</h2>
+    </header>
+
+    <section class="options-section">
+        <h4 class="options-list-header">Единицы измерения:</h4>
+        <ul class="options-list column" style="position:sticky">
+            @foreach (var unit in Units)
+            {
+                <li class="@($"option-item {GetCssClass(unit)}")" @onclick="(() => Set(unit))">
+                    @unit.Name
+                </li>
+            }
+        </ul>
+    </section>
+    <section class="options-section">
+        <h4 class="options-list-header">Метод измерения:</h4>
+        <ul class="options-list column">
+            @foreach (var method in Methods)
+            {
+                <li class="@($"option-item {GetCssClass(method)}")" @onclick="(() => Set(method))">
+                    @method.Name
+                </li>
+            }
+        </ul>
+    </section>
+    <div class="option-accuracy">
+        <label>
+            <span>Точность округления: </span><br />
+            <input type="number" @bind-value="View.RoundAccuracy" />
+            <span>знака</span>
+        </label>
+    </div>
+
+    <h4>
+        Правила:
+    </h4>
+    <style>
+        .rules {
+        }
+
+            .rules th {
+                font-weight: 500;
+                font-style: italic;
+            }
+
+            .rules input {
+                max-width: 100%;
+            }
+
+            .rules .color-example {
+                width: 10px;
+                height: 10px;
+            }
+
+        .rule-range {
+            max-width: 35px;
+        }
+
+        .rule-color {
+            max-width: 50px;
+        }
+    </style>
+    <table class="rules">
+        <tr>
+            <th>От</th>
+            <th>До</th>
+            <th>Цвет</th>
+        </tr>
+        @foreach (var rule in View.Rules.OfType<RuleRanged>().OrderBy(r => r.Min))
+        {
+            <tr>
+                <td style="@($"border-left: 10px solid {rule.Color}")" class="rule-range"><input type="number" @bind-value="rule.Min"></td>
+                <td class="rule-range"><input type="number" @bind-value="rule.Max"></td>
+                <td class="rule-color">
+                    <input type="text" @bind-value="rule.Color">
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+
+@code {
+    private string GetCssClass(MeasureUnit unit) => unit.Unit == View.MeasureUnit.Unit ? "selected" : "";
+    private string GetCssClass(MeasureMethod method) => method.Method == View.MeasureMethod.Method ? "selected" : "";
+    private MeasureUnit[] Units { get; set; } = Enum.GetValues<MeasureUnits>().Select(u => new MeasureUnit(u)).ToArray();
+    private MeasureMethod[] Methods { get; set; } = Enum.GetValues<MeasureMethods>().Select(u => new MeasureMethod(u)).ToArray();
+    private void Set(MeasureUnit unit)
+    {
+        View.MeasureUnit = unit;
+    }
+    private void Set(MeasureMethod method)
+    {
+        View.MeasureMethod = method;
+    }
+}

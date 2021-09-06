@@ -11,6 +11,7 @@ namespace RumineActivityView
         //Данные
         public string Name { get; private set; }
         public IEnumerable<Entry> Entries { get; private set; }
+        public DateRange DateRange { get; private set; }
 
         //Статистика по данным
         public bool IsEmpty => Entries == null || !Entries.Any();
@@ -20,14 +21,15 @@ namespace RumineActivityView
         public Entry MostInactive => Entries.Where(e => e.ValueRelative > 0).OrderBy(e => e.ValueRelative).FirstOrDefault();
         public Entry MostActive => Entries.Where(e => e.ValueRelative > 0).OrderBy(e => e.ValueRelative).LastOrDefault();
 
-        public StatisticsReport() : this("Нулевой отчет", Array.Empty<Entry>())
+        public StatisticsReport() : this("Нулевой отчет", Array.Empty<Entry>(), new DateRange())
         {
 
         }
-        public StatisticsReport(string name, IEnumerable<Entry> entries)
+        public StatisticsReport(string name, IEnumerable<Entry> entries, DateRange range)
         {
             Name = name;
             Entries = entries;
+            DateRange = range;
         }
     }
 }

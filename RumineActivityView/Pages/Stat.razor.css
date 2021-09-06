@@ -1,44 +1,70 @@
 ﻿
 .statistics {
     display: grid;
-    grid-template-columns: 4fr 1fr;
-    grid-template-rows: auto auto auto;
+
+    grid-template-columns: 7fr 1fr;
+    grid-template-rows: auto auto;
     grid-template-areas:
         "stat-options stat-options"
-        "stat-sheme stat-sheme"
-        "stat-data stat-rules";
+        "stat-sheme stat-rules";
 }
 
 .options {
     grid-area: stat-options;
-    padding: 1em;
-    border-bottom: 1px solid silver;
 }
-.statistics-options h2{
+
+    .options h2, .report h2, .rules h2{
     background-color: whitesmoke;
-    padding: 10px 0;
+    margin: 0;
+    padding: 15px 0;
     text-align: center;
+    border: 1px solid silver;
 }
-    .statistics-options h3 {
+    .options h3 {
         padding: 5px 0;
         border-bottom: 1px solid var(--border-brush);
     }
 
-.statistics-data {
-    grid-area: stat-data;
+    .options .dates {
+    }
+
+    .options .source {
+    }
+/*.statistics-data {
     padding: 1em;
-    border-right: 1px solid silver;
+    border-left: 1px solid silver;
+}*/
+
+.report {
+    grid-area: stat-sheme;
 }
 
-.statistics-sheme {
-    grid-area: stat-sheme;
-    padding: 1em;
+
+.report-info{
+
 }
-.statistics-rules {
+
+
+.rules {
     grid-area: stat-rules;
-    padding: 1em;
-    font-size: 0.9em;
+    background-color: whitesmoke;
+    border-left: 1px solid gainsboro;
 }
+.rules h2{
+    margin: 0;
+    padding: 15px 0;
+}
+    .rules .content {
+        font-size: 0.9em;
+    }
+
+.content{
+    padding: 1em;
+}
+.sheme{
+
+}
+
 
 
 .statistics-data-table {
@@ -49,31 +75,6 @@
     padding: 1em;
 }
 
-
-.statistics-data-table, .statistics-summary {
-    border: 1px solid var(--border-brush);
-    border-collapse: collapse;
-    width: 100%;
-}
-.statistics-summary h2{
-    margin: 8px 0;
-}
-
-.statistics-data-table caption, .statistics-summary caption{
-    font-size: 1.5em;
-    padding: 8px 0;
-    background-color: whitesmoke;
-}
-.statistics-data-table td, .statistics-summary td {
-    padding: 10px;
-    border: 1px solid gainsboro;
-    text-align: center;
-}
-    .statistics-data-table th, .statistics-summary th {
-        font-weight: 500;
-        padding: 10px;
-        font-style: italic;
-    }
 
 
 h4.options-list-header{
@@ -100,10 +101,17 @@ h4.options-list-header{
     .option-item:hover {
         background-color: whitesmoke;
     }
+    .rules .option-item:hover{
+        background-color: gainsboro;
+    }
 
 .option-item.selected{
     background-color: whitesmoke;
     border: 1px solid var(--border-brush);
+}
+.rules .option-item.selected{
+    background-color: gainsboro;
+    border: 1px solid silver;
 }
 
 .option-accuracy{
@@ -125,7 +133,7 @@ h4.options-list-header{
     margin: 14px 8px;
 }
 
-.btn-create-report{
+.creation button{
     padding: 5px 10px;
     margin: 5px;
     font-size: 1em;
@@ -133,6 +141,6 @@ h4.options-list-header{
     border-color: lightgreen;
     cursor: pointer;
 }
-    .btn-create-report:hover {
+    .creation button:hover {
         background-color: lightgreen;
     }

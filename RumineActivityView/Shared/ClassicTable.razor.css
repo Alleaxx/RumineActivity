@@ -1,0 +1,44 @@
+﻿.table-activity{
+    margin: 1.25em;
+    border-collapse: collapse;
+    border: 1px solid silver;
+    font-size: 0.85em;
+}
+.table-activity caption{
+    margin: 10px;
+    font-size: 1.25em;
+}
+
+.table-activity td{
+    padding: 6px 4px;
+    text-align: center;
+}
+    .table-activity th {
+        background-color: whitesmoke;
+    }
+
+th.year, th.month{
+}
+.th.title{
+    font-size: 1.5em;
+}
+th.year{
+    padding: 8px 15px;
+}
+th.year-sum-title{
+    font-weight: 500;
+}
+td.year-sum {
+    border-left: 1px solid whitesmoke;
+    border-right: 1px solid whitesmoke;
+}
+th.month {
+    padding: 8px;
+    font-size: 0.95em;
+}
+td.month-posts {
+    font-size: 0.9em;
+}
+td.month-unknown {
+    font-size: 0.9em;
+}

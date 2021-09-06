@@ -6,7 +6,7 @@
 .container {
     display: grid;
     grid-template-rows: auto auto auto;
-    grid-auto-columns: 3fr 9fr;
+    grid-auto-columns: 3fr 10fr;
     grid-template-areas:
         "logo logo"
         "menu content"
@@ -15,7 +15,7 @@
     background-color: white;
     border: 2px solid var(--border-brush);
     border-radius: 3px;
-    max-width: 1280px;
+    max-width: 1400px;
 }
 
 

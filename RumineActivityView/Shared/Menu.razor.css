@@ -20,8 +20,9 @@
 }
 
 .menu-footer {
+    margin-top: 10px;
     border-top: 1px solid var(--border-brush);
-    padding-top: 5px;
+    padding-top: 10px;
 }
 
 
@@ -31,9 +32,6 @@
     border-radius: 2px;
     text-decoration: none;
     color: black;
-}
-.menu-list-link.active{
-    border-left: 4px solid var(--selected-color);
 }
 
     .menu-list-link:hover {
