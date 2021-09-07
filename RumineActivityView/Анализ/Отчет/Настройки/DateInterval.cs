@@ -103,13 +103,13 @@ namespace RumineActivityView
                 {
                     if (Month == 0)
                     {
-                        return new DateRange(new DateTime(Year, 1, 1), new DateTime(Year, 12, 31));
+                        return new DateRange(new DateTime(Year, 1, 1), new DateTime(Year + 1, 1, 1));
                     }
                     else
                     {
                         if(Day.from == 0 || Day.to == 0)
                         {
-                            return new DateRange(new DateTime(Year, Month, 1), new DateTime(Year, Month, DateTime.DaysInMonth(Year, Month)));
+                            return new DateRange(new DateTime(Year, Month, 1), new DateTime(Year, Month, 1).AddMonths(1)); /*DateTime.DaysInMonth(Year, Month)));*/
                         }
                         else
                         {

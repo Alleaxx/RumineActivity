@@ -54,7 +54,10 @@ namespace RumineActivityView
                     break;
             }
         }
-
+        public TopicsMode(TopicsModes mode, params int[] topicIds) : this(mode)
+        {
+            Topics.AddRange(topicIds);
+        }
 
         public bool Filter(Post post, IEnumerable<Topic> topics)
         {

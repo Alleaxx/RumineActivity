@@ -12,7 +12,7 @@ namespace RumineActivityView
 
         public bool OfflineMode { get; set; } = true;
         public NewPost EditingPost { get; private set; }
-
+        public Comparison Comparison { get; private set; }
 
         public ViewOptions ViewOptions { get; private set; } = new ViewOptions();
 
@@ -141,6 +141,9 @@ namespace RumineActivityView
                 Add(new Post() { ID = 1455267, TopicID = 15361, TopicIndex = 184201, Date = new DateTime(2021, 7, 1) });
                 Add(new Post() { ID = 1456509, TopicID = 15361, TopicIndex = 185060, Date = new DateTime(2021, 8, 1) });
             }
+
+
+            Comparison = new Comparison(Topics);
         }
 
 

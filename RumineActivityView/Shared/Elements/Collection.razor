@@ -1,0 +1,55 @@
+﻿<style>
+    .options-list {
+        display: flex;
+        flex-wrap: wrap;
+        list-style: none;
+        margin: 6px 0;
+        padding-left: 1.25em;
+    }
+
+    .option-item {
+        display: block;
+        padding: 6px 12px;
+        border: 1px solid transparent;
+        border-radius: 2px;
+        cursor: pointer;
+        color: rgb(64,64,64);
+    }
+
+        .option-item:hover {
+            background-color: whitesmoke;
+        }
+
+    .rules .option-item:hover {
+        background-color: gainsboro;
+    }
+
+    .option-item.selected {
+        background-color: whitesmoke;
+        border: 1px solid var(--border-brush);
+    }
+</style>
+<section class="options-section">
+    <ul class="options-list">
+        @foreach (var item in List.Items)
+        {
+            <li class="@($"option-item {GetCssClass(item)}")" @onclick="(() =>Set(item))">
+                <span>@item.ToString()</span>
+            </li>
+        }
+    </ul>
+</section>
+
+@code {
+    [Parameter]
+    public ListOptions List { get; set; }
+    [Parameter]
+    public EventCallback<ISelect> OnSelectCallback { get; set; }
+
+    private string GetCssClass(ISelect select) => List.Selected == select ? "selected" : "";
+    private void Set(ISelect select)
+    {
+        List.Selected = select;
+        OnSelectCallback.InvokeAsync(select);
+    }
+}

@@ -17,5 +17,9 @@ namespace RumineActivityView
         {
 
         }
+        public ReportOptions(TopicsMode mode)
+        {
+            TopicMode = mode;
+        }
     }
 }

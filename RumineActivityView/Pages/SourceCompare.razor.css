@@ -1,0 +1,88 @@
+﻿.comparison{
+
+}
+.comparison h2{
+
+}
+
+.comparison .options{
+    height: 150px;
+}
+.options h3{
+    font-size: 1em;
+    margin: 5px;
+}
+.options ul{
+}
+.options li:hover{
+    cursor: pointer;
+    color: green;
+}
+/*.options li:hover:after{
+    content: " (добавить) ";
+}*/
+
+
+
+.comparison table{
+    border-collapse: collapse;
+    border: 1px solid silver;
+    margin: 0 10px;
+}
+.comparison table caption{
+    padding: 0.5em;
+    font-size: 1.5em;
+}
+    .comparison table td {
+        text-align: center;
+        padding: 5px 12px;
+        font-size: 0.9em;
+        color: rgb(64,64,64);
+        border-bottom: 1px solid gainsboro;
+    }
+    .comparison table th {
+        padding: 8px;
+        border: 1px solid silver;
+    }
+.comparison td.property {
+    padding-left: 4px;
+    text-align: left;
+    font-size: 1em;
+    color: black;
+    border-right: 1px solid gainsboro;
+}
+td .more{
+    color: green;
+}
+td .less{
+    color: red;
+}
+td .self{
+    display: none;
+    color: gray;
+}
+.source-name th:first-child{
+    border-right: 0;
+    font-size: 0.8em;
+}
+.source-name th:last-child {
+    padding: 8px 2px;
+    border: 0;
+    border-bottom: 1px solid gainsboro;
+    border-right: 1px solid gainsboro;
+}
+
+.source-name .compare{
+    font-style: italic;
+}
+.source-name button{
+    border: 0;
+    font-weight: 500;
+    padding: 1px;
+    background-color: transparent;
+}
+.source-name button:hover{
+    cursor: pointer;
+    background-color: transparent;
+    color: red;
+}

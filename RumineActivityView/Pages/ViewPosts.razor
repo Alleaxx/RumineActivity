@@ -1,76 +1,68 @@
-﻿@page "/posts/view"
-
-<div class="posts-editing">
-    <h2>Редактирование постов</h2>
+﻿@inherits StatComponent
+@page "/posts/view"
+<style>
+    .topic{
+        margin: 8px;
+        font-size: 0.9em;
+    }
+</style>
+<div class="posts-view">
+    <header>
+        <h2>Редактирование постов</h2>
+    </header>
     <section>
         <header>
-
-            <h3>
-                Настройки
-            </h3>
+            <h3>Настройки</h3>
         </header>
         <div>
-            <label>
-                <span>Название вместо ID тем</span>
-                <input type="checkbox" @bind-value="ShowTopicNames"/>
+            <label for="topic-names">
+                <span>Название вместо ID тем:</span>
             </label>
+            <input type="checkbox" id="topic-names" @bind-value="ShowTopicNames" />
         </div>
-        <button @onclick="() => StatApp.App.SetDebugSource()">
-            Установить данные отладки
-            </button>
     </section>
-    <hr />
-    <span>Всего @Posts.Count() постов</span>
-    <table class="posts-editing-table">
+
+    <p class="count">Всего @Posts.Count() постов</p>
+    <table class="view-table">
         <tr>
-            <th class="id-header">ID</th>
-            <th class="name-header" colspan="2">Дата</th>
+            <th class="id">ID</th>
+            <th colspan="2">Дата</th>
             <th>@(ShowTopicNames ? "Имя темы" : "ID темы")</th>
-            <th>Позиция в теме</th>
-            <th>Имя темы</th>
+            <th class="id">№ в теме</th>
             <th>Действия</th>
         </tr>
         @foreach (var post in Posts)
         {
-            <tr class="topic-item">
-                <td><input type="number" @bind-value="(post.ID)" /></td>
-                <td><input type="date" @bind-value="(post.Date)"/></td>
-                <td><input type="time" @bind-value="(post.Date)"/></td>
-                <td>
+            <tr>
+                <td class="id"><input type="number" min="1" max="5000000" @bind-value="(post.ID)" /></td>
+                <td><input type="date" @bind-value="(post.Date)" /></td>
+                <td><input type="time" @bind-value="(post.Date)" /></td>
+                <td class="id">
                     @if (ShowTopicNames)
                     {
-                        <span>@GetTopicName(post.TopicID)</span>
+                        <span class="topic">@GetTopicName(post.TopicID)</span>
                     }
                     else
                     {
-                        <input type="number" @bind-value="(post.TopicID)" />
+                        <input type="number" list="topicsList" min="1" max="100000" @bind-value="(post.TopicID)" />
                     }
                 </td>
-                <td><input type="number" @bind-value="(post.TopicIndex)" /></td>
-                <td><input type="text" value="Имя темы" /></td>
-                <td class="actions-list">
-                    <ul>
-                        <li>
-                            <input class="action-save" type="button" value="Сохранить" />
-                        </li>
-                        <li>
-                            <input class="action-delete" type="button" value="Удалить" @onclick="(() => StatApp.App.Remove(post))"/>
-                        </li>
-                    </ul>
+                <td class="id"><input type="number" min="1" max="5000000" @bind-value="(post.TopicIndex)" /></td>
+                <td class="actions">
+                    <input class="save" type="button" value="[ S ]" />
+                    <input class="delete" type="button" value="[ X ]" @onclick="(() => StatApp.App.Remove(post))" />
                 </td>
             </tr>
         }
-
     </table>
+    <DataTopics ></DataTopics>
 </div>
 
 @code{
-    public IEnumerable<Post> Posts => StatApp.App.Posts;
-
-    public bool ShowTopicNames { get; set; } = false;
+    private bool ShowTopicNames { get; set; } = false;
     public string GetTopicName(int topicId)
     {
-        var foundTopic = StatApp.App.Topics.First(t => t.ID == topicId);
+        var foundTopic = Topics.FirstOrDefault(t => t.ID == topicId);
         if(foundTopic != null)
         {
             return foundTopic.Name;

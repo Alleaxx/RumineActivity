@@ -49,6 +49,8 @@
     grid-area: stat-rules;
     background-color: whitesmoke;
     border-left: 1px solid gainsboro;
+    border-right: 1px solid gainsboro;
+    border-bottom: 1px solid gainsboro;
 }
 .rules h2{
     margin: 0;

@@ -1,37 +1,42 @@
-﻿@page "/topics/view"
+﻿@inherits StatComponent
+@page "/topics/view"
 
-<div class="topics-editing">
-    <h2>Редактирование тем</h2>
-    <hr />
-    <span>Всего @Topics.Count() постов</span>
-    <table class="topics-editing-table">
+<section class="topics-view">
+    <header>
+        <h2>Редактирование тем</h2>
+    </header>
+    <p class="count">Всего @Topics.Count()</p>
+    <table class="view-table">
         <tr>
-            <th class="id-header">ID</th>
-            <th class="name-header">Название</th>
-            <th class="name-header">Чат?</th>
+            <th class="id">ID</th>
+            <th>Название</th>
+            <th>Чат?</th>
             <th>Действия</th>
         </tr>
         @foreach (var topic in Topics)
         {
-            <tr class="topic-item">
-                <td class="id-edit"><input type="number" @bind-value="(topic.ID)" /></td>
-                <td class="name-edit"><input type="text" @bind-value="(topic.Name)" /></td>
-                <td class="name-edit"><input type="checkbox" @bind-value="(topic.IsChat)" /></td>
-                <td class="actions-list">
-                    <ul>
-                        <li>
-                            <input class="action-save" type="button" value="Сохранить" />
-                        </li>
-                        <li>
-                            <input class="action-delete" type="button" value="Удалить" @onclick="(() => StatApp.App.Remove(topic))" />
-                        </li>
-                    </ul>
+            <tr class="topic">
+                <td class="id"><input type="number" min="1" max="100000" @bind-value="(topic.ID)" /></td>
+                <td class="name"><input type="text" maxlength="80" size="80" @bind-value="(topic.Name)" /></td>
+                <td align="center"><input type="checkbox" @bind-value="(topic.IsChat)" /></td>
+                <td class="actions">
+                    <input class="save" type="button" value="[ S ]" />
+                    <input class="delete" type="button" value="[ X ]" @onclick="(() => StatApp.App.Remove(topic))" />
                 </td>
             </tr>
         }
     </table>
-</div>
+</section>
+<Collection List="List" OnSelectCallback="Selected"/>
+@List.Selected.ToString()
 
 @code{
-    public IEnumerable<Topic> Topics => StatApp.App.Topics;
+    public ListOptions List { get; set; } = new ListOptions(StatApp.App.Topics);
+    private void Selected(ISelect select)
+    {
+        if(select is Topic topic)
+        {
+            Console.WriteLine(topic.Name);
+        }
+    }
 }

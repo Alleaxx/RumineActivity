@@ -1,41 +1,49 @@
 ﻿
-.topics-editing {
-
+.count {
+    color: gray;
+    font-size: 0.9em;
 }
 
-.topics-editing-table {
+.view-table {
+    border: 1px solid silver;
     border-collapse: collapse;
+    width: 100%;
 }
 
-    .topics-editing-table td {
-        /*            border-top: 1px solid var(--border-brush);
-        */ padding: 5px 0;
+    .view-table td {
+        border: 1px solid gainsboro;
     }
 
-.id-header {
-}
+    .view-table th {
+        padding: 10px;
+    }
 
-.name-header {
-}
+    .view-table input {
+        padding: 8px 6px;
+        border: 0;
+    }
+    .view-table input[type=number]{
+        width: 80%;
+    }
 
-.name-edit {
-}
+        .view-table input[type=button] {
+            background-color: transparent;
+            cursor: pointer;
+            margin: 0 2px;
+            padding: 5px 2px;
+            width: 40%;
+        }
 
-.id-edit {
-    width: 50px;
-}
+            .view-table input[type=button]:hover {
+                background-color: transparent;
+                color: red;
+            }
 
-.actions-list ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-}
+            .view-table input[type=button].save:hover {
+                background-color: transparent;
+                color: green;
+            }
 
-.action-save {
-    border-color: green;
-}
-
-.action-delete {
-    border-color: red;
+.id {
+    width: 125px;
 }

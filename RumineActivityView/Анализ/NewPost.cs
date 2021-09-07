@@ -110,6 +110,10 @@ namespace RumineActivityView
             {
                 result.Add(true, true, "Нет ID");
             }
+            if(StatApp.App.Posts.Any(p => p.ID == EditingPost.ID))
+            {
+                result.Add(false, false, "Пост уже есть в базе");
+            }
             if (EditingPost.Date == new DateTime())
             {
                 result.Add(true, true, "Нет даты");

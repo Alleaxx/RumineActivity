@@ -13,7 +13,10 @@ namespace RumineActivityView
         public DateRange Range { get; private set; }
         public string Name { get; private set; }
         public double Value { get; set; }
+        public double ValueIndex { get; private set; }
         public double ValueRelative => Value / Range.Diff.TotalHours;
+        public double ValueTotal { get; private set; }
+        public double ValueTopicTotal { get; private set; }
 
 
         private string Format { get; set; }
@@ -28,6 +31,10 @@ namespace RumineActivityView
             SeparateDates = true;
             Range = new DateRange(newer, older);
             Name = Range.ToString(dateFormat);
+
+            ValueTotal = newer.ID;
+            ValueTopicTotal = newer.TopicIndex;
+
 
             double forumChatAllowance = topicMode.OnlyNonChat ? 0.15 : 0.85;
             int postsDifference = newer.ID - older.ID;

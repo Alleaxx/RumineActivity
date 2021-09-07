@@ -1,123 +1,65 @@
-﻿@page "/add"
+﻿@inherits StatComponent
+@page "/add"
 
-<div class="stat-adding">
-    <h2>Добавить пост</h2>
-    <section class="form-add">
-        <div class="options-item options-link-info">
-            @*<header class="options-header">
-                <span>Ссылка и информация</span>
-            </header>*@
-            <ul class="option-property-list">
-                <li class="option-property">
-                    <label>
-                        <span class="option-property-name">Ссылка</span>
-                        <input type="text" placeholder="showtopic-15361/page-9323/" @bind-value="(Entry.Link)" />
-                    </label>
-                </li>
-                <li class="option-property">
-                    <label>
-                        <span class="option-property-name">Сведения</span>
-                        <input type="text" placeholder="#186603 | Сегодня, 14:42" @bind-value="(Entry.TopicInfo)" />
-                    </label>
-                </li>
-            </ul>
+<section class="new-post">
+    <header>
+        <h2>Добавить пост</h2>
+    </header>
+
+    <div class="content">
+
+        <div class="inputs column">
+            <label for="post-link">Ссылка:</label>
+            <input type="url" id="post-link" maxlength="120" size="120" required autofocus placeholder="showtopic-15361/page-9323/" @bind:event="oninput" @bind="(EditPost.Link)" />
+
+            @if (!string.IsNullOrEmpty(EditPost.Link))
+            {
+                <label for="post-info">Сведения:</label>
+                <input type="text" id="post-info" maxlength="120" size="120" required placeholder="#186603 | Сегодня, 14:42" @bind-value="(EditPost.TopicInfo)" />
+            }
         </div>
 
-        <ul class="results-list">
-            <li class="@($"results-item {Entry.CheckResult.CssClass}")">
-                <div class="sending-area">
-                    <span>
-                        @Entry.CheckResult.Message
-                    </span>
-                </div>
-            </li>
-            <li class="results-item-list">
-                <ul class="results-list-inner">
-                    @foreach (var message in Entry.CheckResult.Inner)
-                    {
-                        <li class="@($"results-item {message.CssClass}")">
-                            @message.Message;
-                        </li>
-                    }
-                </ul>
-            </li>
-        </ul>
-        <button class="@($"send-post {Entry.CheckResult.CssClass}")" @onclick="@(() => Entry.SendPost())">
-            Добавить пост в базу
-        </button>
-        @if (Entry.AddingResult != null)
-        {
-            <p class="@Entry.AddingResult.CssClass">
-                @Entry.AddingResult.Message
-            </p>
-        }
-
-
-        @*<p>
-            Сообщение успешно (или не очень) добавлено!
-        </p>*@
-
-        <details>
-            <summary>Полная информация</summary>
-            <div class="options-list">
-                <div class="options-item">
-                    <header class="options-header">
-                        <span>Пост *</span>
-                    </header>
-                    <ul class="option-property-list">
-                        <li class="option-property option-post-info">
-                            <label>
-                                <span class="option-property-name">Дата:</span>
-                                <input class="input-post-date" type="date" @bind-value="(Entry.EditingPost.Date)" />
-                            </label>
-                            <label>
-                                <span class="option-property-name">Время:</span>
-                                <input class="input-post-date" type="time" @bind-value="(Entry.EditingPost.Date)" />
-                            </label>
-                        </li>
-                        <li class="option-property option-post-info">
-                            <label>
-                                <span class="option-property-name">ID:</span>
-                                <input class="input-post-id" type="number" width="20" @bind-value="(Entry.EditingPost.ID)" />
-                            </label>
-                            <label>
-                                <span class="option-property-name">Страница: @(Entry.EditingPost.Page)</span>
-                            </label>
-                        </li>
+        <details class="information">
+            <summary>Подробности:</summary>
+            <hr />
+            <ul>
+                <li class="@EditPost.CheckResult.CssClass">
+                    <span>@EditPost.CheckResult.Message</span>
+                </li>
+                <li>
+                    <ul>
+                        @foreach (var message in EditPost.CheckResult.Inner)
+                        {
+                            <li class="@message.CssClass">
+                                <span>@message.Message</span>
+                            </li>
+                        }
                     </ul>
-                </div>
-                <div class="options-item">
-                    <header class="options-header">
-                        <span>Тема</span>
-                    </header>
-                    <ul class="option-property-list">
-                        <li class="option-property option-post-info">
-                            <label class="non-required">
-                                <span class="option-property-name">ID:</span>
-                                <input type="number" @bind-value="(Entry.EditingPost.TopicID)" />
-                            </label>
-                            <label class="non-required">
-                                <span class="option-property-name">Позиция поста в теме:</span>
-                                <input type="number" @bind-value="(Entry.EditingPost.TopicIndex)" />
-                            </label>
-                        </li>
-                        <li class="option-property option-post-info">
-                            <label class="non-required">
-                                <span class="option-property-name">Это чат:</span>
-                                <input type="checkbox" />
-                            </label>
-                            <label class="non-required">
-                                <span class="option-property-name">Название:</span>
-                                <input type="text" />
-                            </label>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+                </li>
+            </ul>
         </details>
-    </section>
-</div>
+
+        <div class="sending">
+            @if (EditPost.IsOk)
+            {
+                <button @onclick="@(() => EditPost.SendPost())">
+                    Добавить пост в базу
+                </button>
+            }
+        </div>
+        
+        <div class="result">
+            @if (EditPost.AddingResult != null)
+            {
+                <p>
+                    @EditPost.AddingResult.Message
+                </p>
+            }
+        </div>
+    </div>
+
+</section>
 
 @code{
-    public NewPost Entry => StatApp.App.EditingPost;
+    public NewPost EditPost => App.EditingPost;
 }

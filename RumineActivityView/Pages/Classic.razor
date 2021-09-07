@@ -1,0 +1,12 @@
+﻿@page "/classic"
+
+<h2>Классика</h2>
+<p>
+    Та самая таблица с Гитхаба или еще откуда
+</p>
+
+<Diagram Report="Report" Mode="Таблица"/>
+
+@code {
+    private StatisticsReport Report { get; set; } = ReportsFactory.CreateClassicReport();
+}

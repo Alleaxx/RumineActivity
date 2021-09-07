@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace RumineActivityView
 {
-    public class Topic
+    public class Topic : ISelect
     {
         public int ID { get; set; }
         public string Name { get; set; }

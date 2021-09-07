@@ -1,0 +1,114 @@
+﻿@inherits StatComponent
+@page "/statistics/compare"
+
+<section class="comparison">
+    <header>
+        <h2>@Comparison.Name</h2>
+    </header>
+
+
+    <section class="options row">
+        <section>
+            <h3></h3>
+            <span>Сравнение с:</span><br />
+            @if (Comparison.CompareElement != null)
+            {
+
+                @Comparison.CompareElement.Name
+            }
+            else
+            {
+        <span>Сравнения нет</span>
+                
+            }
+            <br />
+            <button @onclick="() => Comparison.SetCompare(null)">удалить сравнение</button>
+            <br />
+            <span @onclick="() => ShowRelative = true">В процентах</span><br />
+            <span @onclick="() => ShowRelative = false">В абсолютных значениях</span>
+        </section>
+        <section>
+            <h3>Общие:</h3>
+            <ul>
+                @foreach (var possible in Comparison.PossibleItems.Where(i => i.Mode.Mode != TopicsModes.Topics))
+                {
+                    <li @onclick="() => Comparison.Toggle(possible)">
+                        @possible.Name
+                    </li>
+                }
+            </ul>
+
+        </section>
+        <section>
+            <h3>Темы:</h3>
+            <ul>
+                @foreach (var possible in Comparison.PossibleItems.Where(i => i.Mode.Mode == TopicsModes.Topics))
+                {
+                    <li @onclick="() => Comparison.Toggle(possible)">
+                        @possible.Name
+                    </li>
+                }
+            </ul>
+        </section>
+        <section>
+            <h3>Форумные чаты:</h3>
+        </section>
+    </section>
+    
+    <section>
+        @if (Comparison.Items.Count > 0)
+        {
+            <table>
+                @*<caption>Сравнение</caption>*@
+                <tr>
+                    <th rowspan="2">Показатель</th>
+                    <th colspan="@(Comparison.Items.Count * 2)">Источники</th>
+                </tr>
+                <tr class="source-name">
+                    @foreach (var info in Comparison.Items)
+                    {
+                        <th class="@GetSourceClass(info)">
+                            @info.Name
+                        </th>
+                        <th>
+                            <button @onclick="() => Comparison.SetCompare(info)">[ > ]</button>
+                            <button @onclick="() => Comparison.Toggle(info)">[ X ]</button>
+                        </th>
+                    }
+                </tr>
+
+                @foreach(var row in PropertyRows())
+                {
+                    <tr>
+                        <td class="property">@row.First().Name</td>
+                        @foreach(var cell in row.Where(c => c != null))
+                        {
+                            if (cell.CompareEqual())
+                            {
+                                    <td colspan="2">@cell.ToString()</td>
+                            }
+                            else
+                            {
+                                    <td>@cell.ToString()</td>
+                                    <td>
+                                        <span class="@GetCompareClass(cell)">(@GetValue(cell))</span>
+                                    </td>
+                            }
+                        }
+                    </tr>
+                }
+                @foreach (var row in ActivityRows())
+                {
+                    <tr>
+                        <td class="property">@row.First().Name</td>
+                        @foreach (var activity in row)
+                        {
+                            <td colspan="2">@activity.ToString()</td>
+                        }
+                    </tr>
+                }
+            </table>
+
+        }
+    </section>
+</section>

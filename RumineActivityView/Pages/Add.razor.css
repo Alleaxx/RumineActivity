@@ -1,136 +1,78 @@
 ﻿
-.stat-adding {
+.new-post {
 
 }
-.stat-adding h2{
+.new-post h2{
     margin: 5px 0;
 }
-
-.form-add {
-    margin: 0 1em;
-    padding: 0 1em;
-}
-
-.options-list {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-}
-
-.options-item {
-    flex: 3;
-    min-width: 150px;
-    margin-right: 1em;
-}
-
-.options-link-info {
-    max-width: 660px;
+.content {
+    padding: 1em;
 }
 
 
-.options-header {
-    font-weight: 600;
+.inputs{
+    margin: 5px 0;
 }
-
-.options-item label {
-    display: flex;
-    flex-direction: column;
+.inputs label {
+    margin: 5px 0;
 }
-
-.option-property-list {
-    list-style: none;
-    padding: 0;
-    margin: 4px;
-    margin-left: 0;
-}
-
-.option-property {
+.inputs input {
     margin: 3px 0;
-}
-
-    .option-property input {
-        margin-right: 5px;
-    }
-
-
-.option-post-info {
-    display: flex;
-}
-
-.option-topic-info {
-}
-
-.option-property-name {
-    margin: 3px 0;
-}
-
-.paste-results {
-    color: gray;
-}
-
-.required {
-    color: black;
-}
-
-.non-required {
-    color: gray;
-}
-
-.filled-correct {
-}
-
-.filled-non-correct {
-}
-
-.not-filled {
+    margin-left: 12px;
+    padding: 3px;
+    max-width: 100%;
 }
 
 
-.results-list, .results-list-inner {
+
+.information details{
+    margin: 8px 0;
+}
+
+.information ul {
     margin: 5px 0;
     padding: 0;
-    margin-left: 1.5em;
+    margin-left: 2em;
 }
-.results-list-inner {
+.information ul ul {
     margin-left: 1em;
 }
-.results-item{
 
-}
-.results-item-list{
-    list-style: none;
+.information > ul li:last-child{
+    list-style-type: none;
 }
 
-.results-item.normal{
+li.normal{
     color: green;
 }
-.results-item.error{
+li.error{
+    color: darkred;
+}
+li.warning{
     color: red;
 }
-.results-item.warning{
-    color: red;
-}
 
-.sending-area{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between
-}
-.send-post{
-    margin: 5px 0;
-}
-.send-post.safe{
-    border-color: green;
-}
 
-    .send-post.error {
-        display: none;
-        border-color: green;
+.sending{
+    margin-left: 1em;
+}
+    .sending button {
+        margin: 5px 0;
+        padding: 6px 20px;
+        background-color: transparent;
+        border: 1px solid silver;
+        cursor: pointer;
     }
-    .send-post.warning {
-        border-color: green;
+    .sending button:hover{
+        background-color: whitesmoke;
+        color: green;
+        border: 1px solid limegreen;
     }
 
-.stat-adding details{
-    margin: 5px 0;
+.result{
+    margin-left: 1em;
 }
+    .result p{
+        font-size: 0.8em;
+        color: rgb(64,64,64);
+    }

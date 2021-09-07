@@ -1,0 +1,9 @@
+﻿@inherits StatComponent
+
+<datalist id="topicsList">
+    @foreach (var topic in Topics)
+    {
+        <option value="@topic.ID" label="@topic.Name" />
+    }
+</datalist>
+
