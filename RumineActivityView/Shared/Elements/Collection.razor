@@ -1,13 +1,22 @@
-﻿<style>
-    .options-list {
+﻿@typeparam T
+
+<style>
+    .option{
+
+    }
+    .option h4{
+        margin: 4px 0;
+        font-size: 1em;
+    }
+    .option ul {
         display: flex;
         flex-wrap: wrap;
         list-style: none;
-        margin: 6px 0;
-        padding-left: 1.25em;
+        margin: 0 0;
+        padding-left: 1.5em;
     }
 
-    .option-item {
+    .option li {
         display: block;
         padding: 6px 12px;
         border: 1px solid transparent;
@@ -16,25 +25,37 @@
         color: rgb(64,64,64);
     }
 
-        .option-item:hover {
+        .option li:hover {
             background-color: whitesmoke;
         }
 
-    .rules .option-item:hover {
-        background-color: gainsboro;
-    }
 
-    .option-item.selected {
+    .option li.selected {
         background-color: whitesmoke;
         border: 1px solid var(--border-brush);
     }
+    .null{
+        font-size: 0.8em;
+        color: gray;
+    }
 </style>
-<section class="options-section">
-    <ul class="options-list">
-        @foreach (var item in List.Items)
+
+<section class="option">
+    <header>
+        @if (!string.IsNullOrEmpty(HeaderText)) { <h4>@HeaderText</h4> }    
+    </header>
+
+    <ul>
+        @foreach (var item in List)
         {
-            <li class="@($"option-item {GetCssClass(item)}")" @onclick="(() =>Set(item))">
+            <li class="@(GetCssClass(item))" @onclick="() =>Set(item)">
                 <span>@item.ToString()</span>
+            </li>
+        }
+        @if (Nullable)
+        {
+            <li class="@(GetCssClass(default))" @onclick="() =>Set(default)">
+                <span class="null">X</span>
             </li>
         }
     </ul>
@@ -42,14 +63,28 @@
 
 @code {
     [Parameter]
-    public ListOptions List { get; set; }
+    public bool Nullable { get; set; }
     [Parameter]
-    public EventCallback<ISelect> OnSelectCallback { get; set; }
+    public string HeaderText { get; set; }
+    [Parameter]
+    public IEnumerable<T> List { get; set; }
+    [Parameter]
+    public T Selected { get; set; }
+    [Parameter]
+    public EventCallback<T> OnSelectCallback { get; set; }
 
-    private string GetCssClass(ISelect select) => List.Selected == select ? "selected" : "";
-    private void Set(ISelect select)
+
+    private string GetCssClass(T select)
     {
-        List.Selected = select;
+        if(select != null)
+        {
+            return select.Equals(Selected) ? "selected" : "";
+        }
+        return "";
+    }
+    private void Set(T select)
+    {
+        Selected = select;
         OnSelectCallback.InvokeAsync(select);
     }
 }

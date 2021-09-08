@@ -1,56 +1,42 @@
 ﻿@inherits ReportComponent
 
 <table class="table-activity">
-    <caption>Классическая таблица</caption>
-    <tr>
-        <th class="title">Год</th>
-        <th class="year-sum-title">всего</th>
-        @foreach (var month in Months)
+    <caption>Классическая таблица 2.0</caption>
+    <thead>
+        <tr>
+            <th class="title">@Report.Interval.Name</th>
+            <th class="year-sum-title">всего</th>
+            @foreach (var key in Table.ColGroups)
+            {
+                <th class="month">@key</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var group in Table.Table)
         {
-            <th class="month">@month</th>
-        }
-    </tr>
-    @foreach (var year in GroupedYear)
-    {
-<tr>
-    <th class="year">@year.Key</th>
-    <td class="year-sum">@year.Sum(e => e.Value).ToString("#,0")</td>
-    @foreach (var entry in CreateEntries(year))
-    {
-        if (entry == null)
-        {
-            <td class="month-unknown">?</td>
+            <tr>
+                <th class="year">@group.Key</th>
+                <td class="year-sum">@Table.TableSum[group.Key].ToString("#,0")</td>
 
+                @foreach (var col in group.Value)
+                {
+                    if (col.Value == null)
+                    {
+                        <td class="month-unknown">?</td>
+                    }
+                    else
+                    {
+                        <td class="month-posts" title="@($"{col.Value.Range.From:dd MMMM yyyy}")" style="@($"background-color: {View.CheckEntry(col.Value).Color}")">
+                            @col.Value.Value.ToString("#,0")
+                        </td>
+                    }
+                }
+            </tr>
         }
-        else
-        {
-            <td class="month-posts" title="@($"{entry.Range.From:MMMM yyyy}")" style="@($"background-color: {View.CheckEntry(entry).Color}")">
-                @entry.Value.ToString("#,0")
-            </td>
-        }
-    }
-</tr>
-    }
+
+    </tbody>
 </table>
-
 @code {
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-        if (Report == null)
-        {
-
-        }
-    }
-
-    private IEnumerable<IGrouping<int, Entry>> GroupedYear => Report.Entries.GroupBy(e => e.Range.From.Year);
-
-    private string[] Months => Enumerable.Range(1, 12).Select(m => GetMonth(m)).ToArray();
-    private string GetMonth(int month) => new DateTime(2011, month, 1).ToString("MMMM");
-
-    public Entry FirstMonthEntry(int month, IGrouping<int, Entry> yearGroup)
-        => yearGroup.Where(e => e.Range.From.Month == month).FirstOrDefault();
-
-    public Entry[] CreateEntries(IGrouping<int, Entry> yearGroup)
-        => Enumerable.Range(1, 12).Select(m => FirstMonthEntry(m, yearGroup)).ToArray();
+    public TableGrouping Table => new TableGrouping(Report.Interval.Type, Report.Entries);
 }

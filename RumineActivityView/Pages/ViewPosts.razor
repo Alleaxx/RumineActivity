@@ -22,45 +22,41 @@
         </div>
     </section>
 
-    <p class="count">Всего @Posts.Count() постов</p>
-    <table class="view-table">
-        <tr>
+    <ViewTable Items="Posts" Context="Post">
+        <TableHeader>
             <th class="id">ID</th>
             <th colspan="2">Дата</th>
             <th>@(ShowTopicNames ? "Имя темы" : "ID темы")</th>
             <th class="id">№ в теме</th>
             <th>Действия</th>
-        </tr>
-        @foreach (var post in Posts)
-        {
-            <tr>
-                <td class="id"><input type="number" min="1" max="5000000" @bind-value="(post.ID)" /></td>
-                <td><input type="date" @bind-value="(post.Date)" /></td>
-                <td><input type="time" @bind-value="(post.Date)" /></td>
-                <td class="id">
-                    @if (ShowTopicNames)
-                    {
-                        <span class="topic">@GetTopicName(post.TopicID)</span>
-                    }
-                    else
-                    {
-                        <input type="number" list="topicsList" min="1" max="100000" @bind-value="(post.TopicID)" />
-                    }
-                </td>
-                <td class="id"><input type="number" min="1" max="5000000" @bind-value="(post.TopicIndex)" /></td>
-                <td class="actions">
-                    <input class="save" type="button" value="[ S ]" />
-                    <input class="delete" type="button" value="[ X ]" @onclick="(() => StatApp.App.Remove(post))" />
-                </td>
-            </tr>
-        }
-    </table>
+        </TableHeader>
+        <RowTemplate>
+            <td class="id"><input type="number" min="1" max="5000000" @bind-value="(Post.ID)" /></td>
+            <td><input type="date" @bind-value="(Post.Date)" /></td>
+            <td><input type="time" @bind-value="(Post.Date)" /></td>
+            <td class="id">
+
+                @if (ShowTopicNames)
+                { <span class="topic">@GetTopicName(Post.TopicID)</span> }
+
+                else
+                { <input type="number" list="topicsList" min="1" max="100000" @bind-value="(Post.TopicID)" /> }
+
+            </td>
+            <td class="id"><input type="number" min="1" max="5000000" @bind-value="(Post.TopicIndex)" /></td>
+            <td class="actions">
+                <input class="save" type="button" value="[ S ]" />
+                <input class="delete" type="button" value="[ X ]" @onclick="(() => StatApp.App.Remove(Post))" />
+            </td>
+        </RowTemplate>
+    </ViewTable>
+
     <DataTopics ></DataTopics>
 </div>
 
 @code{
     private bool ShowTopicNames { get; set; } = false;
-    public string GetTopicName(int topicId)
+    private string GetTopicName(int topicId)
     {
         var foundTopic = Topics.FirstOrDefault(t => t.ID == topicId);
         if(foundTopic != null)

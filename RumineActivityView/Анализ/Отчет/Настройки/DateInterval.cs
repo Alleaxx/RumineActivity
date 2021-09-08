@@ -10,10 +10,8 @@ namespace RumineActivityView
     {
         Day, Week, Month, Year, Own
     }
-    public class DateInterval
+    public class DateInterval : EnumType<Dates>
     {
-        public string Name { get; private set; }
-        public Dates Type { get; private set; }
         public TimeSpan TimeInterval { get; private set; }
         public string DateFormat { get; private set; }
 
@@ -28,9 +26,8 @@ namespace RumineActivityView
         }
         private double days;
 
-        public DateInterval(Dates period)
+        public DateInterval(Dates period) : base(period)
         {
-            Type = period;
             switch (period)
             {
                 case Dates.Day:
@@ -103,7 +100,7 @@ namespace RumineActivityView
                 {
                     if (Month == 0)
                     {
-                        return new DateRange(new DateTime(Year, 1, 1), new DateTime(Year + 1, 1, 1));
+                        return new DateRange(new DateTime(Year, 1, 1), new DateTime(Year, 12, 31));
                     }
                     else
                     {

@@ -19,6 +19,10 @@ html, body {
     display: flex;
 }
 
+.content{
+    padding: 1em;
+}
+
 .select-options {
     height: 40px;
     border: 1px solid silver;

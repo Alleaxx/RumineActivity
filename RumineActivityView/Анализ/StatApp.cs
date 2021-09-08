@@ -151,6 +151,7 @@ namespace RumineActivityView
         {
             Topics.Clear();
             Posts.Clear();
+
             Add(new Topic() { ID = 1, IsChat = true, Name = "Форумный чат" });
             Add(new Topic() { ID = 2, IsChat = false, Name = "Не чат" });
 

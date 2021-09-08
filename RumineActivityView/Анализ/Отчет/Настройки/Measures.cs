@@ -10,20 +10,13 @@ namespace RumineActivityView
     {
         Messages, Pages, OldPages
     }
-    public enum MeasureMethods
+    public class MeasureUnit : EnumType<MeasureUnits>
     {
-        Total, ByHour, ByDay, ByMonth,
-    }
-    public class MeasureUnit
-    {
-        public MeasureUnits Unit { get; private set; }
-        public string Name { get; private set; }
         public int Value { get; private set; }
 
-        public MeasureUnit(MeasureUnits unit)
+        public MeasureUnit(MeasureUnits unit) : base(unit)
         {
-            Unit = unit;
-            switch (Unit)
+            switch (Type)
             {
                 case MeasureUnits.Messages:
                     Name = "Сообщения";
@@ -40,14 +33,15 @@ namespace RumineActivityView
             }
         }
     }
-    public class MeasureMethod
+    public enum MeasureMethods
     {
-        public MeasureMethods Method { get; private set; }
-        public string Name { get; private set; }
-        public MeasureMethod(MeasureMethods method)
+        Total, ByHour, ByDay, ByMonth,
+    }
+    public class MeasureMethod : EnumType<MeasureMethods>
+    {
+        public MeasureMethod(MeasureMethods method) : base(method)
         {
-            Method = method;
-            switch (Method)
+            switch (Type)
             {
                 case MeasureMethods.ByDay:
                     Name = "В среднем в день";
@@ -67,7 +61,7 @@ namespace RumineActivityView
         public double GetValue(Entry entry)
         {
             double value = entry.Value;
-            switch (Method)
+            switch (Type)
             {
                 case MeasureMethods.ByDay:
                     return entry.ValuePerDay;
@@ -80,5 +74,4 @@ namespace RumineActivityView
             }
         }
     }
-
 }

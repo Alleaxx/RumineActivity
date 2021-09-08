@@ -9,6 +9,10 @@ namespace RumineActivityView.Pages
     {
         public Comparison Comparison => App.Comparison;
 
+        public IEnumerable<ActivitySource> PossibleAll => Comparison.PossibleItems.Where(i => i.Mode.Mode != TopicsModes.Topics);
+        public IEnumerable<ActivitySource> PossibleTopics => Comparison.PossibleItems.Where(i => i.Mode.Mode == TopicsModes.Topics);
+
+
         private string GetSourceClass(ActivitySource source) => Comparison.CompareElement == source ? "compare" : "";
 
         public IEnumerable<ICompareProp[]> PropertyRows()
@@ -40,10 +44,7 @@ namespace RumineActivityView.Pages
         {
             double value = prop.GetTotalDiff();
             double mod = prop.GetModDiff();
-            if (mod == 1)
-            {
-                return "self";
-            }
+
 
 
             if (value > 0)
@@ -54,14 +55,69 @@ namespace RumineActivityView.Pages
             {
                 return "less";
             }
+
+            if (mod == 1)
+            {
+                return "self";
+            }
             else
             {
                 return "self";
             }
         }
 
-        public bool ShowRelative { get; set; } = false;
-        public string GetValue(ICompareProp prop) => ShowRelative ? (prop.GetModDiff()).ToString("0%") : prop.GetTotalDiff().ToString("#,0");
+        public string NewItem
+        {
+            get => "";
+            set
+            {
+                ActivitySource source = Comparison.PossibleItems.Where(p => p.Name == value).FirstOrDefault();
+                if(source != null)
+                {
+                    Comparison.Toggle(source);
+                }
+            }
+        }
 
+        public CompareValue CompareValue { get; set; } = new CompareValue(CompareValues.Absolute);
+        public CompareValue[] Values { get; set; } = CompareValue.Values;
+        private void Set(CompareValue value)
+        {
+            CompareValue = value;
+        }
+        public string GetValue(ICompareProp prop)
+        {
+            switch (CompareValue.Type)
+            {
+                case CompareValues.Absolute:
+                    return prop.GetTotalDiff().ToString("+#,0;-#,0; 0");
+                case CompareValues.Relative:
+                    return prop.GetModDiff().ToString("0%");
+                default:
+                    throw new Exception("Такого преобразования значений не существует");
+            }
+        }
+    }
+
+    public enum CompareValues
+    {
+        Relative, Absolute
+    }
+    public class CompareValue : EnumType<CompareValues>
+    {
+        public CompareValue(CompareValues values) : base(values)
+        {
+            switch (values)
+            {
+                case CompareValues.Absolute:
+                    Name = "Значения";
+                    break;
+                case CompareValues.Relative:
+                    Name = "Проценты";
+                    break;
+            }
+        }
+
+        public static CompareValue[] Values => Enum.GetValues<CompareValues>().Select(v => new CompareValue(v)).ToArray();
     }
 }

@@ -1,23 +1,23 @@
 ﻿<style>
-    .menu-list-link {
+    .menu-list a{
         display: block;
         padding: 4px 0;
         border-radius: 2px;
         text-decoration: none;
         color: black;
-        border-left: 5px solid transparent;
-        border-right: 5px solid transparent;
+
+        border: 5px solid transparent;
         border-top: 1px solid transparent;
         border-bottom: 1px solid transparent;
     }
 
-        .menu-list-link.active {
+        .menu-list a.active {
             border-left: 5px solid var(--selected-color);
             border-right: 5px solid var(--selected-color);
             border-top: 1px solid silver;
             border-bottom: 1px solid silver;
         }
-        .menu-list-link:hover {
+        .menu-list a:hover {
             background-color: gainsboro;
         }
 </style>
@@ -50,13 +50,13 @@
     <h2 class="menu-header">Статистика</h2>
     <ul class="menu-list">
         <li class="menu-list-item">
-            <NavLink href="statistics" Match="NavLinkMatch.All" class="menu-list-link">
-                Статистика (анализ)
+            <NavLink href="classic" class="menu-list-link">
+                Классика
             </NavLink>
         </li>
         <li class="menu-list-item">
-            <NavLink href="classic" class="menu-list-link">
-                Классическая таблица
+            <NavLink href="statistics" Match="NavLinkMatch.All" class="menu-list-link">
+                Статистика
             </NavLink>
         </li>
         <li class="menu-list-item">
@@ -75,10 +75,10 @@
         </li>*@
     </ul>
     <footer class="menu-footer">
-        <label>
+        @*<label>
             <span>Оффлайн-режим</span>
             <input type="checkbox" @bind-value="StatApp.App.OfflineMode" />
         </label>
-        <p>Дополнительно</p>
+        <p>Дополнительно</p>*@
     </footer>
 </nav>

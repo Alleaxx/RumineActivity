@@ -32,13 +32,11 @@ td.year-sum {
     border-left: 1px solid whitesmoke;
     border-right: 1px solid whitesmoke;
 }
+
 th.month {
     padding: 8px;
     font-size: 0.95em;
 }
-td.month-posts {
-    font-size: 0.9em;
-}
-td.month-unknown {
+td.month-posts, td.month-unknown {
     font-size: 0.9em;
 }

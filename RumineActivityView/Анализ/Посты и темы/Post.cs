@@ -7,6 +7,12 @@ namespace RumineActivityView
 {
     public class Post
     {
+        public override string ToString()
+        {
+            return $"Пост {ID}";
+        }
+
+
         //*
         public int ID { get; set; } = -1;
         public DateTime Date { get; set; }

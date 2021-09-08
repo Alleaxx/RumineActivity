@@ -4,38 +4,60 @@
 .comparison h2{
 
 }
+    .comparison h3 {
+        font-size: 1.2em;
+        margin: 5px;
+        border-bottom: 1px solid gainsboro;
+    }
+    .content{
+        padding: 1em;
+    }
 
-.comparison .options{
-    height: 150px;
+    .comparison .options {
+        min-height: 250px;
+    }
+
+
+/* ТАБЛИЦА ИСТОЧНИКОВ АКТИВНОСТИ */
+table.sources{
+    height: 100px;
 }
-.options h3{
-    font-size: 1em;
-    margin: 5px;
-}
-.options ul{
-}
-.options li:hover{
+    .comparison .sources td, .comparison .sources th {
+        border: 0;
+        text-align: left;
+    }
+    .sources tr:last-child td{
+        color: gray;
+    }
+    .sources .main{
+        font-weight: 600;
+    }
+
+.sources button{
+    padding: 8px 14px;
+    border: 0;
+    background-color: transparent;
     cursor: pointer;
-    color: green;
 }
-/*.options li:hover:after{
-    content: " (добавить) ";
-}*/
+.sources button:hover{
+    color: royalblue;
+    border: 0;
+    background-color: whitesmoke;
+}
+    .sources td.delete button:hover {
+        color: red;
+    }
 
 
 
+/* ТАБЛИЦА СРАВНЕНИЯ */
 .comparison table{
     border-collapse: collapse;
-    border: 1px solid silver;
     margin: 0 10px;
-}
-.comparison table caption{
-    padding: 0.5em;
-    font-size: 1.5em;
 }
     .comparison table td {
         text-align: center;
-        padding: 5px 12px;
+        padding: 8px 12px;
         font-size: 0.9em;
         color: rgb(64,64,64);
         border-bottom: 1px solid gainsboro;
@@ -44,12 +66,23 @@
         padding: 8px;
         border: 1px solid silver;
     }
+
+/* ИМЯ ИСТОЧНИКОВ АКТИВНОСТИ */
+.source-name th {
+    font-size: 0.9em;
+    padding: 8px 2px;
+}
+
+.source-name .compare {
+    background-color: whitesmoke;
+}
+
+/* ЗНАЧЕНИЯ В ТАБЛИЦЕ СРАВНЕНИЯ */
 .comparison td.property {
     padding-left: 4px;
     text-align: left;
     font-size: 1em;
     color: black;
-    border-right: 1px solid gainsboro;
 }
 td .more{
     color: green;
@@ -59,30 +92,7 @@ td .less{
 }
 td .self{
     display: none;
-    color: gray;
-}
-.source-name th:first-child{
-    border-right: 0;
-    font-size: 0.8em;
-}
-.source-name th:last-child {
-    padding: 8px 2px;
-    border: 0;
-    border-bottom: 1px solid gainsboro;
-    border-right: 1px solid gainsboro;
 }
 
-.source-name .compare{
-    font-style: italic;
-}
-.source-name button{
-    border: 0;
-    font-weight: 500;
-    padding: 1px;
-    background-color: transparent;
-}
-.source-name button:hover{
-    cursor: pointer;
-    background-color: transparent;
-    color: red;
-}
+
+

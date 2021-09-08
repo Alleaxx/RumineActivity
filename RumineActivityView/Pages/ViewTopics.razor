@@ -5,38 +5,40 @@
     <header>
         <h2>Редактирование тем</h2>
     </header>
-    <p class="count">Всего @Topics.Count()</p>
-    <table class="view-table">
-        <tr>
+
+    <ViewTable Items="Topics" Context="Topic">
+        <TableHeader>
             <th class="id">ID</th>
             <th>Название</th>
             <th>Чат?</th>
             <th>Действия</th>
-        </tr>
-        @foreach (var topic in Topics)
-        {
-            <tr class="topic">
-                <td class="id"><input type="number" min="1" max="100000" @bind-value="(topic.ID)" /></td>
-                <td class="name"><input type="text" maxlength="80" size="80" @bind-value="(topic.Name)" /></td>
-                <td align="center"><input type="checkbox" @bind-value="(topic.IsChat)" /></td>
-                <td class="actions">
-                    <input class="save" type="button" value="[ S ]" />
-                    <input class="delete" type="button" value="[ X ]" @onclick="(() => StatApp.App.Remove(topic))" />
-                </td>
-            </tr>
-        }
-    </table>
+        </TableHeader>
+        <RowTemplate>
+            <td class="id"><input type="number" min="1" max="100000" @bind-value="(Topic.ID)" /></td>
+            <td class="name"><input type="text" maxlength="80" size="80" @bind-value="(Topic.Name)" /></td>
+            <td align="center"><input type="checkbox" @bind-value="(Topic.IsChat)" /></td>
+            <td class="actions">
+                <input class="save" type="button" value="[ S ]" />
+                <input class="delete" type="button" value="[ X ]" @onclick="(() => StatApp.App.Remove(Topic))" />
+            </td>
+        </RowTemplate>
+    </ViewTable>
+
+
 </section>
-<Collection List="List" OnSelectCallback="Selected"/>
-@List.Selected.ToString()
+<Collection List="Topics" Selected="Topic" OnSelectCallback="Selected" T="Topic"/>
+<Collection HeaderText="Выбор темы" List="@Topics" Selected="Topic" OnSelectCallback="Selected" T="Topic" Nullable="true"/>
+
+
+@if(Topic != null)
+{
+    @Topic.Name
+}
 
 @code{
-    public ListOptions List { get; set; } = new ListOptions(StatApp.App.Topics);
-    private void Selected(ISelect select)
+    private void Selected(Topic select)
     {
-        if(select is Topic topic)
-        {
-            Console.WriteLine(topic.Name);
-        }
+        Topic = select;
     }
+    public Topic Topic { get; set; }
 }

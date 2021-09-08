@@ -7,10 +7,15 @@ namespace RumineActivityView
 {
     public class Comparison
     {
-        public string Name => $"Сравнение {Items.Count} источников";
+        public string Name => IsEmpty ? "Подготовка к сравнению" : $"{Type} {Items.Count} источников акт*вности";
+        private string Type => IsSimple ? "Обзор" : "Сравнение";
+
         public List<ActivitySource> Items { get; private set; }
         public ActivitySource CompareElement { get; set; }
         public List<ActivitySource> PossibleItems { get; private set; }
+
+        public bool IsEmpty => !Items.Any();
+        public bool IsSimple => CompareElement == null;
         public Comparison(IEnumerable<Topic> topics)
         {
             Items = new List<ActivitySource>();
@@ -73,7 +78,7 @@ namespace RumineActivityView
             {
                 new ActivitySource(TopicsModes.All),
                 new ActivitySource(TopicsModes.OnlyChat),
-                new ActivitySource(TopicsModes.NotChat),
+                //new ActivitySource(TopicsModes.NotChat),
             };
             foreach (var topic in topics)
             {
@@ -118,7 +123,7 @@ namespace RumineActivityView
             }
             else
             {
-                Name = $"{topic.Name}-{topicId}";
+                Name = $"{topic.Name} [{topicId}]";
             }
         }
         public ActivitySource(TopicsMode mode)
@@ -150,8 +155,8 @@ namespace RumineActivityView
             History = new List<DoubleProperty>();
             if (!Report.IsEmpty)
             {
-                FirstPost = new DateProperty("Первый пост", Report.Entries.Min(e => e.Range.From));
-                LastPost = new DateProperty("Последний пост", Report.Entries.Max(e => e.Range.To));
+                FirstPost = new DateProperty("Первый пост", Report.FirstLastPost.From);
+                LastPost = new DateProperty("Последний пост", Report.FirstLastPost.To);
                 DaysActive = new DoubleProperty("Охватывает дней", "#,0.0", (LastPost.Property - FirstPost.Property).TotalDays);
                 TotalPosts = new DoubleProperty("Всего постов", "#,0", Report.SumValue);
                 AveragePosts = new DoubleProperty("~ постов в день", "#,0.0", TotalPosts.Property / DaysActive.Property);
@@ -263,7 +268,7 @@ namespace RumineActivityView
         }
         public override double GetModDiff()
         {
-            return 1;
+            return 0;
         }
 
         public DateProperty(string name, DateTime date) : base(date)
@@ -271,15 +276,5 @@ namespace RumineActivityView
             Name = name;
             Format = "dd-MM-yyyy";
         }
-    }
-
-
-
-
-
-    public class TimeActivity
-    {
-        public DateRange Range { get; set; }
-        public int Value { get; set; }
     }
 }

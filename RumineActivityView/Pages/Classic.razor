@@ -1,11 +1,26 @@
 ﻿@page "/classic"
 
-<h2>Классика</h2>
-<p>
-    Та самая таблица с Гитхаба или еще откуда
-</p>
 
-<Diagram Report="Report" Mode="Таблица"/>
+<style>
+    .classic h2{
+        margin: 10px 0 4px 0;
+    }
+    .classic p{
+        margin: 5px 0;
+    }
+</style>
+<section class="classic">
+    <header>
+        <h2>Классика</h2>
+    </header>
+    <div class="content">
+        <p>
+            Та самая таблица с Гитхаба или еще откуда
+        </p>
+    </div>
+
+    <Diagram Report="Report" Mode="@(new DataViewType(DataViewTypes.Table))" />
+</section>
 
 @code {
     private StatisticsReport Report { get; set; } = ReportsFactory.CreateClassicReport();

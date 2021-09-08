@@ -52,7 +52,7 @@ namespace RumineActivityView
             }
             while (dateRange.IsDateInside(toDate));
 
-            return new StatisticsReport($"Отчет по периодам", newEntries, Options.DateRange);
+            return new StatisticsReport($"Отчет по периодам", newEntries, Options);
         }
     }
 

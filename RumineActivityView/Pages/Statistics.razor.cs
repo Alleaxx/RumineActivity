@@ -47,8 +47,8 @@ namespace RumineActivityView.Pages
 
         const string SelectedClass = "selected";
         const string SelectableClass = "selectable";
-        private string GetCssClass(MeasureUnit unit) => unit.Unit == View.MeasureUnit.Unit ? SelectedClass : SelectableClass;
-        private string GetCssClass(MeasureMethod method) => method.Method == View.MeasureMethod.Method ? SelectedClass : SelectableClass;
+        private string GetCssClass(MeasureUnit unit) => unit.Type == View.MeasureUnit.Type ? SelectedClass : SelectableClass;
+        private string GetCssClass(MeasureMethod method) => method.Type == View.MeasureMethod.Type ? SelectedClass : SelectableClass;
         private string GetCssClass(DateInterval method) => method.Type == Options.DateInterval.Type ? SelectedClass : SelectableClass;
         private string GetCssClass(TopicsMode topic) => topic.Mode == Options.TopicMode.Mode ? SelectedClass : SelectableClass;
         private string GetCssClassYear(int year) => year == DateInterval.Year ? SelectedClass : SelectableClass;
@@ -79,14 +79,41 @@ namespace RumineActivityView.Pages
                 Options.TopicMode = TopicModes.Where(t => t.Mode.ToString() == str).First();
             }
         }
-        private void AddTopic(ChangeEventArgs e)
+
+        //Добавление тем
+        private int? AdderTopic { get; set; }
+        private string AdderTopicText
+        {
+            get => addderTopicText;
+            set
+            {
+                addderTopicText = value;
+                if (int.TryParse(addderTopicText, out int num))
+                {
+                    AdderTopic = num;
+                }
+            }
+        }
+        private string addderTopicText;
+        private void ChangeTopic(ChangeEventArgs e)
         {
             if (int.TryParse(e.Value.ToString(), out int id))
             {
-                Options.TopicMode.Topics.Add(id);
-                CreateReport();
+                AdderTopic = id;
             }
         }
+        private bool CanAddTopic()
+        {
+            return AdderTopic != null && !Options.TopicMode.Topics.Contains(AdderTopic.Value);
+        }
+        private void AddTopic()
+        {
+            Options.TopicMode.Topics.Add(AdderTopic.Value);
+            CreateReport();
+            AdderTopic = null;
+        }
+
+
         private void SetYear(int year)
         {
             DateInterval.Year = year;

@@ -21,7 +21,7 @@ namespace RumineActivityView
             else
             {
                 var entries = SplitPosts(Options.DateInterval.TimeInterval);
-                return new StatisticsReport($"Отчет по записям", entries, Options.DateRange);
+                return new StatisticsReport($"Отчет по записям", entries, Options);
             }
         }
 

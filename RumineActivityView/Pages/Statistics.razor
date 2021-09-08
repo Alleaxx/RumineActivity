@@ -80,7 +80,7 @@
                                 }
                             </ul>
                         }
-                        @if (DateInterval.Month != 0 && DateInterval.Year != 0)
+                        @if (DateInterval.Month != 0 && DateInterval.Year != 0 && false)
                         {
 
                             <ul class="options-list">
@@ -124,7 +124,9 @@
             </section>
 
             <details class="source" open>
-                <summary>Источник</summary>
+                <summary>
+                    <h4 class="options-list-header">Источник</h4>
+                </summary>
                 <section class="options-section">
                     <ul class="options-list">
                         @foreach (var interval in TopicModes)
@@ -135,19 +137,29 @@
                         }
                     </ul>
                 </section>
-                <section class="options-section" style="margin-left: 20px">
+                <section class="options-section" style="margin-left: 1.5em">
                     @if (Options.TopicMode.Mode == TopicsModes.Topics)
                     {
-                        <h4 class="options-list-header">Список тем:</h4>
+                        <h5 class="options-list-header">Список тем:</h5>
                         <input type="text" placeholder="100; 200; 300" @bind-value="@(Options.TopicMode.TopicsText)" />
+
                         <label>
-                            <span>Добавить тему:</span>
-                            <select @onchange="AddTopic">
+                            <span>Возможные темы:</span>
+                            <input type="number" list="topicsList" @bind-value="AdderTopic"/>
+                            <DataTopics></DataTopics>
+                            @*<select @bind="AdderTopicText">
+                                <option value="-">-</option>
                                 @foreach (var topic in StatApp.App.Topics.Except<Topic>(TopicOptions))
                                 {
                                     <option value="@topic.ID">[@topic.ID] @topic.Name</option>
                                 }
-                            </select>
+                            </select>*@
+                            @if (CanAddTopic())
+                            {
+                                <button @onclick="AddTopic">
+                                    Добавить
+                                </button> 
+                            }
                         </label>
                     }
                 </section>
@@ -169,13 +181,13 @@
                         font-family: Consolas;
                     }
                 </style>
-                <p class="report-text">
+                @*<p class="report-text">
                     <span class="param">@ReportType</span> отчет
                     с <span class="date">@Options.DateRange.From.ToString("dd.MM.yyyy").ToUpper()</span>
                     по <span class="date">@Options.DateRange.To.ToString("dd.MM.yyyy").ToUpper()</span>
                     периодичностью в <span class="param">@Options.DateInterval.Name.ToUpper()</span>
                     учитывающий <span class="param">@Options.TopicMode.Name.ToUpper()</span>
-                </p>
+                </p>*@
             </div>
 
         </div>
@@ -232,7 +244,7 @@
             <div class="sheme">
                 @if (!Report.IsEmpty)
                 {
-                    <Diagram Mode="Список значений" Report="@Report" />
+                    <Diagram Mode="@(new DataViewType(DataViewTypes.Values))" Report="@Report" />
                 }
             </div>
 

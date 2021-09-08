@@ -153,25 +153,4 @@ namespace RumineActivityView
 
         public OpResult AddingResult { get; set; }
     }
-
-
-    public class OpResult
-    {
-        public string Message { get; set; }
-        public bool Error { get; set; }
-        public bool Warning { get; set; }
-        public string CssClass => Error ? "error" : Warning ? "warning" : "normal";
-        public List<OpResult> Inner { get; private set; } = new List<OpResult>();
-
-        public OpResult(bool error, bool warning,string msg)
-        {
-            Error = error;
-            Warning = warning;
-            Message = msg;
-        }
-        public void Add(bool error, bool warning, string msg)
-        {
-            Inner.Add(new OpResult(error, warning, msg));
-        }
-    }
 }
