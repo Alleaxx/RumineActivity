@@ -37,6 +37,6 @@ namespace RumineActivityView
             Min = from;
             Max = to;
         }
-        private bool RangeCheck(Entry entry) => entry.ValuePerDay / 20 >= Min && entry.ValuePerDay / 20 < Max;
+        private bool RangeCheck(Entry entry) => entry.PostsRelative / 20 >= Min && entry.PostsRelative / 20 < Max;
     }
 }

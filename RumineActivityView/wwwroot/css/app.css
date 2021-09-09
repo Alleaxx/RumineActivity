@@ -18,6 +18,12 @@ html, body {
 .row{
     display: flex;
 }
+.row-center{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 
 .content{
     padding: 1em;

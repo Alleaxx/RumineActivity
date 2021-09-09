@@ -10,16 +10,15 @@ namespace RumineActivityView.Pages
     {
         private ReportOptions Options { get; set; } = new ReportOptions();
         private StatisticsReport Report { get; set; } = ReportsFactory.CreateClassicReport();
-        private IEnumerable<Topic> TopicOptions =>
-            Options.TopicMode.Topics.Select(id => StatApp.App.Topics.FirstOrDefault(t => t.ID == id)).Where(t => t != null);
+        private IEnumerable<Topic> TopicOptions => StatApp.App.Topics;
 
 
-
-        private Reports ReportType { get; set; } = Reports.Periodical;
+        private ReportType[] ReportTypes { get; set; } = ReportType.AllValues;
+        private ReportType ReportType { get; set; } = new ReportType(Reports.Periodical);
 
         private void CreateReport()
         {
-            Report = ReportsFactory.CreateReport(ReportType, Options);
+            Report = ReportsFactory.CreateReport(ReportType.Type, Options);
         }
 
         public YearMonthDateSelector DateInterval { get; set; } = new YearMonthDateSelector(0, 0);
@@ -30,8 +29,6 @@ namespace RumineActivityView.Pages
 
 
         private TopicsMode[] TopicModes { get; set; } = Enum.GetValues<TopicsModes>().Select(u => new TopicsMode(u)).ToArray();
-        private MeasureUnit[] Units { get; set; } = Enum.GetValues<MeasureUnits>().Select(u => new MeasureUnit(u)).ToArray();
-        private MeasureMethod[] Methods { get; set; } = Enum.GetValues<MeasureMethods>().Select(u => new MeasureMethod(u)).ToArray();
         private DateInterval[] Intervals { get; set; } = Enum.GetValues<Dates>().Select(d => new DateInterval(d)).ToArray();
         private int[] Years { get; set; } = new int[] { 0, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021 };
         private int[] Months { get; set; } = Enumerable.Range(0, 13).ToArray();
@@ -61,6 +58,15 @@ namespace RumineActivityView.Pages
         private void Set(MeasureMethod method)
         {
             View.MeasureMethod = method;
+        }
+        private void Set(OutputValue val)
+        {
+            View.OutValue = val;
+        }
+        private void Set(ReportType report)
+        {
+            ReportType = report;
+            CreateReport();
         }
         private void Set(TopicsMode mode)
         {
@@ -102,16 +108,16 @@ namespace RumineActivityView.Pages
                 AdderTopic = id;
             }
         }
-        private bool CanAddTopic()
-        {
-            return AdderTopic != null && !Options.TopicMode.Topics.Contains(AdderTopic.Value);
-        }
-        private void AddTopic()
-        {
-            Options.TopicMode.Topics.Add(AdderTopic.Value);
-            CreateReport();
-            AdderTopic = null;
-        }
+        //private bool CanAddTopic()
+        //{
+        //    return AdderTopic != null && !Options.TopicMode.Topics.Contains(AdderTopic.Value);
+        //}
+        //private void AddTopic()
+        //{
+        //    Options.TopicMode.Topics.Add(AdderTopic.Value);
+        //    CreateReport();
+        //    AdderTopic = null;
+        //}
 
 
         private void SetYear(int year)

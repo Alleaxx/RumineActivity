@@ -113,9 +113,9 @@ namespace RumineActivityView
         {
 
         }
-        public ActivitySource(int id, IEnumerable<Topic> topics) : this(new TopicsMode(TopicsModes.Topics, id))
+        public ActivitySource(int id, IEnumerable<Topic> topics) : this(new TopicsMode(id))
         {
-            int topicId = Mode.Topics[0];
+            int topicId = Mode.TopicId;
             Topic topic = topics.FirstOrDefault(t => t.ID == topicId);
             if (topic == null)
             {
@@ -186,10 +186,11 @@ namespace RumineActivityView
         private double GetTotalValue(int daysSince)
         {
             var entry = FindNearestEntry(new TimeSpan(daysSince, 0,0,0,0));
-            if (Mode.Mode == TopicsModes.Topics)
-                return entry.ValueTopicTotal;
-            else
-                return entry.ValueTotal;
+            return entry.GetPosts(PostsType.Total, MeasureMethods.Total);
+            //if (Mode.Mode == TopicsModes.Topics)
+            //    return entry.ValueTopicTotal;
+            //else
+            //    return entry.ValueTotal;
         }
         private Entry FindNearestEntry(TimeSpan since)
         {

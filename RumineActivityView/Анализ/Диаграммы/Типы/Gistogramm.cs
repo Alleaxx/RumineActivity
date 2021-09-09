@@ -17,7 +17,7 @@ namespace RumineActivityView
 
         protected override void CreateChart()
         {
-            double max = Report.MostActive.ValueRelative * MaxValueMod;
+            double max = Report.MostActive.PostsRelative * MaxValueMod;
 
             EntryRectangle prevEntry = null;
             List<EntryRectangle> rects = new List<EntryRectangle>();
@@ -52,7 +52,7 @@ namespace RumineActivityView
             int x = prev == null ? 0 : prev.Filled.X + prev.Filled.Width;
 
             //Высота
-            double mod = entry.ValueRelative / max;
+            double mod = entry.PostsRelative / max;
             int height = (int)options.HeightChart;
             int fillHeight = (int)(height * mod);
             int emptyHeight = height - fillHeight;

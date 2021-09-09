@@ -15,7 +15,15 @@ namespace RumineActivityView
 
         public string FormatEntry(Entry entry)
         {
-            double value = View.MeasureMethod.GetValue(entry);
+            PostsType postsType = View.OutValue.Type;
+            MeasureMethods method = View.MeasureMethod.Type;
+
+            double value = entry.GetPosts(postsType, method);
+
+            if(postsType == PostsType.Total)
+            {
+                return entry.GetPosts(postsType, MeasureMethods.Total).ToString("#,0");
+            }
             if (value == 0)
             {
                 return "???";

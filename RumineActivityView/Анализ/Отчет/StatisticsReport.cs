@@ -39,11 +39,11 @@ namespace RumineActivityView
             DateRange = options.DateRange;
             Interval = options.DateInterval;
 
-            SumValue = IsEmpty ? 0 : Entries.Sum(e => e.Value);
-            AverageValue = IsEmpty ? 0 : Entries.Average(e => e.Value);
+            SumValue = IsEmpty ? 0 : Entries.Sum(e => e.PostsDefault);
+            AverageValue = IsEmpty ? 0 : Entries.Average(e => e.PostsDefault);
 
-            MostInactive = Entries.Where(e => e.ValueRelative > 0).OrderBy(e => e.ValueRelative).FirstOrDefault();
-            MostActive = Entries.Where(e => e.ValueRelative > 0).OrderBy(e => e.ValueRelative).LastOrDefault();
+            MostInactive = Entries.Where(e => e.PostsRelative > 0).OrderBy(e => e.PostsRelative).FirstOrDefault();
+            MostActive = Entries.Where(e => e.PostsRelative > 0).OrderBy(e => e.PostsRelative).LastOrDefault();
             if (IsEmpty)
             {
                 FirstLastPost = new DateRange();

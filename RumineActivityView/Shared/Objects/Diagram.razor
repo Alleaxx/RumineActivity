@@ -81,7 +81,7 @@
                                     @entry.Entry.Name
                                 </text>
                                 <text class="value" x="@entry.Empty.X" y="@(Options.HeightChart + 40)">
-                                    @entry.Entry.Value.ToString("#,0")
+                                    @entry.Entry.PostsDefault.ToString("#,0")
                                 </text>
                             </g>
                         }
@@ -104,7 +104,7 @@
                 {
                     <g>
                         <text class="name" x="@entry.Line.X1" y="@(Options.HeightChart + 20)">@entry.Entry.Name</text>
-                        <text class="value" x="@entry.Line.X1" y="@(Options.HeightChart + 40)">@entry.Entry.Value.ToString("#,0")</text>
+                        <text class="value" x="@entry.Line.X1" y="@(Options.HeightChart + 40)">@entry.Entry.PostsDefault.ToString("#,0")</text>
                     </g>
                 }
             </g>

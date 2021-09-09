@@ -11,30 +11,21 @@ namespace RumineActivityView
     }
     public class TopicsMode
     {
+        public override string ToString() => Name;
+
         public string Name { get; private set; }
         public TopicsModes Mode { get; private set; }
         public bool AllForum { get; private set; }
 
         public bool OnlyChat { get; private set; }
         public bool OnlyNonChat { get; private set; }
-        public List<int> Topics { get; private set; }
-
-        public string TopicsText
-        {
-            get => string.Join(';', Topics);
-            set
-            {
-                Topics = value.Split(';').Select(s => int.Parse(s.Trim())).ToList();
-            }
-        }
-
+        public int TopicId { get; set; } = 1;
 
         public TopicsMode(TopicsModes mode)
         {
             Mode = mode;
             Name = "Режим темы";
             AllForum = false;
-            Topics = new List<int>();
             switch (mode)
             {
                 case TopicsModes.All:
@@ -50,13 +41,13 @@ namespace RumineActivityView
                     OnlyChat = true;
                     break;
                 case TopicsModes.Topics:
-                    Name = "Конкретные темы";
+                    Name = "Конкретная тема";
                     break;
             }
         }
-        public TopicsMode(TopicsModes mode, params int[] topicIds) : this(mode)
+        public TopicsMode(int topic) : this(TopicsModes.Topics)
         {
-            Topics.AddRange(topicIds);
+            TopicId = topic;
         }
 
         public bool Filter(Post post, IEnumerable<Topic> topics)
@@ -77,7 +68,7 @@ namespace RumineActivityView
                     else
                         return false;
                 case TopicsModes.Topics:
-                    return Topics.Contains(post.TopicID);
+                    return TopicId == post.TopicID;
             }
             return true;
         }

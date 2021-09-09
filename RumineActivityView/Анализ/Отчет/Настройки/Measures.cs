@@ -57,21 +57,23 @@ namespace RumineActivityView
                     break;
             }
         }
+    }
 
-        public double GetValue(Entry entry)
+
+    public class OutputValue : EnumType<PostsType>
+    {
+        public OutputValue(PostsType type) : base(type)
         {
-            double value = entry.Value;
-            switch (Type)
+            switch (type)
             {
-                case MeasureMethods.ByDay:
-                    return entry.ValuePerDay;
-                case MeasureMethods.ByHour:
-                    return entry.ValuePerHour;
-                case MeasureMethods.ByMonth:
-                    return entry.ValuePerMonth;
-                default:
-                    return value;
+                case PostsType.Period:
+                    Name = "В промежутке";
+                    break;
+                case PostsType.Total:
+                    Name = "К моменту";
+                    break;
             }
         }
+        public static OutputValue[] AllValues => Enum.GetValues<PostsType>().Select(p => new OutputValue(p)).ToArray();
     }
 }

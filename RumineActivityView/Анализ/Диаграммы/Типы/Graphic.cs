@@ -32,7 +32,7 @@ namespace RumineActivityView
         {
             List<EntryLine> line = new List<EntryLine>();
 
-            double maxedValue = Report.MostActive.ValueRelative * MaxValueMod;
+            double maxedValue = Report.MostActive.PostsRelative * MaxValueMod;
 
             EntryLine prevEntry = null;
             for (int i = 0; i < Report.Entries.Length; i++)
@@ -58,7 +58,7 @@ namespace RumineActivityView
             Index = index;
             Entry = entry;
 
-            int height = (int)(entry.ValueRelative / max * options.HeightChart);
+            int height = (int)(entry.PostsRelative / max * options.HeightChart);
             int y = height;
 
             //Ширина

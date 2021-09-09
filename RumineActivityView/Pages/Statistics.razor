@@ -10,37 +10,10 @@
         <div class="content">
 
             <section>
-                <h4 class="options-list-header">Тип отчета: </h4>
-                <section style="margin-left:20px">
-                    <label for="report1">фактический</label>
-                    <input @onchange="(e => { ReportType = Reports.Fact; CreateReport(); })" type="radio" name="report" id="report1" value="Fact" />
-
-                    <label for="report2">периодический</label>
-                    <input @onchange="(e => { ReportType = Reports.Periodical; CreateReport(); })" type="radio" name="report" id="report2" value="Periodical" checked />
-
-
-                    @*<div class="creation">
-                    <button class="btn-create-report" @onclick="CreateReport">
-                        <span>-></span>
-                    </button>
-                </div>*@
-                </section>
-
+                <Collection HeaderText="Тип отчета:" List="ReportTypes" Selected="ReportType" T="ReportType" OnSelectCallback="Set" />
             </section>
 
             <section class="dates">
-                @*<header>
-                <h3>Даты</h3>
-            </header>*@
-                @*<div>
-                <label>
-                    <input type="date" @bind-value="(Options.DateRange.From)" />
-                </label>
-                <span> - </span>
-                <label>
-                    <input type="date" @bind-value="(Options.DateRange.To)" />
-                </label>
-            </div>*@
                 <section class="options-section">
                     <h4 class="options-list-header">Год / месяц:</h4>
                     <div>
@@ -80,7 +53,7 @@
                                 }
                             </ul>
                         }
-                        @if (DateInterval.Month != 0 && DateInterval.Year != 0 && false)
+                        @*@if (DateInterval.Month != 0 && DateInterval.Year != 0 && false)
                         {
 
                             <ul class="options-list">
@@ -98,7 +71,7 @@
                                     </li>
                                 }
                             </ul>
-                        }
+                        }*@
 
                     </div>
 
@@ -107,89 +80,49 @@
 
             </section>
 
+
             <section class="options-section">
-                <h4 class="options-list-header">Интервал записей:</h4>
-                <ul class="options-list">
-                    @foreach (var interval in Intervals)
-                    {
-                        <li class="@($"option-item {GetCssClass(interval)}")" @onclick="(() =>Set(interval))">
-                            <span>@interval.Name</span>
-                            @if (interval.Name == "Свой")
-                            {
-                                <input class="entry-interval-input" type="number" min="0.001" max="10000" @bind-value="@(interval.Days)" />
-                            }
-                        </li>
-                    }
-                </ul>
+                <div class="row-center">
+                    <Collection HeaderText="Интервал записей:" List="Intervals" Selected="Options.DateInterval" T="DateInterval" OnSelectCallback="Set" />
+                    <div>
+                        @if (Options.DateInterval.Type == Dates.Own)
+                        {
+                            <label for="input-days">Промежуток (дней):</label>
+                            <input id="input-days" class="entry-interval-input" type="number" min="1" max="10000" @bind:event="oninput" @bind="(Options.DateInterval.Days)" />
+                        }
+                    </div>
+                </div>
             </section>
 
-            <details class="source" open>
-                <summary>
-                    <h4 class="options-list-header">Источник</h4>
-                </summary>
-                <section class="options-section">
-                    <ul class="options-list">
-                        @foreach (var interval in TopicModes)
+            <section class="options-section">
+                <div class="row-center">
+                    <Collection HeaderText="Источник:" List="TopicModes" Selected="Options.TopicMode" T="TopicsMode" OnSelectCallback="Set" />
+                    <div>
+                        @if (Options.TopicMode.Mode == TopicsModes.Topics)
                         {
-                            <li class="@($"option-item {GetCssClass(interval)}")" @onclick="(() =>Set(interval))">
-                                <span>@interval.Name</span>
-                            </li>
-                        }
-                    </ul>
-                </section>
-                <section class="options-section" style="margin-left: 1.5em">
-                    @if (Options.TopicMode.Mode == TopicsModes.Topics)
-                    {
-                        <h5 class="options-list-header">Список тем:</h5>
-                        <input type="text" placeholder="100; 200; 300" @bind-value="@(Options.TopicMode.TopicsText)" />
-
-                        <label>
-                            <span>Возможные темы:</span>
-                            <input type="number" list="topicsList" @bind-value="AdderTopic"/>
+                            <label for="topic-id">ID темы: </label>
+                            <input type="number" id="topic-id" min="1" max="20000" list="topicsList" @bind:event="oninput" @bind="(Options.TopicMode.TopicId)" />
                             <DataTopics></DataTopics>
-                            @*<select @bind="AdderTopicText">
-                                <option value="-">-</option>
-                                @foreach (var topic in StatApp.App.Topics.Except<Topic>(TopicOptions))
-                                {
-                                    <option value="@topic.ID">[@topic.ID] @topic.Name</option>
-                                }
-                            </select>*@
-                            @if (CanAddTopic())
-                            {
-                                <button @onclick="AddTopic">
-                                    Добавить
-                                </button> 
-                            }
-                        </label>
-                    }
-                </section>
+                        }
+                    </div>
+                </div>
+            </section>
+
+            <details class="source">
+                <summary>
+                    <h4 class="options-list-header">Подробно</h4>
+                </summary>
+                <div>
+                    <label>
+                        <span> Учет постов с даты: </span>
+                        <input type="date" @bind-value="(Options.DateRange.From)" />
+                    </label>
+                    <label>
+                        <span> По дату: </span>
+                        <input type="date" @bind-value="(Options.DateRange.To)" />
+                    </label>
+                </div>
             </details>
-
-            <div>
-                <style>
-                    .param {
-                        color: black;
-                    }
-
-                    .date {
-                        color: black;
-                    }
-
-                    .report-text {
-                        color: gray;
-                        font-size: 1.1em;
-                        font-family: Consolas;
-                    }
-                </style>
-                @*<p class="report-text">
-                    <span class="param">@ReportType</span> отчет
-                    с <span class="date">@Options.DateRange.From.ToString("dd.MM.yyyy").ToUpper()</span>
-                    по <span class="date">@Options.DateRange.To.ToString("dd.MM.yyyy").ToUpper()</span>
-                    периодичностью в <span class="param">@Options.DateInterval.Name.ToUpper()</span>
-                    учитывающий <span class="param">@Options.TopicMode.Name.ToUpper()</span>
-                </p>*@
-            </div>
-
         </div>
 
     </section>
@@ -225,6 +158,7 @@
                             font-size: 1.6em;
                         }
                 </style>
+                
                 <section class="stat">
                     <div class="parameter">
                         <span>Записей:</span>
@@ -258,27 +192,15 @@
         </header>
         <div class="content">
             <section class="options-section">
-                <h4 class="options-list-header">Единицы измерения:</h4>
-                <ul class="options-list column" style="position:sticky">
-                    @foreach (var unit in Units)
-                    {
-                        <li class="@($"option-item {GetCssClass(unit)}")" @onclick="(() => Set(unit))">
-                            @unit.Name
-                        </li>
-                    }
-                </ul>
+                <Collection HeaderText="Единицы измерения:" List="View.Units" Selected="View.MeasureUnit" T="MeasureUnit" OnSelectCallback="Set" />
             </section>
             <section class="options-section">
-                <h4 class="options-list-header">Метод измерения:</h4>
-                <ul class="options-list column">
-                    @foreach (var method in Methods)
-                    {
-                        <li class="@($"option-item {GetCssClass(method)}")" @onclick="(() => Set(method))">
-                            @method.Name
-                        </li>
-                    }
-                </ul>
+                <Collection HeaderText="Метод измерения:" List="View.Methods" Selected="View.MeasureMethod" T="MeasureMethod" OnSelectCallback="Set" />
             </section>
+            <section>
+                <Collection HeaderText="Значения постов:" List="View.OutValues" Selected="View.OutValue" T="OutputValue" OnSelectCallback="Set" />
+            </section>
+
             <div class="option-accuracy">
                 <label>
                     <span>Точность округления: </span><br />
@@ -293,25 +215,17 @@
             <style>
                 .rules {
                 }
-
                     .rules th {
                         font-weight: 500;
                         font-style: italic;
                     }
-
-                    .rules input {
+                    .rules input{
                         max-width: 100%;
-                    }
-
-                    .rules .color-example {
-                        width: 10px;
-                        height: 10px;
                     }
 
                 .rule-range {
                     max-width: 35px;
                 }
-
                 .rule-color {
                     max-width: 50px;
                 }
@@ -328,7 +242,7 @@
                         <td style="@($"border-left: 10px solid {rule.Color}")" class="rule-range"><input type="number" @bind-value="rule.Min"></td>
                         <td class="rule-range"><input type="number" @bind-value="rule.Max"></td>
                         <td class="rule-color">
-                            <input type="text" @bind-value="rule.Color">
+                            <input type="text" min="1" max="10" @bind-value="rule.Color">
                         </td>
                     </tr>
                 }

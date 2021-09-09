@@ -28,7 +28,7 @@
                     else
                     {
                         <td class="month-posts" title="@($"{col.Value.Range.From:dd MMMM yyyy}")" style="@($"background-color: {View.CheckEntry(col.Value).Color}")">
-                            @col.Value.Value.ToString("#,0")
+                            @col.Value.PostsDefault.ToString("#,0")
                         </td>
                     }
                 }

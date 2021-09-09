@@ -19,6 +19,11 @@ namespace RumineActivityView
 
         public MeasureUnit MeasureUnit { get; set; } = new MeasureUnit(MeasureUnits.Messages);
         public MeasureMethod MeasureMethod { get; set; } = new MeasureMethod(MeasureMethods.Total);
+        public OutputValue OutValue { get; set; } = new OutputValue(PostsType.Period);
+
+        public MeasureUnit[] Units { get; private set; } = Enum.GetValues<MeasureUnits>().Select(u => new MeasureUnit(u)).ToArray();
+        public MeasureMethod[] Methods { get; private set; } = Enum.GetValues<MeasureMethods>().Select(u => new MeasureMethod(u)).ToArray();
+        public OutputValue[] OutValues { get; private set; } = OutputValue.AllValues;
 
         public ViewOptions()
         {

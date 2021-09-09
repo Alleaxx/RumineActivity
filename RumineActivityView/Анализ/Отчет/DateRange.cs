@@ -35,7 +35,7 @@ namespace RumineActivityView
             From = older.Date;
         }
 
-
+        public bool IsZeroDiff => From == To;
         public bool IsSeparate(DateRange range) => GetFraction(range) == 0;     //полностью снаружи
         public bool IsCovered(DateRange range) => GetFraction(range) == 1;      //полностью внутри
         public bool IsDateInside(DateTime date) => From <= date && date <= To;  //полностью внутри

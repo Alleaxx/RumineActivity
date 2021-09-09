@@ -51,7 +51,7 @@ namespace RumineActivityView
             foreach (var firstGroup in grouped)
             {
                 string firstKey = firstGroup.Key;
-                TableSum.Add(firstKey, firstGroup.Sum(i => i.Value));
+                TableSum.Add(firstKey, firstGroup.Sum(i => i.PostsDefault));
                 Table.Add(firstKey, new Dictionary<string, Entry>());
                 foreach (var secondGroup in ColGroups)
                 {
