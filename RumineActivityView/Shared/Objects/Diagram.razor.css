@@ -13,8 +13,14 @@
     padding: 0;
     border-bottom: 1px solid gainsboro;
 }
+.tabber img{
+    margin: 0px 5px;
+    height: 24px;
+    opacity: 0.5;
+}
     .tabber li {
-        display: block;
+        display: flex;
+        align-items: center;
         padding: 8px 10px;
         border-right: 1px solid gainsboro;
         cursor: pointer;
@@ -27,3 +33,6 @@
         background-color: gainsboro;
         cursor: default;
     }
+        .tabber li.selected img {
+            opacity: 1;
+        }

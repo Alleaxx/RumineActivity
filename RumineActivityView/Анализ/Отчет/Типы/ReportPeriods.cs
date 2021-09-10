@@ -102,7 +102,7 @@ namespace RumineActivityView
                 fromDate = toDate;
                 toDate = dateInterval.GetNextDate(fromDate);
             }
-            return new StatisticsReport($"Отчет по периодам 2", newEntries, Options);
+            return new StatisticsReport($"Отчет по периодам - {dateInterval.Name}", newEntries, Options);
         }
 
         public PostFraction GetPosts(DateRange range)

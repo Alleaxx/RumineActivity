@@ -26,19 +26,3 @@
 
 
 </section>
-<Collection List="Topics" Selected="Topic" OnSelectCallback="Selected" T="Topic"/>
-<Collection HeaderText="Выбор темы" List="@Topics" Selected="Topic" OnSelectCallback="Selected" T="Topic" Nullable="true"/>
-
-
-@if(Topic != null)
-{
-    @Topic.Name
-}
-
-@code{
-    private void Selected(Topic select)
-    {
-        Topic = select;
-    }
-    public Topic Topic { get; set; }
-}

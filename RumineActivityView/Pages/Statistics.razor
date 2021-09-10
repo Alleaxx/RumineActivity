@@ -4,8 +4,10 @@
 <div class="statistics">
 
     <section class="options">
-
-        <h2>Настройка отчета</h2>
+        <header>
+            <img alt="Настройки отчета" src="images/settings.svg" />
+            <h2>Настройка отчета</h2>
+        </header>
 
         <div class="content">
 
@@ -83,12 +85,12 @@
 
             <section class="options-section">
                 <div class="row-center">
-                    <Collection HeaderText="Интервал записей:" List="Intervals" Selected="Options.DateInterval" T="DateInterval" OnSelectCallback="Set" />
+                    <Collection HeaderText="Периодичность:" List="Intervals" Selected="Options.DateInterval" T="DateInterval" OnSelectCallback="Set" />
                     <div>
                         @if (Options.DateInterval.Type == Dates.Own)
                         {
-                            <label for="input-days">Промежуток (дней):</label>
-                            <input id="input-days" class="entry-interval-input" type="number" min="1" max="10000" @bind:event="oninput" @bind="(Options.DateInterval.Days)" />
+                            <label for="input-days">Каждые n дней:</label>
+                            <input id="input-days" class="entry-interval-input" type="number" min="1" max="10000" @oninput="Update" @bind-value="(Options.DateInterval.Days)" />
                         }
                     </div>
                 </div>
@@ -98,10 +100,10 @@
                 <div class="row-center">
                     <Collection HeaderText="Источник:" List="TopicModes" Selected="Options.TopicMode" T="TopicsMode" OnSelectCallback="Set" />
                     <div>
-                        @if (Options.TopicMode.Mode == TopicsModes.Topics)
+                        @if (Options.TopicMode.Mode == TopicsModes.Topic)
                         {
                             <label for="topic-id">ID темы: </label>
-                            <input type="number" id="topic-id" min="1" max="20000" list="topicsList" @bind:event="oninput" @bind="(Options.TopicMode.TopicId)" />
+                            <input type="number" id="topic-id" min="1" max="20000" list="topicsList" @oninput="Update" @bind-value="(Options.TopicMode.TopicId)" />
                             <DataTopics></DataTopics>
                         }
                     </div>
@@ -128,8 +130,10 @@
     </section>
 
     <div class="report">
-
-        <h2>@Report.Name</h2>
+        <header>
+            <img alt="Отчет" src="images/clipboard.svg" />
+            <h2>@Report.Name</h2>
+        </header>
 
         <div class="content">
 
@@ -155,18 +159,26 @@
                         }
 
                         .parameter span:last-child {
-                            font-size: 1.6em;
+                            font-size: 1.3em;
+                            letter-spacing: 2px;
+                        }
+                        .daterange{
+                            text-align: center;
+                            letter-spacing: 1px;
+                            margin: 10px 0;
+                            font-weight: 500;
+                            font-size: 1.3em;
                         }
                 </style>
-                
+                <h3 class="daterange">@Report.DateRange.ToString("dd MMMM yyyy","–")</h3>
                 <section class="stat">
                     <div class="parameter">
                         <span>Записей:</span>
-                        <span>@Report.Count</span>
+                        <span>@Report.Length</span>
                     </div>
                     <div class="parameter">
                         <span>Дней:</span>
-                        <span>@Report.DateRange.Diff.TotalDays.ToString("#,0.0")</span>
+                        <span>@Report.FirstLastPost.Diff.TotalDays.ToString("#,0.0")</span>
                     </div>
                     <div class="parameter">
                         <span>Сообщений:</span>
@@ -178,7 +190,7 @@
             <div class="sheme">
                 @if (!Report.IsEmpty)
                 {
-                    <Diagram Mode="@(new DataViewType(DataViewTypes.Values))" Report="@Report" />
+                    <Diagram Mode="@ViewType" ModeChanged="@ChangedViewType" Report="@Report" />
                 }
             </div>
 
@@ -186,68 +198,4 @@
 
     </div>
     
-    <div class="rules">
-        <header>
-            <h2>Измерение</h2>
-        </header>
-        <div class="content">
-            <section class="options-section">
-                <Collection HeaderText="Единицы измерения:" List="View.Units" Selected="View.MeasureUnit" T="MeasureUnit" OnSelectCallback="Set" />
-            </section>
-            <section class="options-section">
-                <Collection HeaderText="Метод измерения:" List="View.Methods" Selected="View.MeasureMethod" T="MeasureMethod" OnSelectCallback="Set" />
-            </section>
-            <section>
-                <Collection HeaderText="Значения постов:" List="View.OutValues" Selected="View.OutValue" T="OutputValue" OnSelectCallback="Set" />
-            </section>
-
-            <div class="option-accuracy">
-                <label>
-                    <span>Точность округления: </span><br />
-                    <input type="number" @bind-value="View.RoundAccuracy" />
-                    <span>знака</span>
-                </label>
-            </div>
-
-            <h4>
-                Правила:
-            </h4>
-            <style>
-                .rules {
-                }
-                    .rules th {
-                        font-weight: 500;
-                        font-style: italic;
-                    }
-                    .rules input{
-                        max-width: 100%;
-                    }
-
-                .rule-range {
-                    max-width: 35px;
-                }
-                .rule-color {
-                    max-width: 50px;
-                }
-            </style>
-            <table class="rules">
-                <tr>
-                    <th>От</th>
-                    <th>До</th>
-                    <th>Цвет</th>
-                </tr>
-                @foreach (var rule in View.Rules.OfType<RuleRanged>().OrderBy(r => r.Min))
-                {
-                    <tr>
-                        <td style="@($"border-left: 10px solid {rule.Color}")" class="rule-range"><input type="number" @bind-value="rule.Min"></td>
-                        <td class="rule-range"><input type="number" @bind-value="rule.Max"></td>
-                        <td class="rule-color">
-                            <input type="text" min="1" max="10" @bind-value="rule.Color">
-                        </td>
-                    </tr>
-                }
-            </table>
-
-        </div>
-    </div>
 </div>

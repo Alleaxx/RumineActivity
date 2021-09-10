@@ -75,7 +75,7 @@ namespace RumineActivityView
             switch (topicMode.Mode)
             {
                 case TopicsModes.OnlyChat:
-                case TopicsModes.Topics:
+                case TopicsModes.Topic:
                 case TopicsModes.NotChat:
                     EntryUse = PostsSource.Topics;
                     break;

@@ -7,15 +7,50 @@
     </header>
 
     <section>
-        <header>
+        @*<header>
             <h3>
                 Описание
             </h3>
-        </header>
+        </header>*@
         <div class="content">
             <p>
-                А тут мы расскажем про данную вкладку
+                Что же мы тут можем сравнивать? А вот давайте и глянем.
             </p>
+            <dl>
+                <dt>Источник а*тивности:</dt>
+                <dd>
+                    <p>
+                        Может быть конкретной темой, всем форумом или чем-то в этом духе. Комбинированные опции типа "всех ФЧ" вроде и работают! Но не идеально.
+                    </p>
+                </dd>
+            </dl>
+            <dl>
+                <dt>Сравнение:</dt>
+                <dd>
+                    <p>
+                        Если в списке источников присутствует <b>главный</b> элемент, то показатели всех остальных будут сравниваться именно с ним.<br />
+                        Если главного элемента нет, то сравнение будет просто обзорное. Главный элемент может быть только один
+                    </p>
+                </dd>
+            </dl>
+            <dl>
+                <dt>Показатели сравнения:</dt>
+                <dd>
+                    <p>Имеют смысл, если сравнение не обзорное</p>
+                    <ul>
+                        <li>
+                            <p>
+                                <span>Проценты</span> - отображает разницу в относительном формате. Для дат, увы, не работает!
+                            </p>
+                        </li>
+                        <li>
+                            <p>
+                                <span>Значения</span> - отображает разницу в абсолютном формате
+                            </p>
+                        </li>
+                    </ul>
+                </dd>
+            </dl>
         </div>
     </section>
 
@@ -43,11 +78,11 @@
 
                             @if (Comparison.CompareElement == item)
                             {
-                                <td class="support"> <button title="Без сравнения" @onclick="() => Comparison.SetCompare(null)">[ Главный ]</button> </td>
+                                <td class="main"> <button title="Без сравнения" @onclick="() => Comparison.SetCompare(null)"><span>[ Главный ]</span> </button> </td>
                             }
                             else
                             {
-                                <td class="main"> <button title="Сделать главным" @onclick="() => Comparison.SetCompare(item)">[ Опорный ]</button> </td>
+                                <td class="support"> <button title="Сделать главным" @onclick="() => Comparison.SetCompare(item)"><span>[ Опорный ]</span></button> </td>
                             }
 
                             <td class="delete"> <button title="Удалить" @onclick="() => Comparison.Toggle(item)">[ X ]</button> </td>
@@ -85,7 +120,7 @@
                 </tbody>
             </table>
 
-            <Collection HeaderText="Отображение" List="Values" Selected="CompareValue" T="CompareValue" OnSelectCallback="Set" />
+            <Collection HeaderText="Показатели сравнения" List="Values" Selected="CompareValue" T="CompareValue" OnSelectCallback="Set" />
         </div>
     </section>
 
@@ -107,7 +142,7 @@
                         <tr class="source-name">
                             @foreach (var info in Comparison.Items)
                             {
-                                <th colspan="2" class="@GetSourceClass(info)">
+                                <th @onclick="() => Comparison.SetCompare(info)" colspan="2" class="@GetSourceClass(info)">
                                     @info.Name
                                 </th>
                             }

@@ -2,24 +2,30 @@
 .statistics {
     display: grid;
 
-    grid-template-columns: 7fr 1fr;
-    grid-template-rows: auto auto;
-    grid-template-areas:
-        "stat-options stat-options"
-        "stat-sheme stat-rules";
+    grid-template: auto / 1fr;
+    grid-template-areas:    "stat-options"
+                            "stat-sheme";
 }
 
 .options {
     grid-area: stat-options;
 }
 
-    .options h2, .report h2, .rules h2{
-    background-color: whitesmoke;
+    .report > header, .options header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: whitesmoke;
+        border: 1px solid silver;
+    }
+    header img{
+        height: 25px;
+        margin: 0 10px;
+    }
+    .statistics h2{
     margin: 0;
     padding: 15px 0;
-    text-align: center;
-    border: 1px solid silver;
-}
+    }
     .options h3 {
         padding: 5px 0;
         border-bottom: 1px solid var(--border-brush);
@@ -29,6 +35,9 @@
     }
 
     .options .source {
+    }
+    .options .source summary{
+        cursor: pointer;
     }
     .options .source summary h4{
         display: inline-block;
@@ -48,20 +57,6 @@
 }
 
 
-.rules {
-    grid-area: stat-rules;
-    background-color: whitesmoke;
-    border-left: 1px solid gainsboro;
-    border-right: 1px solid gainsboro;
-    border-bottom: 1px solid gainsboro;
-}
-.rules h2{
-    margin: 0;
-    padding: 15px 0;
-}
-    .rules .content {
-        font-size: 0.9em;
-    }
 
 .sheme{
 

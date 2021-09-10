@@ -1,8 +1,7 @@
 ﻿.table-activity{
-    margin: 1.25em;
     border-collapse: collapse;
     border: 1px solid silver;
-    font-size: 0.85em;
+    font-size: 1em;
 }
 .table-activity caption{
     margin: 10px;
@@ -10,7 +9,7 @@
 }
 
 .table-activity td{
-    padding: 6px 4px;
+    padding: 6px 8px;
     text-align: center;
 }
     .table-activity th {
@@ -39,4 +38,8 @@ th.month {
 }
 td.month-posts, td.month-unknown {
     font-size: 0.9em;
+}
+td.month-posts:hover, td.month-unknown:hover {
+    color: blue;
+    cursor: pointer;
 }

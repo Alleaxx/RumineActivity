@@ -12,6 +12,7 @@ namespace RumineActivityView
 
         public bool OfflineMode { get; set; } = true;
         public NewPost EditingPost { get; private set; }
+        public StatisticsReport Report { get; set; }
         public Comparison Comparison { get; private set; }
 
         public ViewOptions ViewOptions { get; private set; } = new ViewOptions();

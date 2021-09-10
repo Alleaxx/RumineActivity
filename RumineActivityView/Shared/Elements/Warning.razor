@@ -1,0 +1,14 @@
+﻿<section class="warning">
+    <span>!</span>
+    <div>
+        <h4>@Header</h4>
+        <p>@Message</p>
+    </div>
+</section>
+
+@code {
+    [Parameter]
+    public string Header { get; set; }
+    [Parameter]
+    public string Message { get; set; }
+}

@@ -1,14 +1,23 @@
 ﻿.menu {
     grid-area: menu;
     min-width: 8em;
+    padding-top: 12px;
     border-right: 1px solid var(--border-brush);
     padding: var(--inner-padding);
     text-align: center;
     background-color: var(--headers-color);
 }
 
+section > header{
+    display: flex;
+    align-items: center;
+}
+section > header img{
+    height: 24px;
+    margin: 0 6px;
+}
 .menu-header {
-    font-size: 1.25em;
+    font-size: 1.2em;
 }
 
 .menu-list {
@@ -17,6 +26,7 @@
     list-style: none;
     margin: 0;
     padding: 0;
+    padding-left: 0.5em;
 }
 
 .menu-footer {

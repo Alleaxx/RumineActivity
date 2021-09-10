@@ -1,10 +1,11 @@
 ﻿<style>
     .menu-list a{
         display: block;
-        padding: 4px 0;
+        padding: 5px;
         border-radius: 2px;
         text-decoration: none;
         color: black;
+        text-align: left;
 
         border: 5px solid transparent;
         border-top: 1px solid transparent;
@@ -29,51 +30,52 @@
             </NavLink>
         </li>
     </ul>
-    <h2 class="menu-header">Данные</h2>
-    <ul class="menu-list">
-        <li class="menu-list-item">
-            <NavLink href="add" class="menu-list-link">
-                Добавить
-            </NavLink>
-        </li>
-        <li class="menu-list-item">
-            <NavLink href="posts/view" class="menu-list-link">
-                Посты
-            </NavLink>
-        </li>
-        <li class="menu-list-item">
-            <NavLink href="topics/view" class="menu-list-link">
-                Темы
-            </NavLink>
-        </li>
-    </ul>
-    <h2 class="menu-header">Статистика</h2>
-    <ul class="menu-list">
-        <li class="menu-list-item">
-            <NavLink href="classic" class="menu-list-link">
-                Классика
-            </NavLink>
-        </li>
-        <li class="menu-list-item">
-            <NavLink href="statistics" Match="NavLinkMatch.All" class="menu-list-link">
-                Статистика
-            </NavLink>
-        </li>
-        <li class="menu-list-item">
-            <NavLink href="statistics/compare" class="menu-list-link">
-                Сравнение
-            </NavLink>
-        </li>
-        @*<li class="menu-list-item">
-            <a href="#">Анализ по темам</a>
-        </li>
-        <li class="menu-list-item">
-            <a href="#">Подробный анализ</a>
-        </li>
-        <li class="menu-list-item">
-            <a href="#"></a>
-        </li>*@
-    </ul>
+    <section>
+        <header>
+            <img alt="Данные" src="images/database.svg" />
+            <h2 class="menu-header">Данные</h2>
+        </header>
+        <ul class="menu-list">
+            <li class="menu-list-item">
+                <NavLink href="add" class="menu-list-link">
+                    Добавить
+                </NavLink>
+            </li>
+            <li class="menu-list-item">
+                <NavLink href="posts/view" class="menu-list-link">
+                    Посты
+                </NavLink>
+            </li>
+            <li class="menu-list-item">
+                <NavLink href="topics/view" class="menu-list-link">
+                    Темы
+                </NavLink>
+            </li>
+        </ul>
+    </section>
+    <section>
+        <header>
+            <img alt="Данные" src="images/activity.svg" />
+            <h2 class="menu-header">Статистика</h2>
+        </header>
+        <ul class="menu-list">
+            <li class="menu-list-item">
+                <NavLink href="classic" class="menu-list-link">
+                    Классика
+                </NavLink>
+            </li>
+            <li class="menu-list-item">
+                <NavLink href="statistics" Match="NavLinkMatch.All" class="menu-list-link">
+                    Отчеты
+                </NavLink>
+            </li>
+            <li class="menu-list-item">
+                <NavLink href="statistics/compare" class="menu-list-link">
+                    Сравнение
+                </NavLink>
+            </li>
+        </ul>
+    </section>
     <footer class="menu-footer">
         @*<label>
             <span>Оффлайн-режим</span>

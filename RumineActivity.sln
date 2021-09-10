@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31613.86
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RumineActivity", "RumineActivity\RumineActivity.csproj", "{CFEC9921-1CA9-412F-A698-084BA5404203}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RumineActivityView", "RumineActivityView\RumineActivityView.csproj", "{7D649758-F645-4C36-8F64-DF4154FB808C}"
 EndProject
 Global
@@ -13,10 +11,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{CFEC9921-1CA9-412F-A698-084BA5404203}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CFEC9921-1CA9-412F-A698-084BA5404203}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CFEC9921-1CA9-412F-A698-084BA5404203}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CFEC9921-1CA9-412F-A698-084BA5404203}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7D649758-F645-4C36-8F64-DF4154FB808C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7D649758-F645-4C36-8F64-DF4154FB808C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D649758-F645-4C36-8F64-DF4154FB808C}.Release|Any CPU.ActiveCfg = Release|Any CPU

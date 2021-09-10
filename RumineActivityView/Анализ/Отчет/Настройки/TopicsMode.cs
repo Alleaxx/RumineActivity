@@ -7,7 +7,7 @@ namespace RumineActivityView
 {
     public enum TopicsModes
     {
-        All, OnlyChat, NotChat, Topics
+        All, Topic, OnlyChat, NotChat
     }
     public class TopicsMode
     {
@@ -40,12 +40,12 @@ namespace RumineActivityView
                     Name = "Только чат";
                     OnlyChat = true;
                     break;
-                case TopicsModes.Topics:
+                case TopicsModes.Topic:
                     Name = "Конкретная тема";
                     break;
             }
         }
-        public TopicsMode(int topic) : this(TopicsModes.Topics)
+        public TopicsMode(int topic) : this(TopicsModes.Topic)
         {
             TopicId = topic;
         }
@@ -67,7 +67,7 @@ namespace RumineActivityView
                         return true;
                     else
                         return false;
-                case TopicsModes.Topics:
+                case TopicsModes.Topic:
                     return TopicId == post.TopicID;
             }
             return true;

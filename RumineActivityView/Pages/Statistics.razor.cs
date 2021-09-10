@@ -9,7 +9,14 @@ namespace RumineActivityView.Pages
     public partial class Statistics : StatComponent
     {
         private ReportOptions Options { get; set; } = new ReportOptions();
-        private StatisticsReport Report { get; set; } = ReportsFactory.CreateClassicReport();
+        private StatisticsReport Report
+        {
+            get => App.Report;
+            set
+            {
+                App.Report = value;
+            }
+        }
         private IEnumerable<Topic> TopicOptions => StatApp.App.Topics;
 
 
@@ -22,9 +29,15 @@ namespace RumineActivityView.Pages
         }
 
         public YearMonthDateSelector DateInterval { get; set; } = new YearMonthDateSelector(0, 0);
+        protected override void OnInitialized()
+        {
+            if(Report == null)
+            {
+                Report = ReportsFactory.CreateClassicReport();
+            }
+        }
 
         //Представление числовых данных
-
 
 
 
@@ -51,18 +64,6 @@ namespace RumineActivityView.Pages
         private string GetCssClassYear(int year) => year == DateInterval.Year ? SelectedClass : SelectableClass;
         private string GetCssClassMonth(int month) => month == DateInterval.Month ? SelectedClass : SelectableClass;
         private string GetCssClassDay((int from, int to) day) => day.from == DateInterval.Day.from && day.to == DateInterval.Day.to ? SelectedClass : SelectableClass;
-        private void Set(MeasureUnit unit)
-        {
-            View.MeasureUnit = unit;
-        }
-        private void Set(MeasureMethod method)
-        {
-            View.MeasureMethod = method;
-        }
-        private void Set(OutputValue val)
-        {
-            View.OutValue = val;
-        }
         private void Set(ReportType report)
         {
             ReportType = report;
@@ -138,6 +139,17 @@ namespace RumineActivityView.Pages
         private void UpdateDateRange()
         {
             Options.DateRange = DateInterval.Dates;
+            CreateReport();
+        }
+
+        private DataViewType ViewType { get; set; } = new DataViewType(DataViewTypes.Values);
+        private void ChangedViewType(DataViewType type)
+        {
+            ViewType = type;
+        }
+
+        public void Update(ChangeEventArgs e)
+        {
             CreateReport();
         }
     }

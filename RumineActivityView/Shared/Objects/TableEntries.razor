@@ -1,56 +1,146 @@
 ﻿@inherits ReportComponent
-
-<table class="statistics-summary">
-    @*<caption><span>Рекорды</span></caption>*@
-    <tr>
-        <td>Самый активный период</td>
-        @if (Report.MostActive == null)
-        {
-            <td>-</td>
-        }
-        else
-        {
-
-            <td>@Report.MostActive.Name | @FormatEntry(Report.MostActive)</td>
-        }
-    </tr>
-    <tr>
-        <td>Самый мертвецкий период</td>
-        @if (Report.MostInactive == null)
-        {
-            <td>-</td>
-        }
-        else
-        {
-            <td>@Report.MostInactive.Name | @FormatEntry(Report.MostInactive)</td>
-        }
-    </tr>
-</table>
-<table class="statistics-data-table">
-    @*<caption>Значения</caption>*@
-    <tr>
-        <th colspan="2">Период</th>
-        <th>@View.MeasureUnit.Name @View.MeasureMethod.Name.ToLower()</th>
-    </tr>
-    @foreach (var entry in Report.Entries)
-    {
-        <tr>
-            @if (entry.SeparateDates)
-            {
-                <td>@entry.Range.From.ToString("dd-MM-yyyy")</td>
-                <td>@entry.Range.To.ToString("dd-MM-yyyy")</td>
-            }
-            else
-            {
-
-                <td colspan="2">@entry.Name</td>
-            }
-            <td style="@($"background-color: {View.CheckEntry(entry).Color}")">@FormatEntry(entry)</td>
-        </tr>
-
+<style>
+    .tables {
+        flex: 8;
     }
-</table>
+    .rules {
+        flex: 1;
+        margin: 0 8px;
+    }
+
+        .rules h2 {
+            margin: 0;
+            padding: 5px 0;
+            font-size: 1.3em;
+        }
+
+        .rules .content {
+            font-size: 0.9em;
+        }
+</style>
+<section class="row">
+    <div class="tables">
+        <section>
+            <h3>Рекорды</h3>
+            <ul>
+                <li>
+                    <p>
+                        Самый активный период: @Report.MostActive.Name | @FormatEntry(Report.MostActive)
+                    </p>
+                </li>
+                <li>
+                    <p>
+                        Самый мертвецкий период: @Report.MostInactive.Name | @FormatEntry(Report.MostInactive)
+                    </p>
+                </li>
+            </ul>
+        </section>
+        <table class="statistics-data-table">
+            <tr>
+                <th colspan="2">Период</th>
+                <th>@View.MeasureUnit.Name @View.MeasureMethod.Name.ToLower()</th>
+            </tr>
+            @foreach (var entry in Report.Entries)
+            {
+                <tr>
+                    @if (entry.SeparateDates)
+                    {
+                        <td>@entry.Range.From.ToString("dd-MM-yyyy")</td>
+                        <td>@entry.Range.To.ToString("dd-MM-yyyy")</td>
+                    }
+                    else
+                    {
+
+                        <td colspan="2">@entry.Name</td>
+                    }
+                    <td style="@($"background-color: {View.CheckEntry(entry).Color}")">@FormatEntry(entry)</td>
+                </tr>
+
+            }
+        </table>
+    </div>
+
+    <div class="rules">
+        <header>
+            <h2>Измерение</h2>
+        </header>
+        <div class="content">
+            <section class="options-section">
+                <Collection HeaderText="Единицы измерения:" List="View.Units" Selected="View.MeasureUnit" T="MeasureUnit" OnSelectCallback="Set" />
+            </section>
+            <section class="options-section">
+                <Collection HeaderText="Метод измерения:" List="View.Methods" Selected="View.MeasureMethod" T="MeasureMethod" OnSelectCallback="Set" />
+            </section>
+            <section>
+                <Collection HeaderText="Значения постов:" List="View.OutValues" Selected="View.OutValue" T="OutputValue" OnSelectCallback="Set" />
+            </section>
+
+            <div class="option-accuracy">
+                <label>
+                    <span>Точность округления: </span><br />
+                    <input type="number" @bind-value="View.RoundAccuracy" />
+                    <span>знака</span>
+                </label>
+            </div>
+
+            <h4>
+                Правила:
+            </h4>
+            <style>
+                .rules {
+                }
+
+                    .rules th {
+                        font-weight: 500;
+                        font-style: italic;
+                    }
+
+                    .rules input {
+                        max-width: 100%;
+                    }
+
+                .rule-range {
+                    max-width: 35px;
+                }
+
+                .rule-color {
+                    max-width: 50px;
+                }
+            </style>
+            <table class="rules">
+                <tr>
+                    <th>От</th>
+                    <th>До</th>
+                    <th>Цвет</th>
+                </tr>
+                @foreach (var rule in View.Rules.OfType<RuleRanged>().OrderBy(r => r.Min))
+                {
+                    <tr>
+                        <td style="@($"border-left: 10px solid {rule.Color}")" class="rule-range"><input type="number" @bind-value="rule.Min"></td>
+                        <td class="rule-range"><input type="number" @bind-value="rule.Max"></td>
+                        <td class="rule-color">
+                            <input type="text" min="1" max="10" @bind-value="rule.Color">
+                        </td>
+                    </tr>
+                }
+            </table>
+
+        </div>
+    </div>
+</section>
 
 @code {
+    private void Set(MeasureUnit unit)
+    {
+        View.MeasureUnit = unit;
+    }
+    private void Set(MeasureMethod method)
+    {
+        View.MeasureMethod = method;
+    }
+    private void Set(OutputValue val)
+    {
+        View.OutValue = val;
+    }
 
 }

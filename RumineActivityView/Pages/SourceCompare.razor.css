@@ -9,6 +9,9 @@
         margin: 5px;
         border-bottom: 1px solid gainsboro;
     }
+    .comparison dt{
+        font-weight: 600;
+    }
     .content{
         padding: 1em;
     }
@@ -20,16 +23,16 @@
 
 /* ТАБЛИЦА ИСТОЧНИКОВ АКТИВНОСТИ */
 table.sources{
-    height: 100px;
+
 }
-    .comparison .sources td, .comparison .sources th {
+    .comparison .sources td{
         border: 0;
         text-align: left;
     }
     .sources tr:last-child td{
         color: gray;
     }
-    .sources .main{
+    .sources .main button{
         font-weight: 600;
     }
 
@@ -71,11 +74,19 @@ table.sources{
 .source-name th {
     font-size: 0.9em;
     padding: 8px 2px;
+    font-weight: 500;
+}
+.source-name th:hover{
+    font-weight: 600;
+    cursor: pointer;
 }
 
 .source-name .compare {
-    background-color: whitesmoke;
+    font-weight: 600;
 }
+    .source-name .compare:hover {
+        cursor: auto;
+    }
 
 /* ЗНАЧЕНИЯ В ТАБЛИЦЕ СРАВНЕНИЯ */
 .comparison td.property {

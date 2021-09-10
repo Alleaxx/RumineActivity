@@ -17,7 +17,7 @@ namespace RumineActivityView
 
         //Статистика по данным
         public bool IsEmpty => Entries == null || !Entries.Any();
-        public int Count => Entries.Length;
+        public int Length => Entries.Length;
 
         public double SumValue { get; private set; }
         public double AverageValue { get; private set; }

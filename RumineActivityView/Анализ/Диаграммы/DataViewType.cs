@@ -12,24 +12,30 @@ namespace RumineActivityView
 
     public class DataViewType : EnumType<DataViewTypes>
     {
+        public string Icon { get; set; }
         public DataViewType(DataViewTypes diagram) : base(diagram)
         {
             switch (diagram)
             {
                 case DataViewTypes.Gistogramm:
                     Name = "Гистограмма";
+                    Icon = "bar-chart-2.svg";
                     break;
                 case DataViewTypes.Graphic:
                     Name = "График";
+                    Icon = "trending-up.svg";
                     break;
                 case DataViewTypes.GraphicAdv:
                     Name = "График с заливкой";
+                    Icon = "trending-up.svg";
                     break;
                 case DataViewTypes.Values:
                     Name = "Список значений";
+                    Icon = "list.svg";
                     break;
                 case DataViewTypes.Table:
                     Name = "Таблица";
+                    Icon = "grid.svg";
                     break;
             }
         }

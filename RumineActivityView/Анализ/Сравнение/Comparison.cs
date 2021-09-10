@@ -59,6 +59,10 @@ namespace RumineActivityView
         }
         public void SetCompare(ActivitySource source)
         {
+            if(CompareElement == source)
+            {
+                source = null;
+            }
             CompareElement = source;
             Update();
         }

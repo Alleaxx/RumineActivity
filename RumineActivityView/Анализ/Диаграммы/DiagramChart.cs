@@ -8,10 +8,10 @@ namespace RumineActivityView
     //Настройки диаграммы
     public class DiagramSize
     {
-        public double Width { get; private set; } = 1000;
+        public double Width { get; private set; } = 1150;
 
         //Высота графической части
-        public double HeightChart { get; private set; } = 450;
+        public double HeightChart { get; private set; } = 460;
         //Высота подписей
         public double HeightWriting { get; private set; } = 40;
         //Общая высота диаграммы

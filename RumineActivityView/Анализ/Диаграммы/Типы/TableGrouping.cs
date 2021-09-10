@@ -22,7 +22,7 @@ namespace RumineActivityView
                 case Dates.Year:
                     GetFirstKey = e => "Всё время";
                     GetSecondKey = e => e.Range.From.ToString("yyyy");
-                    ColGroups = Enumerable.Range(2011, yearDifference).Select(y => y.ToString()).ToArray();
+                    ColGroups = Enumerable.Range(2011, yearDifference + 1).Select(y => y.ToString()).ToArray();
                     break;
                 case Dates.Month:
                     GetFirstKey = e => e.Range.From.ToString("yyyy");
@@ -31,13 +31,18 @@ namespace RumineActivityView
                     break;
                 case Dates.Week:
                     GetFirstKey = e => e.Range.From.ToString("MMMM yyyy");
-                    GetSecondKey = e => $"{((int)(e.Range.From.Day / 7) + 1)} неделя";
+                    GetSecondKey = e => $"{((e.Range.From.Day / 7) + 1)} неделя";
                     ColGroups = new string[] { "1 неделя", "2 неделя", "3 неделя", "4 неделя", "5 неделя" };
+                    break;
+                case Dates.Day:
+                    GetFirstKey = e => e.Range.From.ToString($"MMMM yyyy");
+                    GetSecondKey = e => $"{e.Range.From.Day}";
+                    ColGroups = Enumerable.Range(1, 31).Select(i => i.ToString()).ToArray();
                     break;
                 default:
                     GetFirstKey = e => "Всё время";
                     GetSecondKey = e => e.Range.From.ToString("yyyy");
-                    ColGroups = Enumerable.Range(2011, yearDifference).Select(y => y.ToString()).ToArray();
+                    ColGroups = Enumerable.Range(2011, yearDifference + 1).Select(y => y.ToString()).ToArray();
                     break;
             }
             

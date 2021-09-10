@@ -9,8 +9,8 @@ namespace RumineActivityView.Pages
     {
         public Comparison Comparison => App.Comparison;
 
-        public IEnumerable<ActivitySource> PossibleAll => Comparison.PossibleItems.Where(i => i.Mode.Mode != TopicsModes.Topics);
-        public IEnumerable<ActivitySource> PossibleTopics => Comparison.PossibleItems.Where(i => i.Mode.Mode == TopicsModes.Topics);
+        public IEnumerable<ActivitySource> PossibleAll => Comparison.PossibleItems.Where(i => i.Mode.Mode != TopicsModes.Topic);
+        public IEnumerable<ActivitySource> PossibleTopics => Comparison.PossibleItems.Where(i => i.Mode.Mode == TopicsModes.Topic);
 
 
         private string GetSourceClass(ActivitySource source) => Comparison.CompareElement == source ? "compare" : "";

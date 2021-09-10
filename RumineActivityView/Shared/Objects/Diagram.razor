@@ -4,7 +4,10 @@
     <ul class="tabber">
         @foreach(var mode in Modes)
         {
-            <li class="@(Mode == mode ? "selected" : "")" @onclick="() => Set(mode)"><span>@mode.Name</span></li>
+            <li class="@(Mode == mode ? "selected" : "")" @onclick="() => Set(mode)">
+                @if (!string.IsNullOrEmpty(mode.Icon)) { <img alt="@mode.Name" src="images/@mode.Icon" /> }
+                <span>@mode.Name</span>
+            </li>
         }
     </ul>
 
@@ -147,7 +150,10 @@
     private void Set(DataViewType mode)
     {
         Mode = mode;
+        ModeChanged.InvokeAsync(mode);
     }
+    [Parameter]
+    public EventCallback<DataViewType> ModeChanged { get; set; }
 
     public DiagramSize Options { get; set; } = new DiagramSize();
 
@@ -164,7 +170,7 @@
 
     private bool CheckWriting(int entryIndex)
     {
-        return (Report.Count < MaxEntriesForEveryWriting) || ((entryIndex % (Report.Count / EntriesDivider)) < 1);
+        return (Report.Length < MaxEntriesForEveryWriting) || ((entryIndex % (Report.Length / EntriesDivider)) < 1);
     }
 
 }
