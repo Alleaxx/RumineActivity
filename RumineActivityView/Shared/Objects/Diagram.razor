@@ -2,7 +2,7 @@
 
 <section class="data-view">
     <ul class="tabber">
-        @foreach(var mode in Modes)
+        @foreach(var mode in Selection.DataViews)
         {
             <li class="@(Mode == mode ? "selected" : "")" @onclick="() => Set(mode)">
                 @if (!string.IsNullOrEmpty(mode.Icon)) { <img alt="@mode.Name" src="images/@mode.Icon" /> }
@@ -68,7 +68,7 @@
             }
         </style>
 
-        @if (Mode.Type == DataViewTypes.Gistogramm)
+        @if (Mode.Type == DViewTypes.Gistogramm)
         {
             <svg height="@Options.Height" viewBox="@($"0 0 {Options.Width} {Options.Height}")">
                 @foreach (var entry in Gistogramm.Rectangles)
@@ -92,7 +92,7 @@
                 }
             </svg>
         }
-        else if (Mode.Type == DataViewTypes.Graphic)
+        else if (Mode.Type == DViewTypes.Graphic)
         {
             <svg height="@Options.Height" viewBox="@($"0 0 {Options.Width} {Options.Height}")">
                 <line class="help-line" x1="0" x2="@Options.Width" y1="@(Options.HeightChart)" y2="@(Options.HeightChart)"/>
@@ -114,7 +114,7 @@
                 }
             </svg>
         }
-        else if (Mode.Type == DataViewTypes.GraphicAdv)
+        else if (Mode.Type == DViewTypes.GraphicAdv)
         {
             <svg height="@Options.Height" viewBox="@($"0 0 {Options.Width} {Options.Height}")">
                 <line class="help-line" x1="0" x2="@Options.Width" y1="@(Options.HeightChart)" y2="@(Options.HeightChart)" />
@@ -123,11 +123,11 @@
                 </g>
             </svg>
         }
-        else if (Mode.Type == DataViewTypes.Table)
+        else if (Mode.Type == DViewTypes.Table)
         {
             <ClassicTable Report="Report" />
         }
-        else if (Mode.Type == DataViewTypes.Values)
+        else if (Mode.Type == DViewTypes.Values)
         {
             <TableEntries Report="Report" />
         }
@@ -145,15 +145,14 @@
 @code {
 
     [Parameter]
-    public DataViewType Mode { get; set; } = new DataViewType(DataViewTypes.Values);
-    public DataViewType[] Modes { get; set; } = DataViewType.AllValues;
-    private void Set(DataViewType mode)
+    public ViewType Mode { get; set; } = new ViewType(RumineActivityView.DViewTypes.Values);
+    private void Set(ViewType mode)
     {
         Mode = mode;
         ModeChanged.InvokeAsync(mode);
     }
     [Parameter]
-    public EventCallback<DataViewType> ModeChanged { get; set; }
+    public EventCallback<ViewType> ModeChanged { get; set; }
 
     public DiagramSize Options { get; set; } = new DiagramSize();
 

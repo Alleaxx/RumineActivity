@@ -5,50 +5,29 @@ using System.Threading.Tasks;
 
 namespace RumineActivityView
 {
-    public enum Reports
-    {
-        Fact, Periodical, PeriodicalLegacy
-    }
-    public class ReportType : EnumType<Reports>
-    {
-        public ReportType(Reports reports) : base(reports)
-        {
-            switch (reports)
-            {
-                case Reports.Fact:
-                    Name = "Фактический";
-                    break;
-                case Reports.Periodical:
-                    Name = "Периодический";
-                    break;
-                case Reports.PeriodicalLegacy:
-                    Name = "Периодический (устаревший)";
-                    break;
-            }
-        }
-        public static ReportType[] AllValues => Enum.GetValues<Reports>().Select(r => new ReportType(r)).ToArray();
-    }
-
-
     public static class ReportsFactory
     {
         public static StatisticsReport CreateClassicReport()
         {
-            return CreateReport(Reports.PeriodicalLegacy, new ReportOptions()
+            return CreateReport(Reports.Periodical, new ReportOptions()
             {
-                DateInterval = new DateInterval(Dates.Month)
+                Period = new Period(Periods.Month)
             });
         }
+
+
         public static StatisticsReport CreateReport(Reports type, ReportOptions options)
+        {
+            return CreateReport(type, options, new ForumSourceApp());
+        }
+        public static StatisticsReport CreateReport(Reports type, ReportOptions options, IForumSource source)
         {
             switch (type)
             {
                 case Reports.Fact:
-                    return new ReportDefault(new ReportSourceApp(), options).Create();
-                case Reports.PeriodicalLegacy:
-                    //return new ReportPeriods(new ReportSourceApp(), options).Create();
+                    return new ReportDefault(source, options).Create();
                 case Reports.Periodical:
-                    return new ReportPeriods2(new ReportSourceApp(), options).Create();
+                    return new ReportPeriods(source, options).Create();
                 default:
                     throw new Exception("Отчет неизвестного типа");
             }

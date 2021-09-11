@@ -5,102 +5,128 @@ using System.Threading.Tasks;
 
 namespace RumineActivityView
 {
+    public enum PostSources
+    {
+        AllForum, Topics, Difference
+    }
     //Запись 'За период написано сообщений'
     public class Entry
     {
         public override string ToString() => $"{Name} | {PostsDefault}";
 
+
         public DateRange Range { get; private set; }
-        public string Name { get; set; }
+        public string Name { get; private set; }
 
 
-        public bool SeparateDates { get; set; } = false;
-        //xxxx
-        public Entry(DateRange range, string name)
-        {
-            Name = name;
-            Range = range;
-            
-            Posts[PostsSource.AllForum].Add(PostsType.Period, 0);
-            Posts[PostsSource.AllForum].Add(PostsType.Total, 0);
-            Posts[PostsSource.Topics].Add(PostsType.Period, 0);
-            Posts[PostsSource.Topics].Add(PostsType.Total, 0);
-            Posts[PostsSource.Difference].Add(PostsType.Period, 0);
-        }
+        //Разделение дат в интерфейсе
+        public bool SeparateDates { get; private set; } = false;
+        public string DateFormat { get; private set; } = "dd MMMM yyyy";
+
 
         //Периодический отчет
-        public Entry(DateRange date,Post newer, Post older, TopicsMode topicMode, string dateFormat = "", double mod = 1) : this(newer, older, topicMode, dateFormat, mod)
+        public Entry(DateRange range, string format, TopicsMode mode)
         {
-            Range = date;
+            SeparateDates = false;
+            Range = range;
+
+            SetFormat(format);
+            SetMode(mode);
         }
-        //Фактический / периодический отчет
-        public Entry(Post newer, Post older, TopicsMode topicMode, string dateFormat = "", double mod = 1)
+
+        //Периодический отчет Legacy
+        public Entry(string format, DateRange range, Post newer, Post older, TopicsMode topicMode, double mod)
+        {
+            SeparateDates = false;
+            Range = range;
+            SetFormat(format);
+
+            SetPostsDiff(newer, older, mod);
+            SetMode(topicMode);
+        }
+        
+        //Фактический отчет
+        public Entry(string format, Post newer, Post older, TopicsMode topicMode)
         {
             SeparateDates = true;
             Range = new DateRange(newer, older);
-            Name = Range.ToString(dateFormat);
+            SetFormat(format);
 
-            //ValueTotal = newer.ID;
-            //ValueTopicTotal = newer.TopicIndex;
-
-
-            //double forumChatAllowance = topicMode.OnlyNonChat ? 0.15 : 0.85;
-            //int postsDifference = newer.ID - older.ID;
-            //if (!topicMode.AllForum)
-            //{
-            //    bool anyIndexUnknown = newer.TopicIndex <= 0 || older.TopicIndex <= 0;
-            //    if (!anyIndexUnknown && newer.TopicIndex - older.TopicIndex >= 0)
-            //    {
-            //        postsDifference = newer.TopicIndex - older.TopicIndex;
-            //    }
-            //    else
-            //    {
-            //        postsDifference = (int)(postsDifference * forumChatAllowance);
-            //    }
-            //}
-            //PostsDefault = postsDifference * mod;
+            SetPostsDiff(newer, older, 1);
+            SetMode(topicMode);
+        }
 
 
 
+        //Методы создания отчета
+        private void SetPostsDiff(Post newer, Post older, double mod)
+        {
             double postsDifferenceAll = (newer.ID - older.ID) * mod;
             double postsDifferenceTopic = (Math.Max(1, newer.TopicIndex - older.TopicIndex)) * mod;
 
-            Posts[PostsSource.AllForum].Add(PostsType.Period, postsDifferenceAll);
-            Posts[PostsSource.AllForum].Add(PostsType.Total, newer.ID);
-            Posts[PostsSource.Topics].Add(PostsType.Period, postsDifferenceTopic);
-            Posts[PostsSource.Topics].Add(PostsType.Total, newer.TopicIndex);
-            Posts[PostsSource.Difference].Add(PostsType.Period, postsDifferenceAll - postsDifferenceTopic);
-            Posts[PostsSource.Difference].Add(PostsType.Total, newer.ID - newer.TopicIndex);
-
-            switch (topicMode.Mode)
+            Posts[PostSources.AllForum][PostOutputs.PeriodDifference] = postsDifferenceAll;
+            Posts[PostSources.AllForum][PostOutputs.PeriodEnd] = newer.ID;
+            Posts[PostSources.Topics][PostOutputs.PeriodDifference] = postsDifferenceTopic;
+            Posts[PostSources.Topics][PostOutputs.PeriodEnd] = newer.TopicIndex;
+            Posts[PostSources.Difference][PostOutputs.PeriodDifference] = postsDifferenceAll - postsDifferenceTopic;
+            Posts[PostSources.Difference][PostOutputs.PeriodEnd] = newer.ID - newer.TopicIndex;
+        }
+        private void SetMode(TopicsMode mode)
+        {
+            switch (mode.Mode)
             {
                 case TopicsModes.OnlyChat:
                 case TopicsModes.Topic:
                 case TopicsModes.NotChat:
-                    EntryUse = PostsSource.Topics;
+                    EntryUse = PostSources.Topics;
                     break;
                 default:
-                    EntryUse = PostsSource.AllForum;
+                    EntryUse = PostSources.AllForum;
                     break;
-
+            }
+        }
+        private void SetFormat(string dateFormat)
+        {
+            DateFormat = dateFormat;
+            if (!SeparateDates)
+            {
+                Name = Range.From.ToString(dateFormat);
+            }
+            else
+            {
+                Name = Range.ToString(dateFormat);
             }
         }
 
-        private PostsSource EntryUse { get; set; } = PostsSource.AllForum;
-        private Dictionary<PostsSource, Dictionary<PostsType, double>> Posts { get; set; } = new Dictionary<PostsSource, Dictionary<PostsType, double>>
-        {
-            [PostsSource.AllForum] = new Dictionary<PostsType, double>(),
-            [PostsSource.Topics] = new Dictionary<PostsType, double>(),
-            [PostsSource.Difference] = new Dictionary<PostsType, double>()
-        };
 
-        public double PostsDefault => GetPosts(EntryUse, PostsType.Period, MeasureMethods.Total);
-        public double PostsRelative => GetPosts(EntryUse, PostsType.Period, MeasureMethods.ByDay);
-        public double GetPosts(PostsType type, MeasureMethods methods)
+
+        private PostSources EntryUse = PostSources.AllForum;
+        private Dictionary<PostSources, Dictionary<PostOutputs, double>> Posts { get; set; } = new Dictionary<PostSources, Dictionary<PostOutputs, double>>
+        {
+            [PostSources.AllForum] = new Dictionary<PostOutputs, double>()
+                { [PostOutputs.PeriodDifference] = 1, [PostOutputs.PeriodEnd] = 1 },
+            [PostSources.Topics] = new Dictionary<PostOutputs, double>()
+                { [PostOutputs.PeriodDifference] = 1, [PostOutputs.PeriodEnd] = 1 },
+            [PostSources.Difference] = new Dictionary<PostOutputs, double>()
+                { [PostOutputs.PeriodDifference] = 1, [PostOutputs.PeriodEnd] = 1 },
+        };
+        public void Set(PostOutputs type, double val)
+        {
+            Set(EntryUse, type, val);
+        }
+        private void Set(PostSources source, PostOutputs type, double val)
+        {
+            Posts[source][type] = val;
+        }
+
+
+        public double PostsDefault => GetPosts(EntryUse, PostOutputs.PeriodDifference, MeasureMethods.Total);
+        public double PostsRelative => GetPosts(EntryUse, PostOutputs.PeriodDifference, MeasureMethods.ByDay);
+        public double GetPosts(PostOutputs type, MeasureMethods methods)
         {
             return GetPosts(EntryUse, type, methods);
         }
-        private double GetPosts(PostsSource source,PostsType posts, MeasureMethods interval)
+        private double GetPosts(PostSources source, PostOutputs posts, MeasureMethods interval)
         {
             double val = Posts[source][posts];
             switch (interval)
@@ -118,24 +144,4 @@ namespace RumineActivityView
             return val;
         }
     }
-    public enum PostsSource
-    {
-        AllForum, Topics, Difference
-    }
-    public enum PostsType
-    {
-        Total, Period
-    }
-
-    //За период написано сообщений суммарно
-    //За период написано сообщений в темах
-    //За период написана разница в суммарно и темах
-
-    //Относительно для тем
-    //Относительно для всего
-    //Относительно для разницы
-
-    //К последней дате написано сообщений всего
-    //К последней дате написано сообщений в темах
-
 }

@@ -17,10 +17,8 @@ namespace RumineActivityView.Pages
                 App.Report = value;
             }
         }
-        private IEnumerable<Topic> TopicOptions => StatApp.App.Topics;
 
 
-        private ReportType[] ReportTypes { get; set; } = ReportType.AllValues;
         private ReportType ReportType { get; set; } = new ReportType(Reports.Periodical);
 
         private void CreateReport()
@@ -29,23 +27,9 @@ namespace RumineActivityView.Pages
         }
 
         public YearMonthDateSelector DateInterval { get; set; } = new YearMonthDateSelector(0, 0);
-        protected override void OnInitialized()
-        {
-            if(Report == null)
-            {
-                Report = ReportsFactory.CreateClassicReport();
-            }
-        }
 
         //Представление числовых данных
-
-
-
-        private TopicsMode[] TopicModes { get; set; } = Enum.GetValues<TopicsModes>().Select(u => new TopicsMode(u)).ToArray();
-        private DateInterval[] Intervals { get; set; } = Enum.GetValues<Dates>().Select(d => new DateInterval(d)).ToArray();
-        private int[] Years { get; set; } = new int[] { 0, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021 };
-        private int[] Months { get; set; } = Enumerable.Range(0, 13).ToArray();
-        private (int from, int to)[] Days(int year, int month)
+        private static (int from, int to)[] Days(int year, int month)
         {
             var days = new (int from, int to)[]
             {
@@ -57,10 +41,6 @@ namespace RumineActivityView.Pages
 
         const string SelectedClass = "selected";
         const string SelectableClass = "selectable";
-        private string GetCssClass(MeasureUnit unit) => unit.Type == View.MeasureUnit.Type ? SelectedClass : SelectableClass;
-        private string GetCssClass(MeasureMethod method) => method.Type == View.MeasureMethod.Type ? SelectedClass : SelectableClass;
-        private string GetCssClass(DateInterval method) => method.Type == Options.DateInterval.Type ? SelectedClass : SelectableClass;
-        private string GetCssClass(TopicsMode topic) => topic.Mode == Options.TopicMode.Mode ? SelectedClass : SelectableClass;
         private string GetCssClassYear(int year) => year == DateInterval.Year ? SelectedClass : SelectableClass;
         private string GetCssClassMonth(int month) => month == DateInterval.Month ? SelectedClass : SelectableClass;
         private string GetCssClassDay((int from, int to) day) => day.from == DateInterval.Day.from && day.to == DateInterval.Day.to ? SelectedClass : SelectableClass;
@@ -74,17 +54,10 @@ namespace RumineActivityView.Pages
             Options.TopicMode = mode;
             CreateReport();
         }
-        private void Set(DateInterval interval)
+        private void Set(Period period)
         {
-            Options.DateInterval = interval;
+            Options.Period = period;
             CreateReport();
-        }
-        private void SetTopicMode(ChangeEventArgs e)
-        {
-            if (e.Value is string str)
-            {
-                Options.TopicMode = TopicModes.Where(t => t.Mode.ToString() == str).First();
-            }
         }
 
         //Добавление тем
@@ -109,16 +82,7 @@ namespace RumineActivityView.Pages
                 AdderTopic = id;
             }
         }
-        //private bool CanAddTopic()
-        //{
-        //    return AdderTopic != null && !Options.TopicMode.Topics.Contains(AdderTopic.Value);
-        //}
-        //private void AddTopic()
-        //{
-        //    Options.TopicMode.Topics.Add(AdderTopic.Value);
-        //    CreateReport();
-        //    AdderTopic = null;
-        //}
+
 
 
         private void SetYear(int year)
@@ -142,8 +106,8 @@ namespace RumineActivityView.Pages
             CreateReport();
         }
 
-        private DataViewType ViewType { get; set; } = new DataViewType(DataViewTypes.Values);
-        private void ChangedViewType(DataViewType type)
+        private ViewType ViewType { get; set; } = new ViewType(DViewTypes.Values);
+        private void ChangedViewType(ViewType type)
         {
             ViewType = type;
         }

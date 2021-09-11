@@ -24,7 +24,7 @@ namespace RumineActivityView
             for (int i = 0; i < Report.Entries.Length; i++)
             {
                 var entry = Report.Entries[i];
-                EntryRectangle newRect = new EntryRectangle(prevEntry, i, entry, max, Options, Report.FirstLastPost);
+                EntryRectangle newRect = new EntryRectangle(prevEntry, i, entry, max, Options, Report.DateRangePosts);
                 rects.Add(newRect);
                 prevEntry = newRect;
             }

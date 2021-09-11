@@ -38,7 +38,7 @@ namespace RumineActivityView
             for (int i = 0; i < Report.Entries.Length; i++)
             {
                 var currentEntry = Report.Entries[i];
-                EntryLine newLine = new EntryLine(prevEntry, i, currentEntry, maxedValue, Options, Report.FirstLastPost);
+                EntryLine newLine = new EntryLine(prevEntry, i, currentEntry, maxedValue, Options, Report.DateRangePosts);
                 line.Add(newLine);
                 prevEntry = newLine;
             }

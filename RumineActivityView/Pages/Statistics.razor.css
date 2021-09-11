@@ -42,10 +42,6 @@
     .options .source summary h4{
         display: inline-block;
     }
-/*.statistics-data {
-    padding: 1em;
-    border-left: 1px solid silver;
-}*/
 
 .report {
     grid-area: stat-sheme;

@@ -12,7 +12,6 @@ namespace RumineActivityView
             return $"Пост {ID}";
         }
 
-
         //*
         public int ID { get; set; } = -1;
         public DateTime Date { get; set; }
@@ -21,7 +20,6 @@ namespace RumineActivityView
         public int TopicID { get; set; } = -1;
         public int TopicIndex { get; set; } = -1;
 
-        //-
         public int Page => (int)Math.Floor((double)TopicIndex / 20);
 
 

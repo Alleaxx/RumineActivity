@@ -19,7 +19,7 @@
             <td align="center"><input type="checkbox" @bind-value="(Topic.IsChat)" /></td>
             <td class="actions">
                 <input class="save" type="button" value="[ S ]" />
-                <input class="delete" type="button" value="[ X ]" @onclick="(() => StatApp.App.Remove(Topic))" />
+                <input class="delete" type="button" value="[ X ]" @onclick="(() => App.Remove(Topic))" />
             </td>
         </RowTemplate>
     </ViewTable>

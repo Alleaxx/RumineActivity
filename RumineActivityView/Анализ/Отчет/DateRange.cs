@@ -70,19 +70,4 @@ namespace RumineActivityView
         }
     }
 
-
-    public class EntryDateRangeFraction
-    {
-        public readonly DateRange Source;
-        public readonly Entry Entry;
-        public readonly double Fraction;
-
-        public EntryDateRangeFraction(DateRange source, Entry entry)
-        {
-            Source = source;
-            Entry = entry;
-            Fraction = Entry.Range.GetFraction(source);
-        }
-    }
-
 }

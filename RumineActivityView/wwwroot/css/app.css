@@ -39,6 +39,29 @@ html, body {
     padding: 8px 10px;
 }
 
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 600px;
+    margin: auto;
+    margin-top: 3em;
+    padding: 0.5em;
+
+    border: 2px solid gainsboro;
+    border-radius: 3px;
+
+    font-size: 2em;
+    text-align: center;
+    background-color: whitesmoke;
+    font-family: Verdana;
+}
+.loading img{
+    height: 56px;
+    margin: 0 15px;
+}
+
 #blazor-error-ui {
     background: lightyellow;
     bottom: 0;

@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 namespace RumineActivityView
 {
     //Период
-    public enum Dates
+    public enum Periods
     {
         Day, Week, Month, Year, Own
     }
-    public class DateInterval : EnumType<Dates>
+    public class Period : EnumType<Periods>
     {
         public TimeSpan TimeInterval { get; private set; }
         public string DateFormat { get; private set; }
@@ -26,59 +26,52 @@ namespace RumineActivityView
         }
         private double days;
 
-        public DateInterval(Dates period) : base(period)
+        public Period(Periods period) : base(period)
         {
             switch (period)
             {
-                case Dates.Day:
+                case Periods.Day:
                     Name = "День";
                     TimeInterval = new TimeSpan(1, 0, 0, 0, 0);
                     DateFormat = "dd.MM.yyyy";
                     break;
-                case Dates.Week:
+                case Periods.Week:
                     Name = "Неделя";
                     TimeInterval = new TimeSpan(7, 0, 0, 0, 0);
                     DateFormat = "dd MMMM yyyy";
                     break;
-                case Dates.Month:
+                case Periods.Month:
                     Name = "Месяц";
                     TimeInterval = new TimeSpan(30, 0, 0, 0, 0);
                     DateFormat = "MMMM yyyy";
                     break;
-                case Dates.Year:
+                case Periods.Year:
                     Name = "Год";
                     TimeInterval = new TimeSpan(365, 0, 0, 0, 0);
                     DateFormat = "yyyy год";
                     break;
-                case Dates.Own:
+                case Periods.Own:
                     Name = "Свой";
-                    TimeInterval = new TimeSpan(0, 0, 0, 0, 0);
+                    TimeInterval = new TimeSpan(14, 0, 0, 0, 0);
                     DateFormat = "dd MMMM yyyy";
                     break;
             }
             days = TimeInterval.TotalDays;
         }
-
-        public Entry GetNextEntry(DateTime date)
-        {
-            string name = date.ToString(DateFormat);
-            DateRange range = new DateRange(date, GetNextDate(date));
-            return new Entry(range, name);
-        }
+        
         public DateTime GetNextDate(DateTime date)
         {
             switch (Type)
             {
-                case Dates.Month:
+                case Periods.Month:
                     DateTime nextMonth = date.AddMonths(1);
                     return new DateTime(nextMonth.Year, nextMonth.Month, 1);
-                case Dates.Year:
+                case Periods.Year:
                     return new DateTime(date.Year + 1, 1, 1);
                 default:
                     return date + TimeInterval;
             }
         }
-
     }
 
 

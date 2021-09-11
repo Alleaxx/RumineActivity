@@ -7,3 +7,27 @@
     padding: var(--inner-padding);
     background-color: var(--headers-color);
 }
+.site-footer a{
+    color: royalblue;
+    text-decoration: none;
+    cursor: pointer;
+}
+.site-footer a:hover{
+    color: blue;
+}
+.site-footer p{
+    margin: 8px 0;
+    line-height: 150%;
+}
+
+.RM, .CA {
+    font-size: 1.2em;
+    font-family: 'Minecraft Rus', Verdana;
+    letter-spacing: 3px;
+}
+.RM{
+    color: darkorange;
+}
+.CA {
+    color: gray;
+}

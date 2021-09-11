@@ -1,6 +1,5 @@
-﻿@page "/classic"
-
-
+﻿@inherits StatComponent
+@page "/classic"
 <style>
     .classic h2{
         margin: 10px 0 4px 0;
@@ -8,18 +7,32 @@
     .classic p{
         margin: 5px 0;
     }
+    .info{
+        text-align: right;
+        color: gray;
+        font-size: 0.8em;
+    }
 </style>
+
 <section class="classic">
     <header>
-        <h2>Классика</h2>
+        <h2>Классическая таблица</h2>
     </header>
     <div class="content">
         <p>
-            Та самая таблица с Гитхаба или еще откуда
+            Классика с Гитхаба / экселя.
+        </p>
+        <p>
+            Может возникнуть вопрос – где, собственно, информация до июля 2014 и после июля 2021?<br />
+            Ответ следующий: временно отсутствует, ждите ответного звонка и обновы.
         </p>
     </div>
 
-    <Diagram Report="Report" Mode="@(new DataViewType(DataViewTypes.Table))" />
+    <p class="info">
+        Периодический отчет: охватываемый период с 27 июля 2011 по @DateTime.Now.ToString("dd MMMM yyyy"), периодичность - месяц, источник - весь форум
+    </p>
+
+    <Diagram Report="Report" Mode="@(new ViewType(DViewTypes.Table))" />
 </section>
 
 @code {

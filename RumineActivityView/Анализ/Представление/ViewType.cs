@@ -5,42 +5,39 @@ using System.Threading.Tasks;
 
 namespace RumineActivityView
 {
-    public enum DataViewTypes
+    public enum DViewTypes
     {
         Values, Gistogramm, Graphic, GraphicAdv, Table
     }
 
-    public class DataViewType : EnumType<DataViewTypes>
+    public class ViewType : EnumType<DViewTypes>
     {
         public string Icon { get; set; }
-        public DataViewType(DataViewTypes diagram) : base(diagram)
+        public ViewType(DViewTypes diagram) : base(diagram)
         {
             switch (diagram)
             {
-                case DataViewTypes.Gistogramm:
+                case DViewTypes.Gistogramm:
                     Name = "Гистограмма";
                     Icon = "bar-chart-2.svg";
                     break;
-                case DataViewTypes.Graphic:
+                case DViewTypes.Graphic:
                     Name = "График";
                     Icon = "trending-up.svg";
                     break;
-                case DataViewTypes.GraphicAdv:
+                case DViewTypes.GraphicAdv:
                     Name = "График с заливкой";
                     Icon = "trending-up.svg";
                     break;
-                case DataViewTypes.Values:
+                case DViewTypes.Values:
                     Name = "Список значений";
                     Icon = "list.svg";
                     break;
-                case DataViewTypes.Table:
+                case DViewTypes.Table:
                     Name = "Таблица";
                     Icon = "grid.svg";
                     break;
             }
         }
-
-        public static DataViewType[] AllValues => Enum.GetValues<DataViewTypes>().Select(d => new DataViewType(d)).ToArray();
     }
-
 }

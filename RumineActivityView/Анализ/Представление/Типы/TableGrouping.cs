@@ -14,27 +14,27 @@ namespace RumineActivityView
         private Func<Entry, string> GetFirstKey { get; set; }
         private Func<Entry, string> GetSecondKey { get; set; }
 
-        public TableGrouping(Dates date, IEnumerable<Entry> entries)
+        public TableGrouping(Periods date, IEnumerable<Entry> entries)
         {
             int yearDifference = DateTime.Now.Year - 2011;
             switch (date)
             {
-                case Dates.Year:
+                case Periods.Year:
                     GetFirstKey = e => "Всё время";
                     GetSecondKey = e => e.Range.From.ToString("yyyy");
                     ColGroups = Enumerable.Range(2011, yearDifference + 1).Select(y => y.ToString()).ToArray();
                     break;
-                case Dates.Month:
+                case Periods.Month:
                     GetFirstKey = e => e.Range.From.ToString("yyyy");
                     GetSecondKey = e => e.Range.From.ToString("MMMM");
-                    ColGroups = Enumerable.Range(1, 12).Select(m => GetMonthName(m)).ToArray();
+                    ColGroups = Enumerable.Range(1, 12).Select(m => m.MonthName()).ToArray();
                     break;
-                case Dates.Week:
+                case Periods.Week:
                     GetFirstKey = e => e.Range.From.ToString("MMMM yyyy");
                     GetSecondKey = e => $"{((e.Range.From.Day / 7) + 1)} неделя";
                     ColGroups = new string[] { "1 неделя", "2 неделя", "3 неделя", "4 неделя", "5 неделя" };
                     break;
-                case Dates.Day:
+                case Periods.Day:
                     GetFirstKey = e => e.Range.From.ToString($"MMMM yyyy");
                     GetSecondKey = e => $"{e.Range.From.Day}";
                     ColGroups = Enumerable.Range(1, 31).Select(i => i.ToString()).ToArray();
@@ -64,9 +64,7 @@ namespace RumineActivityView
                 }
             }
         }
-
-
-        private string GetMonthName(int month) => new DateTime(2011, month, 1).ToString("MMMM");
     }
+
 
 }

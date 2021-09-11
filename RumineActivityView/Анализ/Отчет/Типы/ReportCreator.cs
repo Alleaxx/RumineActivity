@@ -20,7 +20,7 @@ namespace RumineActivityView
 
         public bool IsEmptyReport => Posts.Length < 2;
 
-        public ReportCreator(IReportSource source, ReportOptions options)
+        public ReportCreator(IForumSource source, ReportOptions options)
         {
             if (options != null)
             {
@@ -40,12 +40,28 @@ namespace RumineActivityView
                 .OrderBy(d => d.ID)
                 .ToArray();
         }
-        public abstract StatisticsReport Create();
-
-
-        protected IEnumerable<Entry> SplitPosts(TimeSpan timeInterval)
+        public StatisticsReport Create()
         {
-            TimeSpan maxDiffence = timeInterval;
+            if (IsEmptyReport)
+            {
+                return new StatisticsReport();
+            }
+            else
+            {
+                return Construct();
+            }
+        }
+        protected abstract StatisticsReport Construct();
+
+
+        protected IEnumerable<Entry> SplitPosts()
+        {
+            return SplitPosts(new TimeSpan(0), true);
+        }
+        protected IEnumerable<Entry> SplitPosts(TimeSpan maxDifference, bool ignoreDifference = false)
+        {
+            string dateFormat = Options.Period.DateFormat;
+
             List<Entry> entries = new List<Entry>();
             int prevIndexDiff = 1;
             for (int i = 1; i < Posts.Length; i++)
@@ -54,9 +70,9 @@ namespace RumineActivityView
                 Post currPost = Posts[i];
 
                 TimeSpan dateDiff = currPost.Date - prevPost.Date;
-                if (dateDiff >= maxDiffence)
+                if (ignoreDifference || dateDiff >= maxDifference)
                 {
-                    Entry newEntry = new Entry(currPost, prevPost, Options.TopicMode, Options.DateInterval.DateFormat);
+                    Entry newEntry = new Entry(dateFormat, currPost, prevPost, Options.TopicMode);
                     entries.Add(newEntry);
                     prevIndexDiff = 1;
                 }
@@ -64,19 +80,17 @@ namespace RumineActivityView
                 {
                     prevIndexDiff++;
                 }
+
                 bool last = i == Posts.Length - 1;
                 if(last && !entries.Any())
                 {
-                    Entry newEntry = new Entry(currPost, prevPost, Options.TopicMode, Options.DateInterval.DateFormat);
+                    Entry newEntry = new Entry(dateFormat, currPost, prevPost, Options.TopicMode);
                     entries.Add(newEntry);
                 }
 
             }
             return entries;
         }
-
-
-
     }
 
 

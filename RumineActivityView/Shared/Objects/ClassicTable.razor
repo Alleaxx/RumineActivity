@@ -1,10 +1,10 @@
 ﻿@inherits ReportComponent
 
 <table class="table-activity">
-    <caption>Классическая таблица 2.0</caption>
+    <caption>Классическая таблица 2.0, сообщения</caption>
     <thead>
         <tr>
-            <th class="title">@Report.Interval.Name</th>
+            <th class="title">@Report.Period.Name</th>
             <th class="year-sum-title">всего</th>
             @foreach (var key in Table.ColGroups)
             {
@@ -27,7 +27,7 @@
                     }
                     else
                     {
-                        <td class="month-posts" title="@($"{col.Value.Range.From:dd MMMM yyyy}")" style="@($"background-color: {View.CheckEntry(col.Value).Color}")">
+                        <td class="month-posts" title="@($"{col.Value.Range.From.ToString(col.Value.DateFormat)}")" style="@($"background-color: {View.CheckEntry(col.Value).Color}")">
                             @col.Value.PostsDefault.ToString("#,0")
                         </td>
                     }
@@ -38,5 +38,5 @@
     </tbody>
 </table>
 @code {
-    public TableGrouping Table => new TableGrouping(Report.Interval.Type, Report.Entries);
+    public TableGrouping Table => new TableGrouping(Report.Period.Type, Report.Entries);
 }

@@ -1,102 +1,134 @@
 ﻿.comparison{
-
 }
-.comparison h2{
 
+/* ЗАГОЛОВКИ */
+.comparison header{
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid gainsboro;
+    padding: 5px 0;
 }
-    .comparison h3 {
-        font-size: 1.2em;
+.comparison header img{
+    margin: 0 5px;
+    height: 24px;
+}
+
+    .comparison header h3 {
+        display: inline-block;
+        font-size: 1.3em;
         margin: 5px;
-        border-bottom: 1px solid gainsboro;
-    }
-    .comparison dt{
-        font-weight: 600;
-    }
-    .content{
-        padding: 1em;
     }
 
-    .comparison .options {
-        min-height: 250px;
+
+.description {
+    flex: 1;
+    order: 1;
+    padding-left: 1em;
+    border-left: 1px solid gainsboro;
+}
+    .description dt {
+        font-weight: 600;
     }
 
 
 /* ТАБЛИЦА ИСТОЧНИКОВ АКТИВНОСТИ */
-table.sources{
-
+.sources-table {
+    height: 100%;
+    border-collapse: collapse;
+    flex: 1;
+    order: 0;
+    margin: 0 10px;
 }
-    .comparison .sources td{
-        border: 0;
-        text-align: left;
+.sources-table td {
+    padding: 8px 12px;
+    font-size: 0.9em;
+    color: rgb(64,64,64);
+    border-bottom: 1px solid gainsboro;
+}
+    .sources-table th {
+        padding: 8px;
+        border: 1px solid gainsboro;
     }
-    .sources tr:last-child td{
+    .sources-table tr:last-child td{
         color: gray;
-    }
-    .sources .main button{
-        font-weight: 600;
+        border: 0;
     }
 
-.sources button{
-    padding: 8px 14px;
+
+/* КНОПКИ В ТАБЛИЦЕ ИСТОЧНИКОВ */
+.sources-table button{
+    width: 100%;
+    height: 100%;
+    padding: 8px 0;
     border: 0;
     background-color: transparent;
     cursor: pointer;
 }
-.sources button:hover{
+.sources-table button:hover{
     color: royalblue;
     border: 0;
     background-color: whitesmoke;
 }
-    .sources td.delete button:hover {
+    .sources-table .main button {
+        font-weight: 600;
+        color: royalblue;
+    }
+
+    .sources-table .delete button {
+        color: darkred;
+    }
+    .sources-table td.delete button:hover {
         color: red;
     }
 
 
 
 /* ТАБЛИЦА СРАВНЕНИЯ */
-.comparison table{
+.compare-table{
     border-collapse: collapse;
     margin: 0 10px;
 }
-    .comparison table td {
+    .compare-table td {
         text-align: center;
         padding: 8px 12px;
         font-size: 0.9em;
         color: rgb(64,64,64);
-        border-bottom: 1px solid gainsboro;
+        border: 1px solid gainsboro;
     }
-    .comparison table th {
+    .compare-table th {
         padding: 8px;
         border: 1px solid silver;
     }
 
-/* ИМЯ ИСТОЧНИКОВ АКТИВНОСТИ */
+
+/* ТАБЛИЦА СРАВНЕНИЯ, ИМЕНА ИСТОЧНИКОВ */
+.source-name{
+    --compare-color: royalblue;
+}
 .source-name th {
     font-size: 0.9em;
-    padding: 8px 2px;
     font-weight: 500;
 }
-.source-name th:hover{
-    font-weight: 600;
-    cursor: pointer;
-}
-
-.source-name .compare {
-    font-weight: 600;
-}
+    .source-name th:hover {
+        color: var(--compare-color);
+        cursor: pointer;
+    }
+    .source-name .compare {
+        color: var(--compare-color);
+        border-bottom: 1px solid var(--compare-color);
+    }
     .source-name .compare:hover {
-        cursor: auto;
+        cursor: default;
     }
 
 /* ЗНАЧЕНИЯ В ТАБЛИЦЕ СРАВНЕНИЯ */
-.comparison td.property {
-    padding-left: 4px;
+.compare-table td.property {
     text-align: left;
     font-size: 1em;
     color: black;
 }
 td .more{
-    color: green;
+    color: forestgreen;
 }
 td .less{
     color: red;

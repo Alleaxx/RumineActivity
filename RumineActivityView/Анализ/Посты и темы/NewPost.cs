@@ -47,7 +47,7 @@ namespace RumineActivityView
             }
             CheckEditingPost();
         }
-        private int? GetNumberFrom(string pattern, string text)
+        private static int? GetNumberFrom(string pattern, string text)
         {
             Regex regPostId = new Regex($"{pattern}[0-9]*");
             Match match = regPostId.Match(text);

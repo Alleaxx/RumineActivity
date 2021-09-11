@@ -46,7 +46,7 @@
             <td class="id"><input type="number" min="1" max="5000000" @bind-value="(Post.TopicIndex)" /></td>
             <td class="actions">
                 <input class="save" type="button" value="[ S ]" />
-                <input class="delete" type="button" value="[ X ]" @onclick="(() => StatApp.App.Remove(Post))" />
+                <input class="delete" type="button" value="[ X ]" @onclick="(() => App.Remove(Post))" />
             </td>
         </RowTemplate>
     </ViewTable>

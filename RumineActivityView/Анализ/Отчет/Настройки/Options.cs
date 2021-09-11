@@ -8,16 +8,21 @@ namespace RumineActivityView
     public class ReportOptions
     {
         public static readonly DateTime FoundationDate = new DateTime(2011, 7, 27);
+
         //Конкретные даты
-        public DateRange DateRange { get; set; } = new DateRange(FoundationDate, DateTime.Now);
-        public DateInterval DateInterval { get; set; } = new DateInterval(Dates.Month);
-        public TopicsMode TopicMode { get; set; } = new TopicsMode(TopicsModes.All);
+        public DateRange DateRange { get; set; } 
+        public Period Period { get; set; }
+        public TopicsMode TopicMode { get; set; } 
+        public bool EmptyPeriodsEnabled { get; set; }
 
         public ReportOptions()
         {
-
+            DateRange = new DateRange(FoundationDate, DateTime.Now);
+            Period = new Period(Periods.Month);
+            TopicMode = new TopicsMode(TopicsModes.All);
+            EmptyPeriodsEnabled = false;
         }
-        public ReportOptions(TopicsMode mode)
+        public ReportOptions(TopicsMode mode) : this()
         {
             TopicMode = mode;
         }

@@ -45,8 +45,8 @@
                 <tr>
                     @if (entry.SeparateDates)
                     {
-                        <td>@entry.Range.From.ToString("dd-MM-yyyy")</td>
-                        <td>@entry.Range.To.ToString("dd-MM-yyyy")</td>
+                        <td>@entry.Range.From.ToString(entry.DateFormat)</td>
+                        <td>@entry.Range.To.ToString(entry.DateFormat)</td>
                     }
                     else
                     {
@@ -66,13 +66,13 @@
         </header>
         <div class="content">
             <section class="options-section">
-                <Collection HeaderText="Единицы измерения:" List="View.Units" Selected="View.MeasureUnit" T="MeasureUnit" OnSelectCallback="Set" />
+                <Collection HeaderText="Единицы измерения:" List="Selection.Units" Selected="View.MeasureUnit" T="MeasureUnit" OnSelectCallback="Set" />
             </section>
             <section class="options-section">
-                <Collection HeaderText="Метод измерения:" List="View.Methods" Selected="View.MeasureMethod" T="MeasureMethod" OnSelectCallback="Set" />
+                <Collection HeaderText="Метод измерения:" List="Selection.Methods" Selected="View.MeasureMethod" T="MeasureMethod" OnSelectCallback="Set" />
             </section>
             <section>
-                <Collection HeaderText="Значения постов:" List="View.OutValues" Selected="View.OutValue" T="OutputValue" OnSelectCallback="Set" />
+                <Collection HeaderText="Значения постов:" List="Selection.Outs" Selected="View.OutValue" T="OutputValue" OnSelectCallback="Set" />
             </section>
 
             <div class="option-accuracy">
@@ -142,5 +142,4 @@
     {
         View.OutValue = val;
     }
-
 }

@@ -12,20 +12,20 @@
         <div class="content">
 
             <section>
-                <Collection HeaderText="Тип отчета:" List="ReportTypes" Selected="ReportType" T="ReportType" OnSelectCallback="Set" />
+                <Collection HeaderText="Тип отчета:" List="Selection.ReportTypes" Selected="ReportType" T="ReportType" OnSelectCallback="Set" />
             </section>
 
             <section class="dates">
                 <section class="options-section">
-                    <h4 class="options-list-header">Год / месяц:</h4>
+                    <h4 class="options-list-header">Охватываемый период:</h4>
                     <div>
                         <ul class="options-list">
-                            @foreach (var year in Years)
+                            @foreach (var year in Selection.Years)
                             {
                                 <li class="@($"option-item {GetCssClassYear(year)}")" @onclick="(() => SetYear(year))">
                                     @if (year == 0)
                                     {
-                                        <span>Все</span>
+                                        <span>Вся история</span>
                                     }
                                     else
                                     {
@@ -39,7 +39,7 @@
                         {
 
                             <ul class="options-list">
-                                @foreach (var month in Months)
+                                @foreach (var month in Selection.Months)
                                 {
                                     <li class="@($"option-item {GetCssClassMonth(month)}")" @onclick="(() => SetMonth(month))">
                                         @if (month == 0)
@@ -84,30 +84,11 @@
 
 
             <section class="options-section">
-                <div class="row-center">
-                    <Collection HeaderText="Периодичность:" List="Intervals" Selected="Options.DateInterval" T="DateInterval" OnSelectCallback="Set" />
-                    <div>
-                        @if (Options.DateInterval.Type == Dates.Own)
-                        {
-                            <label for="input-days">Каждые n дней:</label>
-                            <input id="input-days" class="entry-interval-input" type="number" min="1" max="10000" @oninput="Update" @bind-value="(Options.DateInterval.Days)" />
-                        }
-                    </div>
-                </div>
+                <Collection HeaderText="Периодичность:" List="Selection.Periods" Selected="Options.Period" T="Period" OnSelectCallback="Set" />
             </section>
 
             <section class="options-section">
-                <div class="row-center">
-                    <Collection HeaderText="Источник:" List="TopicModes" Selected="Options.TopicMode" T="TopicsMode" OnSelectCallback="Set" />
-                    <div>
-                        @if (Options.TopicMode.Mode == TopicsModes.Topic)
-                        {
-                            <label for="topic-id">ID темы: </label>
-                            <input type="number" id="topic-id" min="1" max="20000" list="topicsList" @oninput="Update" @bind-value="(Options.TopicMode.TopicId)" />
-                            <DataTopics></DataTopics>
-                        }
-                    </div>
-                </div>
+                <Collection HeaderText="Источник:" List="Selection.TopicModes" Selected="Options.TopicMode" T="TopicsMode" OnSelectCallback="Set" />
             </section>
 
             <details class="source">
@@ -115,14 +96,36 @@
                     <h4 class="options-list-header">Подробно</h4>
                 </summary>
                 <div>
+                    <style>
+                        input {
+                            margin: 0 4px;
+                        }
+                    </style>
                     <label>
-                        <span> Учет постов с даты: </span>
-                        <input type="date" @bind-value="(Options.DateRange.From)" />
+                        <span>Учет с даты: </span>
+                        <input type="date" @bind:event="oninput" @onchange="Update" @bind="(Options.DateRange.From)" />
                     </label>
                     <label>
-                        <span> По дату: </span>
-                        <input type="date" @bind-value="(Options.DateRange.To)" />
+                        <span>По дату: </span>
+                        <input type="date" @bind:event="oninput" @onchange="Update" @bind="(Options.DateRange.To)" />
                     </label>
+                    <label>
+                        <span>Включать пустые периоды: </span>
+                        <input type="checkbox" @bind:event="oninput" @onchange="Update" @bind="(Options.EmptyPeriodsEnabled)" />
+                    </label>
+
+                    @if (Options.Period.Type == Periods.Own)
+                    {
+                        <label for="input-days">Каждые n дней:</label>
+                        <input id="input-days" class="entry-interval-input" type="number" min="1" max="10000" @bind:event="oninput" @onchange="Update" @bind="(Options.Period.Days)" />
+                    }
+                    @if (Options.TopicMode.Mode == TopicsModes.Topic)
+                    {
+                        <label for="topic-id">ID темы: </label>
+                        <input type="number" id="topic-id" min="1" max="20000" list="topicsList" @bind:event="oninput" @onchange="Update" @bind="(Options.TopicMode.TopicId)" />
+                        <DataTopics></DataTopics>
+                    }
+
                 </div>
             </details>
         </div>
@@ -170,7 +173,7 @@
                             font-size: 1.3em;
                         }
                 </style>
-                <h3 class="daterange">@Report.DateRange.ToString("dd MMMM yyyy","–")</h3>
+                <h3 class="daterange">@Report.DateRangeAll.ToString("dd MMMM yyyy","–")</h3>
                 <section class="stat">
                     <div class="parameter">
                         <span>Записей:</span>
@@ -178,7 +181,7 @@
                     </div>
                     <div class="parameter">
                         <span>Дней:</span>
-                        <span>@Report.FirstLastPost.Diff.TotalDays.ToString("#,0.0")</span>
+                        <span>@Report.DateRangePosts.Diff.TotalDays.ToString("#,0.0")</span>
                     </div>
                     <div class="parameter">
                         <span>Сообщений:</span>
