@@ -8,15 +8,15 @@
     background-color: var(--headers-color);
 }
 
-section > header{
+header{
     display: flex;
     align-items: center;
 }
-section > header img{
+header img{
     height: 24px;
     margin: 0 6px;
 }
-.menu-header {
+header h2 {
     font-size: 1.2em;
 }
 
@@ -34,16 +34,3 @@ section > header img{
     border-top: 1px solid var(--border-brush);
     padding-top: 10px;
 }
-
-
-.menu-list-link {
-    display: block;
-    padding: 4px 0;
-    border-radius: 2px;
-    text-decoration: none;
-    color: black;
-}
-
-    .menu-list-link:hover {
-        background-color: gainsboro;
-    }

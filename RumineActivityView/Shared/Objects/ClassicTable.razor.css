@@ -14,32 +14,39 @@
 }
     .table-activity th {
         background-color: whitesmoke;
+        border-bottom: 1px solid gainsboro;
     }
 
-th.year, th.month{
+
+
+.title{
+    font-size: 1.2em;
+    padding: 6px 10px;
 }
-.th.title{
-    font-size: 1.5em;
-}
-th.year{
+.primary-key {
     padding: 8px 15px;
+    border-right: 1px solid gainsboro;
 }
-th.year-sum-title{
+.secondary-key {
+    padding: 8px;
+    font-size: 0.95em;
+}
+
+.sum-title{
     font-weight: 500;
 }
-td.year-sum {
+.sum {
     border-left: 1px solid whitesmoke;
     border-right: 1px solid whitesmoke;
 }
 
-th.month {
-    padding: 8px;
-    font-size: 0.95em;
-}
-td.month-posts, td.month-unknown {
+.posts{
     font-size: 0.9em;
 }
-td.month-posts:hover, td.month-unknown:hover {
-    color: blue;
-    cursor: pointer;
+    .posts:hover {
+        color: blue;
+        cursor: pointer;
+    }
+.unknown{
+
 }

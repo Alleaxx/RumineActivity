@@ -5,10 +5,10 @@
     <thead>
         <tr>
             <th class="title">@Report.Period.Name</th>
-            <th class="year-sum-title">всего</th>
+            <th class="sum-title">Σ</th>
             @foreach (var key in Table.ColGroups)
             {
-                <th class="month">@key</th>
+                <th class="secondary-key">@key</th>
             }
         </tr>
     </thead>
@@ -16,18 +16,18 @@
         @foreach (var group in Table.Table)
         {
             <tr>
-                <th class="year">@group.Key</th>
-                <td class="year-sum">@Table.TableSum[group.Key].ToString("#,0")</td>
+                <th class="primary-key">@group.Key</th>
+                <td class="posts sum">@Table.TableSum[group.Key].ToString("#,0")</td>
 
                 @foreach (var col in group.Value)
                 {
                     if (col.Value == null)
                     {
-                        <td class="month-unknown">?</td>
+                        <td class="posts unknown">?</td>
                     }
                     else
                     {
-                        <td class="month-posts" title="@($"{col.Value.Range.From.ToString(col.Value.DateFormat)}")" style="@($"background-color: {View.CheckEntry(col.Value).Color}")">
+                        <td class="posts" title="@($"{col.Value.Range.From.ToString(col.Value.DateFormat)}")" style="@($"background-color: {View.CheckEntry(col.Value).Color}")">
                             @col.Value.PostsDefault.ToString("#,0")
                         </td>
                     }

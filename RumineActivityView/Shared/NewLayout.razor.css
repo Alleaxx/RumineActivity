@@ -11,7 +11,7 @@
         "logo logo"
         "menu content"
         "footer footer";
-    margin: 0 5em;
+    margin: auto;
     background-color: white;
     border: 2px solid var(--border-brush);
     border-radius: 3px;
@@ -19,7 +19,7 @@
 }
 
 
-    .container > main {
+    main {
         grid-area: content;
         padding: var(--inner-padding);
     }

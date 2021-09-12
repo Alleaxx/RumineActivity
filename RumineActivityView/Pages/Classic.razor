@@ -1,6 +1,15 @@
 ﻿@inherits StatComponent
 @page "/classic"
 <style>
+    .classic header{
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid gainsboro;
+    }
+    .classic header img{
+        width: 24px;
+        margin: 0 8px;
+    }
     .classic h2{
         margin: 10px 0 4px 0;
     }
@@ -12,10 +21,14 @@
         color: gray;
         font-size: 0.8em;
     }
+    .content{
+        padding: 0.5em 1em;
+    }
 </style>
 
 <section class="classic">
     <header>
+        <img src="images/calendar.svg" />
         <h2>Классическая таблица</h2>
     </header>
     <div class="content">

@@ -137,3 +137,20 @@ h4.options-list-header{
     .creation button:hover {
         background-color: lightgreen;
     }
+
+    .source .more-options{
+        margin: 7px 1em;
+    }
+    .source input{
+        margin: 0 4px;
+        border: 0;
+        border-bottom: 1px solid gray;
+    }
+
+    #input-days{
+        width: 4em;
+    }
+    #topic-id{
+        width: 6em;
+    }
+

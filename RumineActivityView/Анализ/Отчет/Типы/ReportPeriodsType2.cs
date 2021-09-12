@@ -39,7 +39,7 @@ namespace RumineActivityView
                     break;
                 }
 
-                Entry newEntry = new Entry(period.DateFormat, range, posts.ToNearestPost, posts.FromNearestPost, Options.TopicMode, posts.Mod);
+                Entry newEntry = new Entry(newEntries.Count, period.DateFormat, range, posts.ToNearestPost, posts.FromNearestPost, Options.TopicMode, posts.Mod);
                 newEntries.Add(newEntry);
 
                 fromDate = toDate;

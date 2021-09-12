@@ -12,62 +12,6 @@
     </ul>
 
     <div class="content">
-        <style>
-            .name {
-                font-size: 0.7em;
-                max-width: 50px;
-                text-wrap: normal;
-                color: gray;
-            }
-
-            .value {
-                font-size: 0.8em;
-                max-width: 50px;
-            }
-
-            .g-entry:hover {
-                color: red;
-            }
-
-            svg {
-                width: 100%;
-                margin: 10px 0;
-            }
-
-            .activity-line {
-                fill: #ffd8a8;
-                stroke: #e3830e;
-            }
-            .activity-line-graph {
-                stroke: orange;
-                stroke-width: 2px;
-                cursor: pointer;
-                z-index: 6;
-            }
-                .activity-line-graph:hover {
-                    stroke-width: 4px;
-                }
-            .point{
-                fill: darkred;
-                z-index: 10;
-            }
-                .help-line{
-                stroke: gainsboro;
-                stroke-width: 1px;
-                cursor: pointer;
-            }
-            
-
-            .trasparent-rect{
-                fill: transparent;
-                stroke: transparent;
-                cursor: pointer;
-            }
-            .trasparent-rect:hover{
-                fill: whitesmoke;
-            }
-        </style>
-
         @if (Mode.Type == DViewTypes.Gistogramm)
         {
             <svg height="@Options.Height" viewBox="@($"0 0 {Options.Width} {Options.Height}")">
@@ -146,30 +90,27 @@
 
     [Parameter]
     public ViewType Mode { get; set; } = new ViewType(RumineActivityView.DViewTypes.Values);
+    [Parameter]
+    public EventCallback<ViewType> ModeChanged { get; set; }
+
     private void Set(ViewType mode)
     {
         Mode = mode;
         ModeChanged.InvokeAsync(mode);
     }
-    [Parameter]
-    public EventCallback<ViewType> ModeChanged { get; set; }
 
-    public DiagramSize Options { get; set; } = new DiagramSize();
+    private DiagramSize Options { get; set; } = new DiagramSize();
 
-    public Gistogramm Gistogramm => new Gistogramm(Report, Options);
-    public Graphic Graphic => new Graphic(Report, Options);
-
-
-
-    public int TextLength { get; set; }
-    public double WritingsPer { get; set; }
-
-    private int MaxEntriesForEveryWriting { get; set; } = 14;
-    private double EntriesDivider { get; set; } = 10;
+    private Gistogramm Gistogramm => new Gistogramm(Report, Options);
+    private Graphic Graphic => new Graphic(Report, Options);
 
     private bool CheckWriting(int entryIndex)
     {
-        return (Report.Length < MaxEntriesForEveryWriting) || ((entryIndex % (Report.Length / EntriesDivider)) < 1);
+        int entriesCount = Report.Length;
+        int maxAllowedEntries = 14;
+        double everyEntryN = 10;
+
+        return (entriesCount < maxAllowedEntries) || ((entryIndex % (entriesCount / everyEntryN)) < 1);
     }
 
 }

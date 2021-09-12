@@ -17,6 +17,7 @@ namespace RumineActivityView
 
         public DateRange Range { get; private set; }
         public string Name { get; private set; }
+        public int Index { get; private set; }
 
 
         //Разделение дат в интерфейсе
@@ -25,8 +26,9 @@ namespace RumineActivityView
 
 
         //Периодический отчет
-        public Entry(DateRange range, string format, TopicsMode mode)
+        public Entry(int index,DateRange range, string format, TopicsMode mode)
         {
+            Index = index;
             SeparateDates = false;
             Range = range;
 
@@ -35,8 +37,9 @@ namespace RumineActivityView
         }
 
         //Периодический отчет Legacy
-        public Entry(string format, DateRange range, Post newer, Post older, TopicsMode topicMode, double mod)
+        public Entry(int index,string format, DateRange range, Post newer, Post older, TopicsMode topicMode, double mod)
         {
+            Index = index;
             SeparateDates = false;
             Range = range;
             SetFormat(format);
@@ -46,8 +49,9 @@ namespace RumineActivityView
         }
         
         //Фактический отчет
-        public Entry(string format, Post newer, Post older, TopicsMode topicMode)
+        public Entry(int index, string format, Post newer, Post older, TopicsMode topicMode)
         {
+            Index = index;
             SeparateDates = true;
             Range = new DateRange(newer, older);
             SetFormat(format);

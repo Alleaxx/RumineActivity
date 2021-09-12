@@ -72,7 +72,7 @@ namespace RumineActivityView
                 TimeSpan dateDiff = currPost.Date - prevPost.Date;
                 if (ignoreDifference || dateDiff >= maxDifference)
                 {
-                    Entry newEntry = new Entry(dateFormat, currPost, prevPost, Options.TopicMode);
+                    Entry newEntry = new Entry(entries.Count, dateFormat, currPost, prevPost, Options.TopicMode);
                     entries.Add(newEntry);
                     prevIndexDiff = 1;
                 }
@@ -84,7 +84,7 @@ namespace RumineActivityView
                 bool last = i == Posts.Length - 1;
                 if(last && !entries.Any())
                 {
-                    Entry newEntry = new Entry(dateFormat, currPost, prevPost, Options.TopicMode);
+                    Entry newEntry = new Entry(entries.Count, dateFormat, currPost, prevPost, Options.TopicMode);
                     entries.Add(newEntry);
                 }
 

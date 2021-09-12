@@ -28,7 +28,7 @@ namespace RumineActivityView
             {
                 toDate = period.GetNextDate(fromDate);
                 DateRange range = new DateRange(fromDate, toDate);
-                Entry entry = new Entry(range, period.DateFormat, Options.TopicMode);
+                Entry entry = new Entry(newEntries.Count, range, period.DateFormat, Options.TopicMode);
 
                 var innerRangeEntries = splittedEntries.Select(e => new EntryDateRangeFraction(range, e)).Where(f => f.Fraction > 0);
 
