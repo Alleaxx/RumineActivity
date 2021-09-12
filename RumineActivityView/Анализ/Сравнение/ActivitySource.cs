@@ -62,8 +62,8 @@ namespace RumineActivityView
             {
                 [CompareProperties.FirstPost] = new DateProperty("Первый пост", firstPost),
                 [CompareProperties.LastPost] = new DateProperty("Последний пост", lastPost),
-                [CompareProperties.DaysActive] = new DoubleProperty("Охватывает дней", "#,0.0", daysActive),
                 [CompareProperties.TotalPosts] = new DoubleProperty("Всего постов", "#,0", sumPosts),
+                [CompareProperties.DaysActive] = new DoubleProperty("Охватывает дней", "#,0.0", daysActive),
                 [CompareProperties.AveragePosts] = new DoubleProperty("~ постов в день", "#,0.0", sumPosts / daysActive),
             };
             Properties = Values.Values.ToArray();
@@ -72,12 +72,12 @@ namespace RumineActivityView
         {
             History = new ICompareProp[]
             {
-                new DoubleProperty("Спустя день", "~ #,0", GetWrittenPosts(1)),
-                new DoubleProperty("Спустя неделю", "~ #,0", GetWrittenPosts(7)),
-                new DoubleProperty("Спустя месяц", "~ #,0", GetWrittenPosts(30)),
-                new DoubleProperty("Спустя 3 месяца", "~ #,0", GetWrittenPosts(90)),
-                new DoubleProperty("Спустя год", "~ #,0", GetWrittenPosts(365)),
-                new DoubleProperty("Спустя 3 года", "~ #,0", GetWrittenPosts(365 * 3))
+                new DoubleProperty("День", "~ #,0", GetWrittenPosts(1)),
+                new DoubleProperty("Неделю", "~ #,0", GetWrittenPosts(7)),
+                new DoubleProperty("Месяц", "~ #,0", GetWrittenPosts(30)),
+                new DoubleProperty("3 месяца", "~ #,0", GetWrittenPosts(90)),
+                new DoubleProperty("Год", "~ #,0", GetWrittenPosts(365)),
+                new DoubleProperty("3 года", "~ #,0", GetWrittenPosts(365 * 3))
             };
         }
 

@@ -1,6 +1,6 @@
 ﻿
 .tables {
-    flex: 5;
+    flex: 3;
 }
 
 .rules {
@@ -29,10 +29,10 @@
 /* ТАБЛИЦА СО СПИСКОМ ЗНАЧЕНИЙ */
 
 .values-table {
-    border: 1px solid var(--border-brush);
     border-collapse: collapse;
-    width: 100%;
     font-size: 0.85em;
+    width: 100%;
+    font-variant-numeric: lining-nums tabular-nums;
 }
 
     .values-table h2 {
@@ -46,15 +46,23 @@
     }
 
     .values-table td {
-        padding: 10px;
-        border: 1px solid gainsboro;
-        text-align: center;
+    }
+    .values-table td, .values-table th {
+        padding: 0.5em 0.5em 0.75em 0.5em;
+        line-height: 1;
+        border-bottom: 1px solid gainsboro;
+    }
+    .values-table tr td:first-child{
+        border-bottom-color: transparent;
     }
 
     .values-table th {
         font-weight: 500;
-        padding: 10px;
-        font-style: italic;
+        border-bottom: 1px solid gainsboro;
+    }
+
+    td.posts{
+        text-align: right;
     }
 
 

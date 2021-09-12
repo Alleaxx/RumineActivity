@@ -29,14 +29,14 @@ html, body {
     padding: 1em;
 }
 
-.select-options {
-    height: 40px;
-    border: 1px solid silver;
+
+
+td.text, th.text {
+    text-align: left;
 }
 
-.select-options option {
-    display: inline-block;
-    padding: 8px 10px;
+td.numbers, th.numbers {
+    text-align: right;
 }
 
 .loading {

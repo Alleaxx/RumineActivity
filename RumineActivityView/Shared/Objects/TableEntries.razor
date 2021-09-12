@@ -8,43 +8,40 @@
                 <tr>
                     <td>Самый активный период</td>
                     <td>@Report.MostActive.Name</td>
-                    <td>@FormatEntry(Report.MostActive)</td>
+                    <td class="numbers">@FormatEntry(Report.MostActive)</td>
                 </tr>
                 <tr>
                     <td>Самый мертвецкий период</td>
                     <td>@Report.MostInactive.Name</td>
-                    <td>@FormatEntry(Report.MostInactive)</td>
+                    <td class="numbers">@FormatEntry(Report.MostInactive)</td>
                 </tr>
             </tbody>
         </table>
-
         <table class="values-table">
-            <colgroup>
-                <col style="width:10%" />
-                <col style="width:18%" />
-                <col style="width:18%" />
-                <col style="width:54%" />
-            </colgroup>
             <tr>
-                <th>№</th>
-                <th colspan="2">Период</th>
-                <th>@View.MeasureUnit.Name @View.MeasureMethod.Name.ToLower()</th>
+                <th class="text">№</th>
+                <th class="text" colspan="2">Период</th>
+                <th class="numbers">Дней</th>
+                <th class="numbers">@View.MeasureUnit.Name @View.MeasureMethod.Name.ToLower()</th>
+                <th class="numbers">~ Страниц в день</th>
             </tr>
             @foreach (var entry in Report.Entries)
             {
-                <tr>
-                    <td>@entry.Index</td>
-                    @if (entry.SeparateDates)
-                    {
-                        <td>@entry.Range.From.ToString(entry.DateFormat)</td>
-                        <td>@entry.Range.To.ToString(entry.DateFormat)</td>
-                    }
-                    else
-                    {
-                        <td colspan="2">@entry.Name</td>
-                    }
-                    <td style="@($"background-color: {View.CheckEntry(entry).Color}")">@FormatEntry(entry)</td>
-                </tr>
+        <tr>
+            <td style="@($"background-color: {View.CheckEntry(entry).Color}")">@entry.Index</td>
+            @if (entry.SeparateDates)
+            {
+                <td>@entry.Range.From.ToString(entry.DateFormat)</td>
+                <td>@entry.Range.To.ToString(entry.DateFormat)</td>
+            }
+            else
+            {
+                <td colspan="2">@entry.Name</td>
+            }
+            <td class="numbers">@entry.Range.Diff.Days.ToString("#,0.0")</td>
+            <td class="numbers posts">@FormatEntry(entry)</td>
+            <td class="numbers posts">@((entry.PostsRelative / 20).ToString("#,0.00"))</td>
+        </tr>
 
             }
         </table>
@@ -86,13 +83,13 @@
                     @foreach (var rule in View.Rules.OfType<RuleRanged>().OrderBy(r => r.Min))
                     {
                         <tr>
-                            <td style="@($"border-left: 10px solid {rule.Color}")" class="rule-range">
+                            <td class="rule-range">
                                 <input type="number" min="0" max="2000" @bind-value="rule.Min">
                             </td>
                             <td class="rule-range">
                                 <input type="number" min="0" max="2000" @bind-value="rule.Max">
                             </td>
-                            <td class="rule-color">
+                            <td class="rule-color" style="@($"border-right: 20px solid {rule.Color}")">
                                 <input type="text"  @bind-value="rule.Color">
                             </td>
                         </tr>

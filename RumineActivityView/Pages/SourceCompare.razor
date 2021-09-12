@@ -63,8 +63,8 @@
 
                 <thead>
                     <tr>
-                        <th>Источник</th>
-                        <th>Тип</th>
+                        <th class="text">Источник</th>
+                        <th class="text">Тип</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -151,26 +151,42 @@
 
                         @foreach (var row in PropertyRows())
                         {
-                            <tr>
-                                <td class="property">@row.First().Name</td>
-                                @foreach (var cell in row)
+                        <tr>
+                            <td class="property">@row.First().Name</td>
+                            @foreach (var cell in row)
+                            {
+                                @*if (cell.CompareEqual())
+            {
+                <td colspan="2">@cell.ToString()</td>
+            }
+            else
+            {
+                <td>@cell.ToString()</td>
+                <td>
+                    <span class="@GetCompareClass(cell)">@GetValueCompare(cell)</span>
+                </td>
+            }*@
+                        <td colspan="2">
+                            <span>@cell.ToString()</span>
+                            @if (!Comparison.IsSimple)
+                            {
+                                <br />
+                                @if (!cell.CompareEqual())
                                 {
-                                    if (cell.CompareEqual())
-                                    {
-                                        <td colspan="2">@cell.ToString()</td>
-                                    }
-                                    else
-                                    {
-                                        <td>@cell.ToString()</td>
-                                        <td>
-                                            <span class="@GetCompareClass(cell)">@GetValueCompare(cell)</span>
-                                        </td>
-                                    }
+                                    <span class="@GetCompareClass(cell)">@GetValueCompare(cell)</span>
                                 }
-                            </tr>
+                                else
+                                {
+                                    <span>&nbsp;</span>
+                                }
+
+                            }
+                        </td>
+                            }
+                        </tr>
                         }
                         <tr>
-                            <th colspan="@(2 + Comparison.Items.Count * 2)">Сообщений написано</th>
+                            <th colspan="@(2 + Comparison.Items.Count * 2)">Сообщений написано спустя</th>
                         </tr>
                         @foreach (var row in HistoryRows())
                         {
