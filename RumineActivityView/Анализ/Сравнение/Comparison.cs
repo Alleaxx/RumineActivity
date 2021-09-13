@@ -16,7 +16,7 @@ namespace RumineActivityView
         public List<ActivitySource> PossibleItems { get; private set; }
 
         public bool IsEmpty => !Items.Any();
-        public bool IsSimple => CompareElement == null;
+        public bool IsSimple => CompareElement == null || (CompareElement != null && Items.Count < 2);
 
 
         public Comparison(IEnumerable<Topic> topics)
