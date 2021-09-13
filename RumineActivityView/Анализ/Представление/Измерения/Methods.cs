@@ -16,13 +16,13 @@ namespace RumineActivityView
             switch (Type)
             {
                 case MeasureMethods.ByDay:
-                    Name = "В среднем в день";
+                    Name = "в среднем в день";
                     break;
                 case MeasureMethods.ByHour:
-                    Name = "В среднем в час";
+                    Name = "в среднем в час";
                     break;
                 case MeasureMethods.ByMonth:
-                    Name = "В среднем за месяц";
+                    Name = "в среднем за месяц";
                     break;
                 case MeasureMethods.Total:
                     Name = "Всего за период";

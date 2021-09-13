@@ -8,7 +8,7 @@ namespace RumineActivityView
     //Отчет с РАВНЫМИ периодами, достраивает недостающие данные
     public class ReportPeriods : ReportCreator
     {
-        public ReportPeriods(IForumSource source, ReportOptions options) : base(source, options)
+        public ReportPeriods(IForumSource source, ReportCreatorOptions options) : base(source, options)
         {
 
         }
@@ -28,29 +28,29 @@ namespace RumineActivityView
             {
                 toDate = period.GetNextDate(fromDate);
                 DateRange range = new DateRange(fromDate, toDate);
-                Entry entry = new Entry(newEntries.Count, range, period.DateFormat, Options.TopicMode);
+                Entry entry = new Entry(newEntries.Count, range, period.DateFormat, Options.TopicMode.Mode);
 
                 var innerRangeEntries = splittedEntries.Select(e => new EntryDateRangeFraction(range, e)).Where(f => f.Fraction > 0);
-
                 double written = innerRangeEntries.Sum(PostsWritten);
-                double PostsWritten(EntryDateRangeFraction obj)
-                {
-                    Entry e = obj.Entry;
-                    double fraction = obj.Fraction;
 
-                    if (fraction == 1)
-                        return e.PostsDefault;
-                    else
-                        return e.PostsDefault * fraction;
-                }
                 entry.Set(PostOutputs.PeriodDifference, written);
                 newEntries.Add(entry);
-
                 fromDate = toDate;
             }
             while (condition.Invoke(toDate));
 
             return new StatisticsReport($"Отчет по периодам", newEntries, Options);
+        }
+
+        private double PostsWritten(EntryDateRangeFraction obj)
+        {
+            Entry e = obj.Entry;
+            double fraction = obj.Fraction;
+
+            if (fraction == 1)
+                return e.PostsDefault;
+            else
+                return e.PostsDefault * fraction;
         }
     }
 

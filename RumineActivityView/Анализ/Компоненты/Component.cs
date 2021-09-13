@@ -15,8 +15,11 @@ namespace RumineActivityView
 
         public string FormatEntry(Entry entry)
         {
+            return FormatEntry(entry, View.MeasureMethod.Type);
+        }
+        public string FormatEntry(Entry entry, MeasureMethods method)
+        {
             PostOutputs postsType = View.OutValue.Type;
-            MeasureMethods method = View.MeasureMethod.Type;
 
             double value = entry.GetPosts(postsType, method);
 
@@ -31,9 +34,13 @@ namespace RumineActivityView
             else
             {
                 value /= View.MeasureUnit.Value;
-                string zeros = string.Join("", Enumerable.Repeat("0", View.RoundAccuracy));
-                return value.ToString($"#,0.{zeros}");
+                return value.ToString(FormatString());
             }
+        }
+        public string FormatString()
+        {
+            string zeros = string.Join("", Enumerable.Repeat("0", View.RoundAccuracy));
+            return $"#,0.{zeros}";
         }
     }
 }

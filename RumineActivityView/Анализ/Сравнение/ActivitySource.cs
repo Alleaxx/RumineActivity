@@ -41,7 +41,7 @@ namespace RumineActivityView
             bool Created = Report != null;
             if (!Created)
             {
-                Report = ReportsFactory.CreateReport(Reports.Fact, new ReportOptions(Mode));
+                Report = ReportsFactory.CreateReport(Reports.Fact, new ReportCreatorOptions(Mode));
                 if (!Report.IsEmpty)
                 {
                     SetProperties();

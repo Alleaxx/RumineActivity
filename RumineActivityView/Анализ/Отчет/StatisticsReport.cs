@@ -26,11 +26,11 @@ namespace RumineActivityView
         public Entry MostInactive { get; private set; }
         public Entry MostActive { get; private set; }
 
-        public StatisticsReport() : this("Нулевой отчет", Array.Empty<Entry>(), new ReportOptions())
+        public StatisticsReport() : this("Нулевой отчет", Array.Empty<Entry>(), new ReportCreatorOptions())
         {
             Type = new ReportType(Reports.Empty);
         }
-        public StatisticsReport(string name, IEnumerable<Entry> entries, ReportOptions options)
+        public StatisticsReport(string name, IEnumerable<Entry> entries, ReportCreatorOptions options)
         {
             Name = name;
             Entries = entries.ToArray();

@@ -8,7 +8,7 @@ namespace RumineActivityView.Pages
 {
     public partial class Statistics : StatComponent
     {
-        private ReportOptions Options { get; set; } = new ReportOptions();
+        private ReportCreatorOptions Options { get; set; } = new ReportCreatorOptions();
         private StatisticsReport Report
         {
             get => App.Report;

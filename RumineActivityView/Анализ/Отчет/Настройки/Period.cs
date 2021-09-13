@@ -87,7 +87,7 @@ namespace RumineActivityView
             {
                 if (Year == 0)
                 {
-                    return new DateRange(ReportOptions.FoundationDate, DateTime.Now);
+                    return new DateRange(ReportCreatorOptions.FoundationDate, DateTime.Now);
                 }
                 else
                 {

@@ -14,7 +14,6 @@ namespace RumineActivityView
     {
         public override string ToString() => $"{Name} | {PostsDefault}";
 
-
         public DateRange Range { get; private set; }
         public string Name { get; private set; }
         public int Index { get; private set; }
@@ -25,31 +24,20 @@ namespace RumineActivityView
         public string DateFormat { get; private set; } = "dd MMMM yyyy";
 
 
+
         //Периодический отчет
-        public Entry(int index,DateRange range, string format, TopicsMode mode)
+        public Entry(int index, DateRange range, string format, TopicsModes mode)
         {
             Index = index;
             SeparateDates = false;
             Range = range;
-
             SetFormat(format);
+
             SetMode(mode);
-        }
-
-        //Периодический отчет Legacy
-        public Entry(int index,string format, DateRange range, Post newer, Post older, TopicsMode topicMode, double mod)
-        {
-            Index = index;
-            SeparateDates = false;
-            Range = range;
-            SetFormat(format);
-
-            SetPostsDiff(newer, older, mod);
-            SetMode(topicMode);
         }
         
         //Фактический отчет
-        public Entry(int index, string format, Post newer, Post older, TopicsMode topicMode)
+        public Entry(int index, Post newer, Post older, string format, TopicsModes topicMode)
         {
             Index = index;
             SeparateDates = true;
@@ -75,9 +63,9 @@ namespace RumineActivityView
             Posts[PostSources.Difference][PostOutputs.PeriodDifference] = postsDifferenceAll - postsDifferenceTopic;
             Posts[PostSources.Difference][PostOutputs.PeriodEnd] = newer.ID - newer.TopicIndex;
         }
-        private void SetMode(TopicsMode mode)
+        private void SetMode(TopicsModes mode)
         {
-            switch (mode.Mode)
+            switch (mode)
             {
                 case TopicsModes.OnlyChat:
                 case TopicsModes.Topic:

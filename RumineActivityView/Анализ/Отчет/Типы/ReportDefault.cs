@@ -8,7 +8,7 @@ namespace RumineActivityView
     //Отчет по существующим записям
     public class ReportDefault : ReportCreator
     {
-        public ReportDefault(IForumSource source, ReportOptions options) : base(source, options)
+        public ReportDefault(IForumSource source, ReportCreatorOptions options) : base(source, options)
         {
 
         }

@@ -55,7 +55,7 @@ namespace RumineActivityView
             ViewOptions = new ViewOptions();
             EditingPost = new NewPost();
             Comparison = new Comparison(Topics);
-            Report = ReportsFactory.CreateReport(Reports.Periodical, new ReportOptions(), new ForumSourceOwn(Posts, Topics));
+            Report = ReportsFactory.CreateReport(Reports.Periodical, new ReportCreatorOptions(), new ForumSourceOwn(Posts, Topics));
         }
 
         private void SetOfflineSource()

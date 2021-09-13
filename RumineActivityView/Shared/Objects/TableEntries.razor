@@ -18,46 +18,59 @@
             </tbody>
         </table>
         <table class="values-table">
-            <tr>
-                <th class="text">№</th>
-                <th class="text" colspan="2">Период</th>
-                <th class="numbers">Дней</th>
-                <th class="numbers">@View.MeasureUnit.Name @View.MeasureMethod.Name.ToLower()</th>
-                <th class="numbers">~ Страниц в день</th>
-            </tr>
-            @foreach (var entry in Report.Entries)
-            {
-        <tr>
-            <td style="@($"background-color: {View.CheckEntry(entry).Color}")">@entry.Index</td>
-            @if (entry.SeparateDates)
-            {
-                <td>@entry.Range.From.ToString(entry.DateFormat)</td>
-                <td>@entry.Range.To.ToString(entry.DateFormat)</td>
-            }
-            else
-            {
-                <td colspan="2">@entry.Name</td>
-            }
-            <td class="numbers">@entry.Range.Diff.Days.ToString("#,0.0")</td>
-            <td class="numbers posts">@FormatEntry(entry)</td>
-            <td class="numbers posts">@((entry.PostsRelative / 20).ToString("#,0.00"))</td>
-        </tr>
+            <thead>
+                <tr>
+                    <th colspan="6">
+                        @*<b>@View.MeasureUnit.Name</b>*@
+                        <CollectionSelect HeaderText="Измерение в:" List="Selection.Units" Selected="View.MeasureUnit" T="MeasureUnit" OnSelectCallback="Set" />
+                    </th>
+                </tr>
+                <tr>
+                    <th class="text">№</th>
+                    <th class="text" colspan="2">Период</th>
+                    <th class="numbers">Дней</th>
+                    <th class="numbers">всего за период</th>
+                    <th class="numbers">
+                        <CollectionSelect List="Selection.Methods" Selected="View.MeasureMethod" T="MeasureMethod" OnSelectCallback="Set" />
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var entry in Report.Entries)
+                {
+                    <tr>
+                        <td style="@($"background-color: {View.CheckEntry(entry).Color}")">@entry.Index</td>
+                        @if (entry.SeparateDates)
+                        {
+                            <td>@entry.Range.From.ToString(entry.DateFormat)</td>
+                            <td>@entry.Range.To.ToString(entry.DateFormat)</td>
+                        }
+                        else
+                        {
+                            <td colspan="2">@entry.Name</td>
+                        }
+                        <td class="numbers">@entry.Range.Diff.Days.ToString("#,0")</td>
+                        <td class="numbers posts">@FormatEntry(entry, MeasureMethods.Total)</td>
+                        <td class="numbers posts">@FormatEntry(entry)</td>
+                    </tr>
 
-            }
+                }
+
+            </tbody>
         </table>
     </div>
 
     <section class="rules">
         <div class="content">
-            <section class="options-section">
-                <Collection HeaderText="Единицы измерения:" List="Selection.Units" Selected="View.MeasureUnit" T="MeasureUnit" OnSelectCallback="Set" />
-            </section>
-            <section class="options-section">
-                <Collection HeaderText="Метод измерения:" List="Selection.Methods" Selected="View.MeasureMethod" T="MeasureMethod" OnSelectCallback="Set" />
-            </section>
-            @*<section>
-                <Collection HeaderText="Значения постов:" List="Selection.Outs" Selected="View.OutValue" T="OutputValue" OnSelectCallback="Set" />
-            </section>*@
+            @*<section class="options-section">
+            <Collection HeaderText="Единицы измерения:" List="Selection.Units" Selected="View.MeasureUnit" T="MeasureUnit" OnSelectCallback="Set" />
+        </section>
+        <section class="options-section">
+            <Collection HeaderText="Метод измерения:" List="Selection.Methods" Selected="View.MeasureMethod" T="MeasureMethod" OnSelectCallback="Set" />
+        </section>
+        <section>
+            <Collection HeaderText="Значения постов:" List="Selection.Outs" Selected="View.OutValue" T="OutputValue" OnSelectCallback="Set" />
+        </section>*@
 
             <div class="option-accuracy">
                 <label>
@@ -71,8 +84,8 @@
                 <table class="rules-table">
                     <caption><h4 class="rules-header">Правила:</h4></caption>
                     <colgroup>
-                        <col style="width:30%"/>
-                        <col style="width:30%"/>
+                        <col style="width:30%" />
+                        <col style="width:30%" />
                         <col style="width:40%" />
                     </colgroup>
                     <tr>
@@ -90,7 +103,7 @@
                                 <input type="number" min="0" max="2000" @bind-value="rule.Max">
                             </td>
                             <td class="rule-color" style="@($"border-right: 20px solid {rule.Color}")">
-                                <input type="text"  @bind-value="rule.Color">
+                                <input type="text" @bind-value="rule.Color">
                             </td>
                         </tr>
                     }

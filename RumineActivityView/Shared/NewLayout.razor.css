@@ -14,6 +14,7 @@
     background-color: white;
     border: 2px solid var(--border-brush);
     border-radius: 3px;
+    min-width: 800px;
     max-width: 1400px;
 }
 

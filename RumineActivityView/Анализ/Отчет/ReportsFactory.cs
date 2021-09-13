@@ -9,18 +9,18 @@ namespace RumineActivityView
     {
         public static StatisticsReport CreateClassicReport()
         {
-            return CreateReport(Reports.Periodical, new ReportOptions()
+            return CreateReport(Reports.Periodical, new ReportCreatorOptions()
             {
                 Period = new Period(Periods.Month)
             });
         }
 
 
-        public static StatisticsReport CreateReport(Reports type, ReportOptions options)
+        public static StatisticsReport CreateReport(Reports type, ReportCreatorOptions options)
         {
             return CreateReport(type, options, new ForumSourceApp());
         }
-        public static StatisticsReport CreateReport(Reports type, ReportOptions options, IForumSource source)
+        public static StatisticsReport CreateReport(Reports type, ReportCreatorOptions options, IForumSource source)
         {
             switch (type)
             {

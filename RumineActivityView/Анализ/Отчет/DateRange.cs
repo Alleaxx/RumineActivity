@@ -8,7 +8,6 @@ namespace RumineActivityView
     //Временные рамки
     public class DateRange
     {
-        public override string ToString() => ToString();
         public string ToString(string format = "", string sep = "-")
         {
             return $"{From.ToString(format)} {sep} {To.ToString(format)}";
@@ -35,11 +34,8 @@ namespace RumineActivityView
             From = older.Date;
         }
 
-        public bool IsZeroDiff => From == To;
-        public bool IsSeparate(DateRange range) => GetFraction(range) == 0;     //полностью снаружи
-        public bool IsCovered(DateRange range) => GetFraction(range) == 1;      //полностью внутри
+
         public bool IsDateInside(DateTime date) => From <= date && date <= To;  //полностью внутри
-        public bool IsIntersected(DateRange range) => GetFraction(range) > 0;   //частично перекрывает
 
         //Получать % интервала в другом интервале
         public double GetFraction(DateRange range)

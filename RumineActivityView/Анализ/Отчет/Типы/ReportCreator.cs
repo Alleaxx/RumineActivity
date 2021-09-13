@@ -15,12 +15,11 @@ namespace RumineActivityView
     public abstract class ReportCreator : IReportCreator
     {
         protected Post[] Posts { get; private set; }
-        protected Topic[] Topics { get; private set; }
-        protected ReportOptions Options { get; private set; }
+        protected ReportCreatorOptions Options { get; private set; }
 
         public bool IsEmptyReport => Posts.Length < 2;
 
-        public ReportCreator(IForumSource source, ReportOptions options)
+        public ReportCreator(IForumSource source, ReportCreatorOptions options)
         {
             if (options != null)
             {
@@ -28,16 +27,13 @@ namespace RumineActivityView
             }
             else
             {
-                Options = new ReportOptions();
+                Options = new ReportCreatorOptions();
             }
 
             Posts = source.Posts
                 .Where(p => Options.TopicMode.Filter(p, source.Topics))
                 .Where(p => options.DateRange.IsDateInside(p.Date))
                 .OrderBy(d => d.Date)
-                .ToArray();
-            Topics = source.Topics
-                .OrderBy(d => d.ID)
                 .ToArray();
         }
         public StatisticsReport Create()
@@ -72,7 +68,7 @@ namespace RumineActivityView
                 TimeSpan dateDiff = currPost.Date - prevPost.Date;
                 if (ignoreDifference || dateDiff >= maxDifference)
                 {
-                    Entry newEntry = new Entry(entries.Count, dateFormat, currPost, prevPost, Options.TopicMode);
+                    Entry newEntry = CreateFactEntry(entries.Count, currPost, prevPost);
                     entries.Add(newEntry);
                     prevIndexDiff = 1;
                 }
@@ -82,16 +78,18 @@ namespace RumineActivityView
                 }
 
                 bool last = i == Posts.Length - 1;
-                if(last && !entries.Any())
+                if (last && !entries.Any())
                 {
-                    Entry newEntry = new Entry(entries.Count, dateFormat, currPost, prevPost, Options.TopicMode);
+                    Entry newEntry = CreateFactEntry(entries.Count, currPost, prevPost);
                     entries.Add(newEntry);
                 }
-
             }
             return entries;
         }
+
+        private Entry CreateFactEntry(int index, Post newPost, Post oldPost)
+        {
+            return new Entry(index, newPost, oldPost, Options.Period.DateFormat, Options.TopicMode.Mode);
+        }
     }
-
-
 }

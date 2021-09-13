@@ -18,7 +18,7 @@ namespace RumineActivityView
         public int RoundAccuracy { get; set; } = 2;
 
         public MeasureUnit MeasureUnit { get; set; } = new MeasureUnit(MeasureUnits.Messages);
-        public MeasureMethod MeasureMethod { get; set; } = new MeasureMethod(MeasureMethods.Total);
+        public MeasureMethod MeasureMethod { get; set; } = new MeasureMethod(MeasureMethods.ByDay);
         public OutputValue OutValue { get; set; } = new OutputValue(PostOutputs.PeriodDifference);
 
 
