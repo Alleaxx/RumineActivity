@@ -15,5 +15,32 @@ namespace RumineActivityView
         {
             return new DateRange(date, toDate);
         }
+
+        public static DateTime NextDate(this DateTime date, Periods period)
+        {
+            switch (period)
+            {
+                case Periods.Month:
+                    DateTime nextMonth = date.AddMonths(1);
+                    return new DateTime(nextMonth.Year, nextMonth.Month, 1);
+                case Periods.Year:
+                    return new DateTime(date.Year + 1, 1, 1);
+                default:
+                    return date;
+            }
+        }
+        public static DateTime NextDate(this DateTime date, Period period)
+        {
+            switch (period.Type)
+            {
+                case Periods.Month:
+                    DateTime nextMonth = date.AddMonths(1);
+                    return new DateTime(nextMonth.Year, nextMonth.Month, 1);
+                case Periods.Year:
+                    return new DateTime(date.Year + 1, 1, 1);
+                default:
+                    return date + period.TimeInterval;
+            }
+        }
     }
 }

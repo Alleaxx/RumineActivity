@@ -76,8 +76,8 @@ namespace RumineActivityView
             Add(new Post() { ID = 1063961, TopicID = 11371, TopicIndex = 108719, Date = new DateTime(2015, 2, 1) });
             Add(new Post() { ID = 1079034, TopicID = 11371, TopicIndex = 121312, Date = new DateTime(2015, 3, 1) });
             Add(new Post() { ID = 1090150, TopicID = 11371, TopicIndex = 130062, Date = new DateTime(2015, 4, 1) });
-            Add(new Post() { ID = 1094867, TopicID = 11371, TopicIndex = 134060, Date = new DateTime(2015, 4, 10) });
-            Add(new Post() { ID = 1094942, TopicID = 13408, TopicIndex = 1, Date = new DateTime(2015, 4, 10) });
+            Add(new Post() { ID = 1094867, TopicID = 11371, TopicIndex = 134060, Date = new DateTime(2015, 4, 10, 21, 0, 0) });
+            Add(new Post() { ID = 1094942, TopicID = 13408, TopicIndex = 1, Date = new DateTime(2015, 4, 10, 21, 54, 0) });
             Add(new Post() { ID = 1101882, TopicID = 13408, TopicIndex = 5835, Date = new DateTime(2015, 5, 1) });
             Add(new Post() { ID = 1109911, TopicID = 13408, TopicIndex = 12475, Date = new DateTime(2015, 6, 1) });
             Add(new Post() { ID = 1116139, TopicID = 13408, TopicIndex = 17386, Date = new DateTime(2015, 7, 1) });
@@ -94,8 +94,8 @@ namespace RumineActivityView
             Add(new Post() { ID = 1208486, TopicID = 13408, TopicIndex = 94450, Date = new DateTime(2016, 6, 1) });
             Add(new Post() { ID = 1215008, TopicID = 13408, TopicIndex = 99636, Date = new DateTime(2016, 7, 1) });
             Add(new Post() { ID = 1235106, TopicID = 13408, TopicIndex = 118139, Date = new DateTime(2016, 8, 1) });
-            Add(new Post() { ID = 1239049, TopicID = 13408, TopicIndex = 121930, Date = new DateTime(2016, 8, 3) });
-            Add(new Post() { ID = 1239050, TopicID = 15361, TopicIndex = 1, Date = new DateTime(2016, 8, 3) });
+            Add(new Post() { ID = 1239049, TopicID = 13408, TopicIndex = 121930, Date = new DateTime(2016, 8, 3, 0,0,0) });
+            Add(new Post() { ID = 1239050, TopicID = 15361, TopicIndex = 1, Date = new DateTime(2016, 8, 3,1,0,0) });
             Add(new Post() { ID = 1266015, TopicID = 15361, TopicIndex = 25108, Date = new DateTime(2016, 9, 1) });
             Add(new Post() { ID = 1276411, TopicID = 15361, TopicIndex = 34968, Date = new DateTime(2016, 10, 1) });
             Add(new Post() { ID = 1281285, TopicID = 15361, TopicIndex = 39317, Date = new DateTime(2016, 11, 1) });

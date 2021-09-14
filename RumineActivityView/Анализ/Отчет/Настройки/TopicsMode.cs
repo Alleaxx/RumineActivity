@@ -15,30 +15,21 @@ namespace RumineActivityView
 
         public string Name { get; private set; }
         public TopicsModes Mode { get; private set; }
-        public bool AllForum { get; private set; }
-
-        public bool OnlyChat { get; private set; }
-        public bool OnlyNonChat { get; private set; }
         public int TopicId { get; set; } = 1;
 
         public TopicsMode(TopicsModes mode)
         {
             Mode = mode;
-            Name = "Режим темы";
-            AllForum = false;
             switch (mode)
             {
                 case TopicsModes.All:
                     Name = "Весь форум";
-                    AllForum = true;
                     break;
                 case TopicsModes.NotChat:
                     Name = "Все помимо чата";
-                    OnlyNonChat = true;
                     break;
                 case TopicsModes.OnlyChat:
                     Name = "Только чат";
-                    OnlyChat = true;
                     break;
                 case TopicsModes.Topic:
                     Name = "Конкретная тема";
@@ -58,10 +49,6 @@ namespace RumineActivityView
                 case TopicsModes.All:
                     return true;
                 case TopicsModes.NotChat:
-                    if (topic.IsChat.HasValue && topic.IsChat.Value)
-                        return false;
-                    else
-                        return true;
                 case TopicsModes.OnlyChat:
                     if (topic.IsChat.HasValue && topic.IsChat.Value)
                         return true;

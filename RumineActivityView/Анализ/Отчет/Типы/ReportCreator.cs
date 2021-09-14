@@ -29,12 +29,8 @@ namespace RumineActivityView
             {
                 Options = new ReportCreatorOptions();
             }
-
-            Posts = source.Posts
-                .Where(p => Options.TopicMode.Filter(p, source.Topics))
-                .Where(p => options.DateRange.IsDateInside(p.Date))
-                .OrderBy(d => d.Date)
-                .ToArray();
+            
+            Posts = Options.GetPostsSource(source);
         }
         public StatisticsReport Create()
         {
@@ -50,14 +46,12 @@ namespace RumineActivityView
         protected abstract StatisticsReport Construct();
 
 
-        protected IEnumerable<Entry> SplitPosts()
+        protected Entry[] SplitPosts()
         {
             return SplitPosts(new TimeSpan(0), true);
         }
-        protected IEnumerable<Entry> SplitPosts(TimeSpan maxDifference, bool ignoreDifference = false)
+        protected Entry[] SplitPosts(TimeSpan maxDifference, bool ignoreDifference = false)
         {
-            string dateFormat = Options.Period.DateFormat;
-
             List<Entry> entries = new List<Entry>();
             int prevIndexDiff = 1;
             for (int i = 1; i < Posts.Length; i++)
@@ -84,7 +78,7 @@ namespace RumineActivityView
                     entries.Add(newEntry);
                 }
             }
-            return entries;
+            return entries.ToArray();
         }
 
         private Entry CreateFactEntry(int index, Post newPost, Post oldPost)

@@ -8,14 +8,10 @@ namespace RumineActivityView
     //Отчет по существующим записям
     public class ReportDefault : ReportCreator
     {
-        public ReportDefault(IForumSource source, ReportCreatorOptions options) : base(source, options)
-        {
-
-        }
+        public ReportDefault(IForumSource source, ReportCreatorOptions options) : base(source, options) { }
         protected override StatisticsReport Construct()
         {
-            var entries = SplitPosts(Options.Period.TimeInterval);
-            return new StatisticsReport($"Отчет по записям", entries, Options);
+            return new StatisticsReport($"Отчет по записям", SplitPosts(Options.Period.TimeInterval), Options);
         }
     }
 }

@@ -96,6 +96,7 @@ namespace RumineActivityView
             return new ActivitySource[]
             {
                 new ActivitySource(new TopicsMode(TopicsModes.All)),
+                new ActivitySource(new TopicsMode(TopicsModes.NotChat)),
                 new ActivitySource(new TopicsMode(TopicsModes.OnlyChat)),
             }.Concat(topics.Select(t => new ActivitySource(t)));
         }

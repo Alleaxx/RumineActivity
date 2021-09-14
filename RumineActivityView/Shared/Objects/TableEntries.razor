@@ -8,12 +8,12 @@
                 <tr>
                     <td>Самый активный период</td>
                     <td>@Report.MostActive.Name</td>
-                    <td class="numbers">@FormatEntry(Report.MostActive)</td>
+                    <td class="numbers">@View.FormatEntry(Report.MostActive)</td>
                 </tr>
                 <tr>
                     <td>Самый мертвецкий период</td>
                     <td>@Report.MostInactive.Name</td>
-                    <td class="numbers">@FormatEntry(Report.MostInactive)</td>
+                    <td class="numbers">@View.FormatEntry(Report.MostInactive)</td>
                 </tr>
             </tbody>
         </table>
@@ -39,7 +39,7 @@
                 @foreach (var entry in Report.Entries)
                 {
                     <tr>
-                        <td style="@($"background-color: {View.CheckEntry(entry).Color}")">@entry.Index</td>
+                        <td style="@($"background-color: {View.Rules.GetFor(entry).Color}")">@entry.Index</td>
                         @if (entry.SeparateDates)
                         {
                             <td>@entry.Range.From.ToString(entry.DateFormat)</td>
@@ -50,8 +50,8 @@
                             <td colspan="2">@entry.Name</td>
                         }
                         <td class="numbers">@entry.Range.Diff.Days.ToString("#,0")</td>
-                        <td class="numbers posts">@FormatEntry(entry, MeasureMethods.Total)</td>
-                        <td class="numbers posts">@FormatEntry(entry)</td>
+                        <td class="numbers posts">@View.FormatEntry(entry, MeasureMethods.Total)</td>
+                        <td class="numbers posts">@View.FormatEntry(entry)</td>
                     </tr>
 
                 }
@@ -93,19 +93,22 @@
                         <th>До</th>
                         <th>Цвет</th>
                     </tr>
-                    @foreach (var rule in View.Rules.OfType<RuleRanged>().OrderBy(r => r.Min))
+                    @foreach (var rule in View.Rules.List)
                     {
-                        <tr>
-                            <td class="rule-range">
-                                <input type="number" min="0" max="2000" @bind-value="rule.Min">
-                            </td>
-                            <td class="rule-range">
-                                <input type="number" min="0" max="2000" @bind-value="rule.Max">
-                            </td>
-                            <td class="rule-color" style="@($"border-right: 20px solid {rule.Color}")">
-                                <input type="text" @bind-value="rule.Color">
-                            </td>
-                        </tr>
+                        if (rule is RuleRanged ruleRanged)
+                        {
+                            <tr>
+                                <td class="rule-range">
+                                    <input type="number" min="0" max="2000" @bind-value="ruleRanged.Min">
+                                </td>
+                                <td class="rule-range">
+                                    <input type="number" min="0" max="2000" @bind-value="ruleRanged.Max">
+                                </td>
+                                <td class="rule-color" style="@($"border-right: 20px solid {rule.Color}")">
+                                    <input type="text" @bind-value="rule.Color">
+                                </td>
+                            </tr>
+                        }
                     }
                 </table>
             </section>

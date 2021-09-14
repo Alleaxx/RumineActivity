@@ -33,6 +33,10 @@ namespace RumineActivityView
             }
         }
 
+        public double GetValue(double val)
+        {
+            return val / Value;
+        }
     }
 
 }

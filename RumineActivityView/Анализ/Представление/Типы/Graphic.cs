@@ -11,74 +11,70 @@ namespace RumineActivityView
     {
         public EntryLine[] Lines { get; private set; }
 
-        public string GetPathAttribute()
+
+        public Graphic(StatisticsReport report, DiagramSize options) : base(report, options) { }
+
+        protected override void CreateChart()
+        {
+            List<EntryLine> lines = new List<EntryLine>();
+
+            EntryLine prevEntry = new EntryLine(Size.HeightChart);
+            for (int i = 0; i < Report.Entries.Length; i++)
+            {
+                var currentEntry = Report.Entries[i];
+                EntryLine newLine = new EntryLine(prevEntry, currentEntry, this);
+                lines.Add(newLine);
+                prevEntry = newLine;
+            }
+
+            Lines = lines.ToArray();
+        }
+        public string CreatePathAttribute()
         {
             StringBuilder sb = new StringBuilder(Lines.Length * 4 + 10);
-            sb.Append($"M 0 {Options.HeightChart}");
+            sb.Append($"M 0 {Size.HeightChart}");
             foreach (var entryLine in Lines)
             {
                 sb.Append(entryLine.Point.Path);
             }
             return sb.ToString();
         }
-
-
-        public Graphic(StatisticsReport report, DiagramSize options) : base(report, options)
-        {
-
-        }
-
-        protected override void CreateChart()
-        {
-            List<EntryLine> line = new List<EntryLine>();
-
-            double maxedValue = Report.MostActive.PostsRelative * MaxValueMod;
-
-            EntryLine prevEntry = null;
-            for (int i = 0; i < Report.Entries.Length; i++)
-            {
-                var currentEntry = Report.Entries[i];
-                EntryLine newLine = new EntryLine(prevEntry, i, currentEntry, maxedValue, Options, Report.DateRangePosts);
-                line.Add(newLine);
-                prevEntry = newLine;
-            }
-
-            Lines = line.ToArray();
-        }
     }
-    public class EntryLine
+
+    public class EntryLine : DiagramObject
     {
-        public int Index { get; set; }
-        public Entry Entry { get; set; }
-        public Point Point { get; set; }
-        public Line Line { get; set; }
+        public Point Point { get; private set; }
+        public Line Line { get; private set; }
 
-        public EntryLine(EntryLine prev, int index, Entry entry, double max, DiagramSize options, DateRange range)
+        public EntryLine(double maxHeight)
         {
-            Index = index;
-            Entry = entry;
-
-            int height = (int)(entry.PostsRelative / max * options.HeightChart);
+            Point = new Point()
+            {
+                X = 0
+            };
+            Line = new Line()
+            {
+                X2 = 0,
+                Y2 = (int)maxHeight
+            };
+        }
+        public EntryLine(EntryLine prev, Entry entry, DiagramChart chart) : base(prev, entry, chart)
+        {
+            int height = CountHeight();
             int y = height;
 
-            //Ширина
-            double widthDays = entry.Range.Diff.TotalDays;
-            double allDays = range.Diff.TotalDays;
-            int width = Math.Max(1, (int)(widthDays / allDays * options.Width));
-
-            //Смещение по ширине
-            int x = prev == null ? width : width + prev.Point.X;
+            int width = CountWidth();
+            int x = width + prev.Point.X;
 
             Point = new Point()
             {
                 X = x,
-                Y = (int)(options.HeightChart - y)
+                Y = MaxAllowedHeight - y
             };
-
             Line = new Line()
             {
-                X1 = prev != null ? prev.Line.X2 : 0,
-                Y1 = prev != null ? prev.Line.Y2 : (int)(options.HeightChart),
+                X1 = prev.Line.X2,
+                Y1 = prev.Line.Y2,
                 X2 = Point.X,
                 Y2 = Point.Y
             };

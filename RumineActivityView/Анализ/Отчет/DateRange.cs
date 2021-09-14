@@ -5,8 +5,13 @@ using System.Threading.Tasks;
 
 namespace RumineActivityView
 {
+    interface IDateRange
+    {
+        DateTime From { get; }
+        DateTime To { get; }
+    }
     //Временные рамки
-    public class DateRange
+    public class DateRange : IDateRange
     {
         public string ToString(string format = "", string sep = "-")
         {
@@ -17,6 +22,9 @@ namespace RumineActivityView
         public DateTime From { get; set; }
         public DateTime To { get; set; }
         public TimeSpan Diff => To - From;
+
+        public bool IsEmpty => From == To;
+        public double DaysDifference => Diff.TotalDays;
 
 
         public DateRange()
@@ -35,34 +43,44 @@ namespace RumineActivityView
         }
 
 
-        public bool IsDateInside(DateTime date) => From <= date && date <= To;  //полностью внутри
 
         //Получать % интервала в другом интервале
-        public double GetFraction(DateRange range)
+        public double GetFractionOfRange(DateRange range)
         {
-            if (range.To < From || range.From > To)
+            if(IsEmpty || range.IsEmpty)
             {
                 return 0;
             }
-            else if (range.From < From && range.To > To)
+
+            if (IsOutsideOfRange(range))
+            {
+                return 0;
+            }
+            else if (IsInsideOfRange(range))
             {
                 return 1;
             }
             else
             {
-                DateTime countFrom = From;
-                DateTime countTo = To;
-                if (range.From > From)
-                {
-                    countFrom = range.From;
-                }
-                if (range.To < To)
-                {
-                    countTo = range.To;
-                }
+                DateTime countFrom = range.From > From ? range.From : From;
+                DateTime countTo = range.To < To ? range.To : To;
+
                 TimeSpan compareDifference = countTo - countFrom;
-                return compareDifference.TotalHours / Diff.TotalHours;
+                return compareDifference.TotalDays / DaysDifference;
             }
+        }
+        public bool IsDateInside(DateTime date) => From <= date && date <= To;
+        public bool IsOutsideOfRange(DateRange range)
+        {
+            return range.To < From || range.From > To;
+        }
+        public bool IsInsideOfRange(DateRange range)
+        {
+            return range.From < From && range.To > To;
+        }
+        public bool IsIntersectedWithRange(DateRange range)
+        {
+            return !IsOutsideOfRange(range);
         }
     }
 

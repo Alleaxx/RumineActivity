@@ -27,8 +27,8 @@
                     }
                     else
                     {
-                        <td class="posts" title="@($"{col.Value.Range.From.ToString(col.Value.DateFormat)}")" style="@($"background-color: {View.CheckEntry(col.Value).Color}")">
-                            @col.Value.PostsDefault.ToString("#,0")
+                        <td class="posts" title="@($"{col.Value.Range.From.ToString(col.Value.DateFormat)}")" style="@($"background-color: {View.Rules.GetFor(col.Value).Color}")">
+                            @col.Value.PostsWritten.ToString("#,0")
                         </td>
                     }
                 }

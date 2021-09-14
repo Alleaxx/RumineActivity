@@ -100,7 +100,7 @@ namespace RumineActivityView
             TimeSpan days = new TimeSpan(daysSince, 0, 0, 0, 0);
             DateTime date = Report.DateRangePosts.From + days;
             var entry = Report.Entries.FirstOrDefault(e => e.Range.From >= date) ?? Report.Entries.Last();
-            return entry.GetPosts(PostOutputs.PeriodEnd, MeasureMethods.Total);
+            return entry.LastPostIndex;
         }
     }
 }

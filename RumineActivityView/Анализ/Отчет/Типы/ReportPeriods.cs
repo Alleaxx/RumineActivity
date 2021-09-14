@@ -16,55 +16,68 @@ namespace RumineActivityView
         {
             List<Entry> newEntries = new List<Entry>();
 
-            Period period = Options.Period;
-            DateRange dateRange = Options.DateRange;
-            DateTime lastPostDate = Posts.Last().Date;
             var splittedEntries = SplitPosts();
-            Func<DateTime, bool> condition = Options.EmptyPeriodsEnabled ? toDate => dateRange.IsDateInside(toDate) : toDate => toDate <= lastPostDate; 
+            Func<DateTime, bool> condition = EndCondition(); 
             
-            DateTime fromDate = Options.EmptyPeriodsEnabled ? dateRange.From : Posts.First().Date;
-            DateTime toDate = new DateTime();
-            do
+            DateTime fromDate = Options.EmptyPeriodsEnabled ? Options.DateRange.From : Posts.First().Date;
+            while (true)
             {
-                toDate = period.GetNextDate(fromDate);
-                DateRange range = new DateRange(fromDate, toDate);
-                Entry entry = new Entry(newEntries.Count, range, period.DateFormat, Options.TopicMode.Mode);
-
-                var innerRangeEntries = splittedEntries.Select(e => new EntryDateRangeFraction(range, e)).Where(f => f.Fraction > 0);
-                double written = innerRangeEntries.Sum(PostsWritten);
-
-                entry.Set(PostOutputs.PeriodDifference, written);
+                DateRange currentRange = GetRangeFor(fromDate);
+                Entry entry = new Entry(newEntries.Count, currentRange, Options.Period.DateFormat, Options.TopicMode.Mode);
+                entry.Set(WrittenPosts(splittedEntries, currentRange));
                 newEntries.Add(entry);
-                fromDate = toDate;
-            }
-            while (condition.Invoke(toDate));
 
-            return new StatisticsReport($"Отчет по периодам", newEntries, Options);
+                fromDate = currentRange.To;
+                if (!condition.Invoke(currentRange.To))
+                {
+                    break;
+                }
+            }
+
+            return new StatisticsReport($"Отчет по периодам", newEntries.ToArray(), Options);
         }
 
-        private double PostsWritten(EntryDateRangeFraction obj)
+        private double WrittenPosts(IEnumerable<Entry> splittedEntries, DateRange currentRange)
         {
-            Entry e = obj.Entry;
-            double fraction = obj.Fraction;
+            EntryFraction[] innerEntries = splittedEntries
+                .Where(e => e.Range.IsIntersectedWithRange(currentRange))
+                .Select(e => new EntryFraction(currentRange, e)).ToArray();
+            return innerEntries.Sum(Posts);
 
-            if (fraction == 1)
-                return e.PostsDefault;
+
+            double Posts(EntryFraction obj)
+            {
+                return obj.Entry.PostsWritten * obj.Fraction;
+            }
+        }
+
+        private DateRange GetRangeFor(DateTime now)
+        {
+            DateTime next = now.NextDate(Options.Period);
+            if (next >= Options.DateRange.To)
+                return new DateRange(now, Options.DateRange.To);
             else
-                return e.PostsDefault * fraction;
+                return new DateRange(now, next);
+        }
+        private Func<DateTime, bool> EndCondition()
+        {
+            DateTime lastPostDate = Posts.Last().Date;
+            if (Options.EmptyPeriodsEnabled)
+                return (toDate) => Options.DateRange.To > toDate;
+            else
+                return (toDate) => toDate <= lastPostDate;
         }
     }
 
-    public class EntryDateRangeFraction
+    public class EntryFraction
     {
-        public readonly DateRange Source;
         public readonly Entry Entry;
         public readonly double Fraction;
 
-        public EntryDateRangeFraction(DateRange source, Entry entry)
+        public EntryFraction(DateRange source, Entry entry)
         {
-            Source = source;
             Entry = entry;
-            Fraction = Entry.Range.GetFraction(source);
+            Fraction = Entry.Range.GetFractionOfRange(source);
         }
     }
 }

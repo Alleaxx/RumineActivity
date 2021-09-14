@@ -20,7 +20,7 @@
                     <g title="@entry.Entry.ToString()">
                         <title>@entry.Entry.ToString()</title>
                         <rect class="trasparent-rect" x="@entry.Empty.X" y="@entry.Empty.Y" height="@entry.Empty.Height" width="@entry.Empty.Width" />
-                        <rect x="@entry.Filled.X" y="@entry.Filled.Y" height="@entry.Filled.Height" width="@entry.Filled.Width" fill="@View.CheckEntry(entry.Entry).Color" stroke="gray" />
+                        <rect x="@entry.Filled.X" y="@entry.Filled.Y" height="@entry.Filled.Height" width="@entry.Filled.Width" fill="@View.Rules.GetFor(entry.Entry).Color" stroke="gray" />
                         @if (CheckWriting(entry.Index))
                         {
                             <g>
@@ -28,7 +28,7 @@
                                     @entry.Entry.Name
                                 </text>
                                 <text class="value" x="@entry.Empty.X" y="@(Options.HeightChart + 40)">
-                                    @entry.Entry.PostsDefault.ToString("#,0")
+                                    @entry.Entry.PostsWritten.ToString("#,0")
                                 </text>
                             </g>
                         }
@@ -51,7 +51,7 @@
                 {
                     <g>
                         <text class="name" x="@entry.Line.X1" y="@(Options.HeightChart + 20)">@entry.Entry.Name</text>
-                        <text class="value" x="@entry.Line.X1" y="@(Options.HeightChart + 40)">@entry.Entry.PostsDefault.ToString("#,0")</text>
+                        <text class="value" x="@entry.Line.X1" y="@(Options.HeightChart + 40)">@entry.Entry.PostsWritten.ToString("#,0")</text>
                     </g>
                 }
             </g>
@@ -63,7 +63,7 @@
             <svg height="@Options.Height" viewBox="@($"0 0 {Options.Width} {Options.Height}")">
                 <line class="help-line" x1="0" x2="@Options.Width" y1="@(Options.HeightChart)" y2="@(Options.HeightChart)" />
                 <g>
-                    <path class="activity-line" d="@Graphic.GetPathAttribute()" />
+                    <path class="activity-line" d="@Graphic.CreatePathAttribute()" />
                 </g>
             </svg>
         }

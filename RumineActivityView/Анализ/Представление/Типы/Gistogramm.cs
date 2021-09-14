@@ -17,61 +17,61 @@ namespace RumineActivityView
 
         protected override void CreateChart()
         {
-            double max = Report.MostActive.PostsRelative * MaxValueMod;
-
-            EntryRectangle prevEntry = null;
+            EntryRectangle prevEntry = new EntryRectangle();
             List<EntryRectangle> rects = new List<EntryRectangle>();
             for (int i = 0; i < Report.Entries.Length; i++)
             {
-                var entry = Report.Entries[i];
-                EntryRectangle newRect = new EntryRectangle(prevEntry, i, entry, max, Options, Report.DateRangePosts);
+                Entry entry = Report.Entries[i];
+                EntryRectangle newRect = new EntryRectangle(prevEntry, entry, this);
                 rects.Add(newRect);
                 prevEntry = newRect;
             }
             Rectangles = rects.ToArray();
         }
     }
-    public class EntryRectangle
+
+    public class EntryRectangle : DiagramObject
     {
-        public Entry Entry { get; private set; }
-        public int Index { get; private set; }
         public Rect Empty { get; private set; } = new Rect();
         public Rect Filled { get; private set; } = new Rect();
 
-        public EntryRectangle(EntryRectangle prev, int index, Entry entry, double max, DiagramSize options, DateRange range)
+        public EntryRectangle()
         {
-            Index = index;
-            Entry = entry;
+            Filled = new Rect()
+            {
+                X = 0,
+                Width = 0
+            };
+        }
+        public EntryRectangle(EntryRectangle prev, Entry entry, DiagramChart chart) : base(prev, entry, chart)
+        {
+            int x = prev.Filled.X + prev.Filled.Width;
 
-            //Ширина
-            double widthDays = entry.Range.Diff.TotalDays;
-            double allDays = range.Diff.TotalDays;
-            int width = Math.Max(1, (int)(widthDays / allDays * options.Width));
-
-            //Отступ от левого края
-            int x = prev == null ? 0 : prev.Filled.X + prev.Filled.Width;
-
-            //Высота
-            double mod = entry.PostsRelative / max;
-            int height = (int)options.HeightChart;
-            int fillHeight = (int)(height * mod);
-            int emptyHeight = height - fillHeight;
-
+            int width = CountWidth();
+            var (filled, empty) = CountDoubleHeight();
 
             Empty = new Rect()
             {
                 X = x,
                 Width = width,
                 Y = 0,
-                Height = emptyHeight,
+                Height = empty,
             };
             Filled = new Rect()
             {
                 X = x,
                 Width = width,
-                Y = emptyHeight,
-                Height = fillHeight
+                Y = empty,
+                Height = filled
             };
+        }
+
+
+        protected (int filled, int empty) CountDoubleHeight()
+        {
+            int fillHeight = CountHeight();
+            int emptyHeight = MaxAllowedHeight - fillHeight;
+            return (fillHeight, emptyHeight);
         }
     }
 

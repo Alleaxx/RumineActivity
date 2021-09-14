@@ -29,6 +29,25 @@ namespace RumineActivityView
                     break;
             }
         }
+
+        public double GetValue(Entry entry)
+        {
+            return GetValue(entry.PostsWritten, entry.Range);
+        }
+        public double GetValue(double all, DateRange range)
+        {
+            switch (Type)
+            {
+                default:
+                    return all;
+                case MeasureMethods.ByDay:
+                    return all / range.DaysDifference;
+                case MeasureMethods.ByMonth:
+                    return all / range.DaysDifference * 30;
+                case MeasureMethods.ByHour:
+                    return all / range.Diff.TotalHours;
+            }
+        }
     }
 
 }

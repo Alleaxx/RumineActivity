@@ -30,24 +30,31 @@ namespace RumineActivityView
         {
             Type = new ReportType(Reports.Empty);
         }
-        public StatisticsReport(string name, IEnumerable<Entry> entries, ReportCreatorOptions options)
+        public StatisticsReport(string name, Entry[] entries, ReportCreatorOptions options)
         {
             Name = name;
-            Entries = entries.ToArray();
+            Entries = entries;
             DateRangeAll = options.DateRange;
             Period = options.Period;
 
-            SumValue = IsEmpty ? 0 : Entries.Sum(e => e.PostsDefault);
-            AverageValue = IsEmpty ? 0 : Entries.Average(e => e.PostsDefault);
+            CountStatistics();
+        }
 
-            MostInactive = Entries.Where(e => e.PostsRelative > 0).OrderBy(e => e.PostsRelative).FirstOrDefault();
-            MostActive = Entries.Where(e => e.PostsRelative > 0).OrderBy(e => e.PostsRelative).LastOrDefault();
+        private void CountStatistics()
+        {
+            MostInactive = Entries.Where(e => e.PostsAverage > 0).OrderBy(e => e.PostsAverage).FirstOrDefault();
+            MostActive = Entries.Where(e => e.PostsAverage > 0).OrderBy(e => e.PostsAverage).LastOrDefault();
+
             if (IsEmpty)
             {
+                SumValue = 0;
+                AverageValue = 0;
                 DateRangePosts = new DateRange();
             }
             else
             {
+                SumValue = Entries.Sum(e => e.PostsWritten);
+                AverageValue = Entries.Average(e => e.PostsWritten);
                 DateRangePosts = new DateRange(Entries.Min(e => e.Range.From), Entries.Max(e => e.Range.To));
             }
         }
