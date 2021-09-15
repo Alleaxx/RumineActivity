@@ -19,7 +19,7 @@ namespace RumineActivityView
         {
             EntryRectangle prevEntry = new EntryRectangle();
             List<EntryRectangle> rects = new List<EntryRectangle>();
-            for (int i = 0; i < Report.Entries.Length; i++)
+            for (int i = 0; i < Report.Length; i++)
             {
                 Entry entry = Report.Entries[i];
                 EntryRectangle newRect = new EntryRectangle(prevEntry, entry, this);

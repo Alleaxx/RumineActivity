@@ -39,16 +39,12 @@ namespace RumineActivityView
 
     public class Rule
     {
-        public string Name { get; set; }
         public string Color { get; set; }
         protected Predicate<Entry> CheckMethod { get; set; }
 
         public bool Check(Entry entry)
         {
-            if (CheckMethod != null)
-                return CheckMethod.Invoke(entry);
-            else
-                return true;
+            return CheckMethod?.Invoke(entry) ?? true;
         }
 
         public Rule()

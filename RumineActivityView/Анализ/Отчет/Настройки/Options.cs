@@ -15,18 +15,18 @@ namespace RumineActivityView
         public DateTime To { get; set; }
 
         public Period Period { get; set; }
-        public TopicsMode TopicMode { get; set; } 
+        public PostSource TopicMode { get; set; } 
         public bool EmptyPeriodsEnabled { get; set; }
 
 
         public ReportCreatorOptions()
         {
             DateRange = new DateRange(FoundationDate, DateTime.Now);
-            Period = new Period(Periods.Month);
-            TopicMode = new TopicsMode(TopicsModes.All);
+            Period = Period.Create(Periods.Month);
+            TopicMode = PostSource.Create(PostSources.All);
             EmptyPeriodsEnabled = false;
         }
-        public ReportCreatorOptions(TopicsMode mode) : this()
+        public ReportCreatorOptions(PostSource mode) : this()
         {
             TopicMode = mode;
         }

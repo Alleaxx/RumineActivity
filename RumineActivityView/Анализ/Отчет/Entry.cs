@@ -13,12 +13,11 @@ namespace RumineActivityView
     //Для записи с 'к моменту (ДАТА) написано сообщений следует придумать нечто другое'
 
     //Запись 'За период написано сообщений'
-    public class Entry
+    public class Entry : Named
     {
         public override string ToString() => $"{Name} | {PostsWritten}";
 
         public DateRange Range { get; protected set; }
-        public string Name { get; private set; }
         public int Index { get; protected set; }
 
 
@@ -29,7 +28,7 @@ namespace RumineActivityView
 
 
         //Периодический отчет
-        public Entry(int index, DateRange range, string format, TopicsModes topicMode)
+        public Entry(int index, DateRange range, string format, PostSources topicMode)
         {
             Index = index;
             SeparateDates = false;
@@ -40,7 +39,7 @@ namespace RumineActivityView
         }
 
         //Фактический отчет
-        public Entry(int index, Post newer, Post older, string format, TopicsModes topicMode)
+        public Entry(int index, Post newer, Post older, string format, PostSources topicMode)
         {
             Index = index;
             SeparateDates = true;
@@ -68,14 +67,14 @@ namespace RumineActivityView
         {
             EndingPost = ending;
         }
-        protected void SetMode(TopicsModes mode)
+        protected void SetMode(PostSources mode)
         {
-            Dictionary<TopicsModes, EntrySources> Translate = new Dictionary<TopicsModes, EntrySources>()
+            Dictionary<PostSources, EntrySources> Translate = new Dictionary<PostSources, EntrySources>()
             {
-                [TopicsModes.All] = EntrySources.AllForum,
-                [TopicsModes.NotChat] = EntrySources.Difference,
-                [TopicsModes.Topic] = EntrySources.Topics,
-                [TopicsModes.OnlyChat] = EntrySources.Topics
+                [PostSources.All] = EntrySources.AllForum,
+                [PostSources.NotChat] = EntrySources.Difference,
+                [PostSources.Topic] = EntrySources.Topics,
+                [PostSources.OnlyChat] = EntrySources.Topics
             };
             EntrySource = Translate[mode];
         }
@@ -120,7 +119,7 @@ namespace RumineActivityView
         private double GetPosts(EntrySources source, MeasureMethods interval, MeasureUnits unit)
         {
             double val = Posts[source];
-            val = new MeasureMethod(interval).GetValue(val, Range);
+            val = MeasureMethod.Create(interval).GetValue(val, Range);
             val = new MeasureUnit(unit).GetValue(val);
             return val;
         }

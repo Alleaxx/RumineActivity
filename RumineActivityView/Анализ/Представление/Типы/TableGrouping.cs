@@ -47,7 +47,6 @@ namespace RumineActivityView
         }
         private void SetMonth()
         {
-
             GetFirstKey = e => e.Range.From.ToString("yyyy");
             GetSecondKey = e => e.Range.From.ToString("MMMM");
             ColGroups = Enumerable.Range(1, 12).Select(m => m.MonthName()).ToArray();
@@ -65,7 +64,6 @@ namespace RumineActivityView
         }
         private void SetWeek()
         {
-
             GetFirstKey = e => e.Range.From.ToString("MMMM yyyy");
             GetSecondKey = e => $"{(e.Range.From.Day / 7) + 1} неделя";
             ColGroups = new string[] { "1 неделя", "2 неделя", "3 неделя", "4 неделя", "5 неделя" };

@@ -19,7 +19,7 @@ namespace RumineActivityView
             List<EntryLine> lines = new List<EntryLine>();
 
             EntryLine prevEntry = new EntryLine(Size.HeightChart);
-            for (int i = 0; i < Report.Entries.Length; i++)
+            for (int i = 0; i < Report.Length; i++)
             {
                 var currentEntry = Report.Entries[i];
                 EntryLine newLine = new EntryLine(prevEntry, currentEntry, this);

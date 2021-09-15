@@ -5,15 +5,14 @@ using System.Threading.Tasks;
 
 namespace RumineActivityView
 {
-    public class EnumType<T>
+    public class EnumType<T> : Named
     {
+        public readonly T Type;
         public override string ToString()
         {
             return Name;
         }
 
-        public string Name { get; protected set; }
-        public T Type { get; private set; }
         public EnumType(T type)
         {
             Type = type;
@@ -31,6 +30,11 @@ namespace RumineActivityView
         public override int GetHashCode()
         {
             return Type.GetHashCode();
+        }
+
+        public static implicit operator T(EnumType<T> enums)
+        {
+            return enums.Type;
         }
     }
 }

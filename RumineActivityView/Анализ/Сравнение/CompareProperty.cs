@@ -14,7 +14,7 @@ namespace RumineActivityView
         bool CompareEqual();
         void SetCompare(ICompareProp compare);
     }
-    public class CompareProperty<T> : ICompareProp
+    public class CompareProperty<T> : Named, ICompareProp
     {
         public T Value { get; private set; }
         protected T ValueCompareWith { get; private set; }
@@ -24,7 +24,6 @@ namespace RumineActivityView
         public virtual double GetTotalDiff() => 0;
 
 
-        public string Name { get; set; } = "";
         public string Format { get; set; }
 
         public CompareProperty(T source)

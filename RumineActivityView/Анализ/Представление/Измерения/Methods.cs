@@ -3,51 +3,85 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using RumineActivityView.Measures;
+
 namespace RumineActivityView
 {
     public enum MeasureMethods
     {
         Total, ByHour, ByDay, ByMonth,
     }
-    public class MeasureMethod : EnumType<MeasureMethods>
+
+    public abstract class MeasureMethod : EnumType<MeasureMethods>
     {
-        public MeasureMethod(MeasureMethods method) : base(method)
+        public static MeasureMethod Create(MeasureMethods method)
         {
-            switch (Type)
+            switch (method)
             {
-                case MeasureMethods.ByDay:
-                    Name = "в среднем в день";
-                    break;
-                case MeasureMethods.ByHour:
-                    Name = "в среднем в час";
-                    break;
                 case MeasureMethods.ByMonth:
-                    Name = "в среднем за месяц";
-                    break;
-                case MeasureMethods.Total:
-                    Name = "Всего за период";
-                    break;
+                    return new MeasureMethodByMonth();
+                case MeasureMethods.ByHour:
+                    return new MeasureMethodByHour();
+                case MeasureMethods.ByDay:
+                    return new MeasureMethodByDay();
+                default:
+                    return new MeasureMethodTotal();
             }
         }
 
-        public double GetValue(Entry entry)
+        protected MeasureMethod(MeasureMethods method) : base(method) { }
+        public abstract double GetValue(double all, DateRange range);
+    }
+}
+
+
+namespace RumineActivityView.Measures
+{
+    public class MeasureMethodTotal : MeasureMethod
+    {
+        public MeasureMethodTotal() : base(MeasureMethods.Total)
         {
-            return GetValue(entry.PostsWritten, entry.Range);
+            Name = "Всего за период";
         }
-        public double GetValue(double all, DateRange range)
+        public override double GetValue(double all, DateRange range)
         {
-            switch (Type)
-            {
-                default:
-                    return all;
-                case MeasureMethods.ByDay:
-                    return all / range.DaysDifference;
-                case MeasureMethods.ByMonth:
-                    return all / range.DaysDifference * 30;
-                case MeasureMethods.ByHour:
-                    return all / range.Diff.TotalHours;
-            }
+            return all;
         }
     }
 
+    public class MeasureMethodByMonth : MeasureMethod
+    {
+        public MeasureMethodByMonth() : base(MeasureMethods.ByMonth)
+        {
+            Name = "в среднем за месяц";
+        }
+        public override double GetValue(double all, DateRange range)
+        {
+            return all / range.DaysDifference * 30;
+        }
+    }
+
+    public class MeasureMethodByDay : MeasureMethod
+    {
+        public MeasureMethodByDay() : base(MeasureMethods.ByDay)
+        {
+            Name = "в среднем в день";
+        }
+        public override double GetValue(double all, DateRange range)
+        {
+            return all / range.DaysDifference;
+        }
+    }
+
+    public class MeasureMethodByHour : MeasureMethod
+    {
+        public MeasureMethodByHour() : base(MeasureMethods.ByHour)
+        {
+            Name = "в среднем в час";
+        }
+        public override double GetValue(double all, DateRange range)
+        {
+            return all / range.Diff.TotalHours;
+        }
+    }
 }

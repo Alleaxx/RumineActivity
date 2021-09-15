@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace RumineActivityView
 {
-    public class Comparison
+    public class Comparison : Named
     {
-        public string Name => IsEmpty ? "Подготовка к сравнению" : $"{Type} {Items.Count} источников акт*вности";
+        public override string Name => IsEmpty ? "Подготовка к сравнению" : $"{Type} {Items.Count} источников акт*вности";
         private string Type => IsSimple ? "Обзор" : "Сравнение";
 
         //Элементы сравнения
@@ -41,12 +41,17 @@ namespace RumineActivityView
         {
             if (source == CompareElement)
             {
-                SetCompare(null);
+                SetCompareNone();
             }
             else
             {
                 SetCompare(source);
             }
+        }
+
+        private void SetCompareNone()
+        {
+            SetCompare(null);
         }
         private void SetCompare(ActivitySource source)
         {
@@ -62,23 +67,31 @@ namespace RumineActivityView
         {
             if (!Items.Contains(newSource) && newSource != null)
             {
-                newSource.SetReport();
-                Items.Add(newSource);
-                PossibleItems.Remove(newSource);
-                if (CompareElement == null)
-                {
-                    SetCompare(newSource);
-                }
-                newSource.UpdateCompareInfo(CompareElement);
+                AddNew(newSource);
             }
         }
+        private void AddNew(ActivitySource newSource)
+        {
+            newSource.SetReport();
+            Items.Add(newSource);
+            PossibleItems.Remove(newSource);
+            if (CompareElement == null)
+            {
+                SetCompare(newSource);
+            }
+            newSource.UpdateCompareInfo(CompareElement);
+        }
+
+
         private void Remove(ActivitySource removingSource)
         {
-            PossibleItems.Add(removingSource);
-            Items.Remove(removingSource);
-            if(CompareElement == removingSource)
+            if (Items.Remove(removingSource))
             {
-                SetCompare(null);
+                PossibleItems.Add(removingSource);
+                if (CompareElement == removingSource)
+                {
+                    SetCompareNone();
+                }
             }
         }
         private void UpdateWithCompareElement()
@@ -95,9 +108,9 @@ namespace RumineActivityView
         {
             return new ActivitySource[]
             {
-                new ActivitySource(new TopicsMode(TopicsModes.All)),
-                new ActivitySource(new TopicsMode(TopicsModes.NotChat)),
-                new ActivitySource(new TopicsMode(TopicsModes.OnlyChat)),
+                new ActivitySource(PostSource.Create(PostSources.All)),
+                new ActivitySource(PostSource.Create(PostSources.NotChat)),
+                new ActivitySource(PostSource.Create(PostSources.OnlyChat)),
             }.Concat(topics.Select(t => new ActivitySource(t)));
         }
     }

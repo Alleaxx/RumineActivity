@@ -11,7 +11,7 @@ namespace RumineActivityView
         {
             return CreateReport(Reports.Periodical, new ReportCreatorOptions()
             {
-                Period = new Period(Periods.Month)
+                Period = Period.Create(Periods.Month)
             });
         }
 

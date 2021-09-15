@@ -62,13 +62,19 @@ namespace RumineActivityView
             }
             else
             {
-                DateTime countFrom = range.From > From ? range.From : From;
-                DateTime countTo = range.To < To ? range.To : To;
-
-                TimeSpan compareDifference = countTo - countFrom;
-                return compareDifference.TotalDays / DaysDifference;
+                return CountModOfRange(range);
             }
         }
+
+        private double CountModOfRange(DateRange range)
+        {
+            DateTime countFrom = range.From > From ? range.From : From;
+            DateTime countTo = range.To < To ? range.To : To;
+
+            TimeSpan compareDifference = countTo - countFrom;
+            return compareDifference.TotalDays / DaysDifference;
+        }
+
         public bool IsDateInside(DateTime date) => From <= date && date <= To;
         public bool IsOutsideOfRange(DateRange range)
         {

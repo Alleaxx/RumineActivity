@@ -8,14 +8,14 @@ namespace RumineActivityView
     public static class Selection
     {
         //Измерение
-        public static MeasureMethod[] Methods { get; private set; } = Enum.GetValues<MeasureMethods>().Select(u => new MeasureMethod(u)).ToArray();
-        public static OutputValue[] Outs { get; private set; } = new PostOutputs[] { PostOutputs.PeriodDifference }.Select(p => new OutputValue(p)).ToArray();
+        public static MeasureMethod[] Methods { get; private set; } = Enum.GetValues<MeasureMethods>().Select(u => MeasureMethod.Create(u)).ToArray();
+        //public static OutputValue[] Outs { get; private set; } = new PostOutputs[] { PostOutputs.PeriodDifference }.Select(p => new OutputValue(p)).ToArray();
         public static MeasureUnit[] Units { get; private set; } = Enum.GetValues<MeasureUnits>().Select(u => new MeasureUnit(u)).ToArray();
-        public static CompareValue[] CompareValues { get; private set; } = Enum.GetValues<CompareValues>().Select(v => new CompareValue(v)).ToArray();
+        public static CompareView[] CompareValues { get; private set; } = Enum.GetValues<CompareViews>().Select(v => CompareView.Create(v)).ToArray();
 
         //Настройки отчета
-        public static Period[] Periods { get; private set; } = Enum.GetValues<Periods>().Select(d => new Period(d)).ToArray();
-        public static TopicsMode[] TopicModes { get; private set; } = Enum.GetValues<TopicsModes>().Select(u => new TopicsMode(u)).ToArray();
+        public static Period[] Periods { get; private set; } = Enum.GetValues<Periods>().Select(d => Period.Create(d)).ToArray();
+        public static PostSource[] TopicModes { get; private set; } = Enum.GetValues<PostSources>().Select(u => PostSource.Create(u)).ToArray();
         public static ReportType[] ReportTypes { get; private set; } = new Reports[] { Reports.Fact, Reports.Periodical }.Select(r => new ReportType(r)).ToArray();
 
         //Представление

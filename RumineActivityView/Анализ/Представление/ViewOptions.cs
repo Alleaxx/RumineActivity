@@ -18,11 +18,11 @@ namespace RumineActivityView
 
         public string FormatEntry(Entry entry)
         {
-            return FormatEntry(entry, MeasureMethod.Type);
+            return FormatEntry(entry, MeasureMethod);
         }
         public string FormatEntry(Entry entry, MeasureMethods method)
         {
-            double value = entry.GetPosts(method, MeasureUnit.Type);
+            double value = entry.GetPosts(method, MeasureUnit);
             if (value == 0)
             {
                 return "???";
@@ -48,7 +48,7 @@ namespace RumineActivityView
         {
             Rules = new ViewRules();
             MeasureUnit = new MeasureUnit(MeasureUnits.Messages);
-            MeasureMethod = new MeasureMethod(MeasureMethods.ByDay);
+            MeasureMethod = MeasureMethod.Create(MeasureMethods.ByDay);
             OutValue = new OutputValue(PostOutputs.PeriodDifference);
         }
     }

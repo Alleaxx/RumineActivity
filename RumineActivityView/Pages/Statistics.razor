@@ -88,7 +88,7 @@
             </section>
 
             <section class="options-section">
-                <Collection HeaderText="Источник:" List="Selection.TopicModes" Selected="Options.TopicMode" T="TopicsMode" OnSelectCallback="Set" />
+                <Collection HeaderText="Источник:" List="Selection.TopicModes" Selected="Options.TopicMode" T="PostSource" OnSelectCallback="Set" />
             </section>
 
             <details class="source">
@@ -112,7 +112,7 @@
                     </div>
                     <div class="more-options">
 
-                        @if (Options.Period.Type == Periods.Own)
+                        @if (Options.Period == Periods.Own)
                         {
                             <label for="input-days">Каждые:</label>
                             <input id="input-days" class="entry-interval-input" type="number" min="0.1" step="1" max="3650" @bind:event="oninput" @onchange="Update" @bind="(Options.Period.Days)" />
@@ -120,7 +120,7 @@
                         }
                     </div>
                     <div class="more-options">
-                        @if (Options.TopicMode.Mode == TopicsModes.Topic)
+                        @if (Options.TopicMode.Mode == PostSources.Topic)
                         {
                             <label for="topic-id">ID темы: </label>
                             <input type="number" id="topic-id" min="1" max="20000" list="topicsList" @bind:event="oninput" @onchange="Update" @bind="(Options.TopicMode.TopicId)" />

@@ -53,7 +53,7 @@ namespace RumineActivityView
 
         private DateRange GetRangeFor(DateTime now)
         {
-            DateTime next = now.NextDate(Options.Period);
+            DateTime next = Options.Period.GetNextDate(now);
             if (next >= Options.DateRange.To)
                 return new DateRange(now, Options.DateRange.To);
             else

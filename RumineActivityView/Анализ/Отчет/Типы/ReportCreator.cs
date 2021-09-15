@@ -48,9 +48,70 @@ namespace RumineActivityView
 
         protected Entry[] SplitPosts()
         {
-            return SplitPosts(new TimeSpan(0), true);
+            return SplitPosts(new TimeSpan(0));
         }
-        protected Entry[] SplitPosts(TimeSpan maxDifference, bool ignoreDifference = false)
+        protected Entry[] SplitPosts(TimeSpan maxDifference)
+        {
+            bool ignoreDifference = maxDifference.Ticks == 0;
+            List<Entry> entries = new List<Entry>();
+            int prevIndexDiff = 1;
+            for (int i = 1; i < Posts.Length; i++)
+            {
+                bool isLast = i == Posts.Length - 1;
+                Post prevPost = Posts[i - prevIndexDiff];
+                Post currPost = Posts[i];
+                DateRange range = new DateRange(currPost, prevPost);
+
+                if (ignoreDifference || range.Diff >= maxDifference || isLast)
+                {
+                    AddEntry(prevPost, currPost);
+                }
+                else
+                {
+                    prevIndexDiff++;
+                }
+            }
+            return entries.ToArray();
+
+
+            void AddEntry(Post prevPost, Post currPost)
+            {
+                Entry newEntry = CreateFactEntry(entries.Count, currPost, prevPost);
+                entries.Add(newEntry);
+                prevIndexDiff = 1;
+            }
+        }
+
+        private Entry CreateFactEntry(int index, Post newPost, Post oldPost)
+        {
+            return new Entry(index, newPost, oldPost, Options.Period.DateFormat, Options.TopicMode.Mode);
+        }
+    }
+
+
+
+    interface IReportInfo
+    {
+        Post[] Posts { get; }
+        DateRange DateRange { get; }
+        Period Period { get; }
+        PostSource Source { get; }
+
+    }
+    //Перенести опции отчета в создатель полностью
+    //Выделить стратегию создания отчетов
+
+    interface IReportStrategy
+    {
+        StatisticsReport CreateReport(ReportCreatorOptions options, Post[] posts);
+    }
+    abstract class ReportStrategy
+    {
+        protected Entry[] SplitPosts(Post[] posts)
+        {
+            return SplitPosts(posts,new TimeSpan(0));
+        }
+        protected Entry[] SplitPosts(Post[] Posts, TimeSpan maxDifference)
         {
             List<Entry> entries = new List<Entry>();
             int prevIndexDiff = 1;
@@ -60,9 +121,9 @@ namespace RumineActivityView
                 Post currPost = Posts[i];
 
                 TimeSpan dateDiff = currPost.Date - prevPost.Date;
-                if (ignoreDifference || dateDiff >= maxDifference)
+                if (dateDiff >= maxDifference)
                 {
-                    Entry newEntry = CreateFactEntry(entries.Count, currPost, prevPost);
+                    Entry newEntry = CreateFactEntry(null,entries.Count, currPost, prevPost);
                     entries.Add(newEntry);
                     prevIndexDiff = 1;
                 }
@@ -74,16 +135,26 @@ namespace RumineActivityView
                 bool last = i == Posts.Length - 1;
                 if (last && !entries.Any())
                 {
-                    Entry newEntry = CreateFactEntry(entries.Count, currPost, prevPost);
+                    Entry newEntry = CreateFactEntry(null,entries.Count, currPost, prevPost);
                     entries.Add(newEntry);
                 }
             }
             return entries.ToArray();
-        }
 
-        private Entry CreateFactEntry(int index, Post newPost, Post oldPost)
+
+        }
+        private Entry CreateFactEntry(ReportCreatorOptions Options,int index, Post newPost, Post oldPost)
         {
             return new Entry(index, newPost, oldPost, Options.Period.DateFormat, Options.TopicMode.Mode);
         }
+
+    }
+    class FactStrategy : ReportStrategy
+    {
+
+    }
+    class PeriodicalStrategy : ReportStrategy
+    {
+
     }
 }

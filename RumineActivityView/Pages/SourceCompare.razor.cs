@@ -9,8 +9,8 @@ namespace RumineActivityView.Pages
     {
         public Comparison Comparison => App.Comparison;
 
-        private IEnumerable<ActivitySource> PossibleAll => Comparison.PossibleItems.Where(i => i.Mode.Mode != TopicsModes.Topic);
-        private IEnumerable<ActivitySource> PossibleTopics => Comparison.PossibleItems.Where(i => i.Mode.Mode == TopicsModes.Topic);
+        private IEnumerable<ActivitySource> PossibleAll => Comparison.PossibleItems.Where(i => i.Mode.Mode != PostSources.Topic);
+        private IEnumerable<ActivitySource> PossibleTopics => Comparison.PossibleItems.Where(i => i.Mode.Mode == PostSources.Topic);
 
 
 
@@ -67,23 +67,11 @@ namespace RumineActivityView.Pages
             }
         }
 
-        public CompareValue CompareValue { get; set; } = new CompareValue(CompareValues.Absolute);
-        private void Set(CompareValue value)
+        public CompareView CompareView { get; set; } = CompareView.Create(CompareViews.Absolute);
+        private void Set(CompareView value)
         {
-            CompareValue = value;
+            CompareView = value;
         }
 
-        public string GetValueCompare(ICompareProp prop)
-        {
-            switch (CompareValue.Type)
-            {
-                case CompareValues.Absolute:
-                    return prop.GetTotalDiff().ToString("+#,0;-#,0; 0");
-                case CompareValues.Relative:
-                    return prop.GetModDiff().ToString("0%");
-                default:
-                    throw new Exception("Такого преобразования значений не существует");
-            }
-        }
     }
 }

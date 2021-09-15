@@ -9,15 +9,13 @@ namespace RumineActivityView
     {
         FirstPost, LastPost, DaysActive, TotalPosts, AveragePosts
     }
-    public class ActivitySource
+    public class ActivitySource : Named
     {
-        public TopicsMode Mode { get; private set; }
+        public PostSource Mode { get; private set; }
         private StatisticsReport Report { get; set; }
 
 
         //Статистика по источнику активности
-        public string Name { get; protected set; }
-
         private Dictionary<CompareProperties, ICompareProp> Values { get; set; } = new Dictionary<CompareProperties, ICompareProp>();
         public ICompareProp[] Properties { get; private set; } = Array.Empty<ICompareProp>();
         public ICompareProp[] History { get; private set; } = Array.Empty<ICompareProp>();
@@ -26,10 +24,10 @@ namespace RumineActivityView
         //Задание источника
         public ActivitySource(Topic topic)
         {
-            Mode = new TopicsMode(topic.ID);
+            Mode = PostSource.Create(topic.ID);
             Name = $"{topic.Name} [{topic.ID}]";
         }
-        public ActivitySource(TopicsMode mode)
+        public ActivitySource(PostSource mode)
         {
             Mode = mode;
             Name = mode.Name;
@@ -41,12 +39,16 @@ namespace RumineActivityView
             bool Created = Report != null;
             if (!Created)
             {
-                Report = ReportsFactory.CreateReport(Reports.Fact, new ReportCreatorOptions(Mode));
-                if (!Report.IsEmpty)
-                {
-                    SetProperties();
-                    SetHistory();
-                }
+                CreateReport();
+            }
+        }
+        private void CreateReport()
+        {
+            Report = ReportsFactory.CreateReport(Reports.Fact, new ReportCreatorOptions(Mode));
+            if (!Report.IsEmpty)
+            {
+                SetProperties();
+                SetHistory();
             }
         }
 

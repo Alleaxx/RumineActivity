@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using RumineActivityView.Measures;
+
 namespace RumineActivityView
 {
     //Период
@@ -10,10 +12,10 @@ namespace RumineActivityView
     {
         Day, Week, Month, Year, Own
     }
-    public class Period : EnumType<Periods>
+    public abstract class Period : EnumType<Periods>
     {
-        public TimeSpan TimeInterval { get; private set; }
-        public string DateFormat { get; private set; }
+        public TimeSpan TimeInterval { get; protected set; }
+        public string DateFormat { get; protected set; }
 
         public double Days
         {
@@ -26,95 +28,94 @@ namespace RumineActivityView
         }
         private double days;
 
-        public Period(Periods period) : base(period)
+        public static Period Create(Periods period)
         {
             switch (period)
             {
                 case Periods.Day:
-                    Name = "День";
-                    TimeInterval = new TimeSpan(1, 0, 0, 0, 0);
-                    DateFormat = "dd.MM.yyyy";
-                    break;
+                    return new PeriodDay();
                 case Periods.Week:
-                    Name = "Неделя";
-                    TimeInterval = new TimeSpan(7, 0, 0, 0, 0);
-                    DateFormat = "dd MMMM yyyy";
-                    break;
+                    return new PeriodWeek();
                 case Periods.Month:
-                    Name = "Месяц";
-                    TimeInterval = new TimeSpan(30, 0, 0, 0, 0);
-                    DateFormat = "MMMM yyyy";
-                    break;
+                    return new PeriodMonth();
                 case Periods.Year:
-                    Name = "Год";
-                    TimeInterval = new TimeSpan(365, 0, 0, 0, 0);
-                    DateFormat = "yyyy год";
-                    break;
-                case Periods.Own:
-                    Name = "Свой";
-                    TimeInterval = new TimeSpan(14, 0, 0, 0, 0);
-                    DateFormat = "dd MMMM yyyy";
-                    break;
+                    return new PeriodYear();
+                default:
+                    return new PeriodOwn();
             }
+        }
+
+
+        protected Period(Periods period) : base(period)
+        {
             days = TimeInterval.TotalDays;
         }
-        
-        public DateTime GetNextDate(DateTime date)
+        public virtual DateTime GetNextDate(DateTime date)
         {
-            switch (Type)
-            {
-                case Periods.Month:
-                    DateTime nextMonth = date.AddMonths(1);
-                    return new DateTime(nextMonth.Year, nextMonth.Month, 1);
-                case Periods.Year:
-                    return new DateTime(date.Year + 1, 1, 1);
-                default:
-                    return date + TimeInterval;
-            }
+            return date + TimeInterval;
         }
     }
 
+}
 
-    //Указатель на год и месяц
-    public class YearMonthDateSelector
+namespace RumineActivityView.Measures
+{
+    class PeriodDay : Period
     {
-        public int Year { get; set; } = 0;
-        public int Month { get; set; } = 0;
-        public (int from, int to) Day { get; set; } = (0, 0);
-        public DateRange Dates
+        public PeriodDay() : base(Periods.Day)
         {
-            get
-            {
-                if (Year == 0)
-                {
-                    return new DateRange(ReportCreatorOptions.FoundationDate, DateTime.Now);
-                }
-                else
-                {
-                    if (Month == 0)
-                    {
-                        return new DateRange(new DateTime(Year, 1, 1), new DateTime(Year, 12, 31));
-                    }
-                    else
-                    {
-                        if(Day.from == 0 || Day.to == 0)
-                        {
-                            return new DateRange(new DateTime(Year, Month, 1), new DateTime(Year, Month, 1).AddMonths(1)); /*DateTime.DaysInMonth(Year, Month)));*/
-                        }
-                        else
-                        {
-                            return new DateRange(new DateTime(Year, Month, Day.from), new DateTime(Year, Month, Day.to));
-                        }
-                    }
-                }
-            }
-        }
-
-        public YearMonthDateSelector(int year, int month)
-        {
-            Year = year;
-            Month = month;
+            Name = "День";
+            TimeInterval = new TimeSpan(1, 0, 0, 0, 0);
+            DateFormat = "dd.MM.yyyy";
         }
     }
 
+    class PeriodWeek : Period
+    {
+        public PeriodWeek() : base(Periods.Week)
+        {
+            Name = "Неделя";
+            TimeInterval = new TimeSpan(7, 0, 0, 0, 0);
+            DateFormat = "dd MMMM yyyy";
+        }
+    }
+
+    class PeriodMonth : Period
+    {
+        public PeriodMonth() : base(Periods.Month)
+        {
+            Name = "Месяц";
+            TimeInterval = new TimeSpan(30, 0, 0, 0, 0);
+            DateFormat = "MMMM yyyy";
+        }
+        public override DateTime GetNextDate(DateTime date)
+        {
+            DateTime nextMonth = date.AddMonths(1);
+            return new DateTime(nextMonth.Year, nextMonth.Month, 1);
+        }
+    }
+
+    class PeriodYear : Period
+    {
+        public PeriodYear() : base(Periods.Year)
+        {
+            Name = "Год";
+            TimeInterval = new TimeSpan(365, 0, 0, 0, 0);
+            DateFormat = "yyyy год";
+        }
+        public override DateTime GetNextDate(DateTime date)
+        {
+            return new DateTime(date.Year + 1, 1, 1);
+        }
+    }
+
+    class PeriodOwn : Period
+    {
+        public PeriodOwn() : base(Periods.Own)
+        {
+            Name = "Свой";
+            TimeInterval = new TimeSpan(14, 0, 0, 0, 0);
+            DateFormat = "dd MMMM yyyy";
+        }
+    }
 }

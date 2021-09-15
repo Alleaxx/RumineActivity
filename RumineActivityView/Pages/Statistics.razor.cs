@@ -23,7 +23,7 @@ namespace RumineActivityView.Pages
 
         private void CreateReport()
         {
-            Report = ReportsFactory.CreateReport(ReportType.Type, Options);
+            Report = ReportsFactory.CreateReport(ReportType, Options);
         }
 
         public YearMonthDateSelector DateInterval { get; set; } = new YearMonthDateSelector(0, 0);
@@ -49,7 +49,7 @@ namespace RumineActivityView.Pages
             ReportType = report;
             CreateReport();
         }
-        private void Set(TopicsMode mode)
+        private void Set(PostSource mode)
         {
             Options.TopicMode = mode;
             CreateReport();
@@ -58,29 +58,6 @@ namespace RumineActivityView.Pages
         {
             Options.Period = period;
             CreateReport();
-        }
-
-        //Добавление тем
-        private int? AdderTopic { get; set; }
-        private string AdderTopicText
-        {
-            get => addderTopicText;
-            set
-            {
-                addderTopicText = value;
-                if (int.TryParse(addderTopicText, out int num))
-                {
-                    AdderTopic = num;
-                }
-            }
-        }
-        private string addderTopicText;
-        private void ChangeTopic(ChangeEventArgs e)
-        {
-            if (int.TryParse(e.Value.ToString(), out int id))
-            {
-                AdderTopic = id;
-            }
         }
 
 
