@@ -1,4 +1,5 @@
-﻿@typeparam T
+﻿@inherits CollectionComponent<T>
+@typeparam T
 
 <style>
     .option-select {
@@ -41,32 +42,4 @@
 </section>
 
 @code {
-    [Parameter]
-    public bool Nullable { get; set; }
-    [Parameter]
-    public string HeaderText { get; set; }
-    [Parameter]
-    public IEnumerable<T> List { get; set; }
-    [Parameter]
-    public T Selected { get; set; }
-    [Parameter]
-    public EventCallback<T> OnSelectCallback { get; set; }
-
-
-    private void Set(T select)
-    {
-        Selected = select;
-        OnSelectCallback.InvokeAsync(select);
-    }
-
-    private string Item
-    {
-        get => index.ToString();
-        set
-        {
-            index = int.Parse(value);
-            Set(List.ElementAt(index));
-        }
-    }
-    private int index { get; set; } = 0;
 }

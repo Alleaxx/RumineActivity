@@ -40,6 +40,7 @@ namespace RumineActivityView
             }
             else
             {
+                Console.WriteLine("Создание отчета");
                 return Construct();
             }
         }

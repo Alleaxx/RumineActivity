@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace RumineActivityView.Pages
 {
-    public partial class SourceCompare : StatComponent
+    public partial class ComparisonPage : StatComponent
     {
         public Comparison Comparison => App.Comparison;
 

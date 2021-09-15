@@ -39,17 +39,21 @@ namespace RumineActivityView
             bool Created = Report != null;
             if (!Created)
             {
-                CreateReport();
+                Report = GetReport();
+                SetReportInfo();
             }
         }
-        private void CreateReport()
+        private void SetReportInfo()
         {
-            Report = ReportsFactory.CreateReport(Reports.Fact, new ReportCreatorOptions(Mode));
             if (!Report.IsEmpty)
             {
                 SetProperties();
                 SetHistory();
             }
+        }
+        protected virtual StatisticsReport GetReport()
+        {
+            return ReportsFactory.CreateReport(Reports.Fact, new ReportCreatorOptions(Mode));
         }
 
         //Задание информации, обновление сравнения

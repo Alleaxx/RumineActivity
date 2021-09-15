@@ -1,0 +1,59 @@
+﻿<style>
+
+    .report-type-block {
+        display: flex;
+        border: 1px solid silver;
+        border-radius: 2px;
+        padding: 1em 0.2em;
+        margin: 0 5px;
+    }
+
+    a.report-type-block {
+        text-decoration: none;
+        cursor: pointer;
+        color: rgb(64,64,64);
+    }
+
+    a.report-type-block {
+        color: black;
+    }
+
+        a.report-type-block:hover img {
+            opacity: 1;
+        }
+
+        a.report-type-block:visited {
+            color: black;
+        }
+
+    .report-type-block img {
+        height: 48px;
+        margin: 0 15px;
+        opacity: 0.5;
+    }
+
+    .report-type-block-text {
+    }
+
+    .report-type-block-header {
+        font-weight: 600;
+        font-size: 1.2em;
+    }
+</style>
+<NavLink href="@Href" class="report-type-block">
+    <img alt="-" src="@Img" />
+    <div class="report-type-block-text">
+        <span class="report-type-block-header">@Header</span><br />
+        @ChildContent
+    </div>
+</NavLink>
+@code {
+    [Parameter]
+    public string Img { get; set; }
+    [Parameter]
+    public string Href { get; set; }
+    [Parameter]
+    public string Header { get; set; }
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+}

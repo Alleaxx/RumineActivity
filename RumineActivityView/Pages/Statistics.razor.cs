@@ -23,6 +23,7 @@ namespace RumineActivityView.Pages
 
         private void CreateReport()
         {
+            Console.WriteLine("Rjvfylf оздание отчета");
             Report = ReportsFactory.CreateReport(ReportType, Options);
         }
 

@@ -6,7 +6,7 @@
         <h2>Редактирование тем</h2>
     </header>
 
-    <ViewTable Items="Topics" Context="Topic">
+    <Table Items="Topics" Context="Topic">
         <TableHeader>
             <th class="id">ID</th>
             <th>Название</th>
@@ -22,7 +22,7 @@
                 <input class="delete" type="button" value="[ X ]" @onclick="(() => App.Remove(Topic))" />
             </td>
         </RowTemplate>
-    </ViewTable>
+    </Table>
 
 
 </section>

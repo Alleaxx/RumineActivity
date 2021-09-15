@@ -20,11 +20,11 @@ namespace RumineActivityView
                 {
                     return FullHistory();
                 }
-                if (Year == 0 && Month == 0)
+                else if (Year != 0 && Month == 0)
                 {
                     return YearHistory();
                 }
-                if (Year == 0 && Month == 0 && (Day.from == 0 || Day.to == 0))
+                else if (Year != 0 && Month != 0)
                 {
                     return MonthHistory();
                 }

@@ -28,10 +28,11 @@ namespace RumineActivityView
                 newEntries.Add(entry);
 
                 fromDate = currentRange.To;
-                if (!condition.Invoke(currentRange.To))
+                if (condition.Invoke(currentRange.To))
                 {
                     break;
                 }
+                Console.WriteLine(currentRange.ToString());
             }
 
             return new StatisticsReport($"Отчет по периодам", newEntries.ToArray(), Options);
@@ -63,9 +64,9 @@ namespace RumineActivityView
         {
             DateTime lastPostDate = Posts.Last().Date;
             if (Options.EmptyPeriodsEnabled)
-                return (toDate) => Options.DateRange.To > toDate;
+                return (toDate) => Options.DateRange.To <= toDate;
             else
-                return (toDate) => toDate <= lastPostDate;
+                return (toDate) => toDate >= lastPostDate;
         }
     }
 

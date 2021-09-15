@@ -8,6 +8,10 @@
     .content p{
         line-height: 140%;
     }
+    .report-blocks {
+        display: flex;
+        margin: 10px 5px;
+    }
 </style>
 <article>
     <header>
@@ -22,7 +26,14 @@
         <p>
             На данный момент есть два (даже три со сравнением) <s>стула</s> пути посмотреть на энту самую активность:
         </p>
-        <ReportTypes />
+        <div class="report-blocks">
+            <Block Href="classic" Img="images/columns.svg" Header="Классический путь">
+                <span>Заранее настроенная таблица с количеством сообщений в уездном месяце N</span>
+            </Block>
+            <Block Href="statistics" Img="images/sliders.svg" Header="Продвинутый вариант">
+                <span>Вручную настраиваемый отчет, который покажет что угодно и как угодно. Ещё и попыхтит при этом.</span>
+            </Block>
+        </div>
         <p>
             Если с классическим всё понятно, то настройки продвинутого варианта стоит рассмотреть поподробнее.
         </p>

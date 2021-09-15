@@ -24,7 +24,7 @@
         </div>
     </section>
 
-    <ViewTable Items="Posts" Context="Post">
+    <Table Items="Posts" Context="Post">
         <TableHeader>
             <th class="id">ID</th>
             <th colspan="2">Дата</th>
@@ -51,7 +51,7 @@
                 <input class="delete" type="button" value="[ X ]" @onclick="(() => App.Remove(Post))" />
             </td>
         </RowTemplate>
-    </ViewTable>
+    </Table>
 
     <DataTopics ></DataTopics>
 </div>
