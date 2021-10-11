@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 namespace RumineActivityView
 {
     //Отчет с РАВНЫМИ периодами, достраивает недостающие данные
-    public class ReportPeriods : ReportCreator
+    public class CreateReportPeriods : CreateReportCommand
     {
-        public ReportPeriods(IForumSource source, ReportCreatorOptions options) : base(source, options)
+        public CreateReportPeriods(IForumSource source, ReportCreatorOptions options) : base(source, options)
         {
 
         }
@@ -23,7 +23,7 @@ namespace RumineActivityView
             while (true)
             {
                 DateRange currentRange = GetRangeFor(fromDate);
-                Entry entry = new Entry(newEntries.Count, currentRange, Options.Period.DateFormat, Options.TopicMode.Mode);
+                Entry entry = new Entry(newEntries.Count, currentRange, Options);
                 entry.Set(WrittenPosts(splittedEntries, currentRange));
                 newEntries.Add(entry);
 
@@ -32,7 +32,6 @@ namespace RumineActivityView
                 {
                     break;
                 }
-                Console.WriteLine(currentRange.ToString());
             }
 
             return new StatisticsReport($"Отчет по периодам", newEntries.ToArray(), Options);

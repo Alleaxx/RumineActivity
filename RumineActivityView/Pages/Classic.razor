@@ -49,5 +49,10 @@
 </section>
 
 @code {
-    private StatisticsReport Report { get; set; } = ReportsFactory.CreateClassicReport();
+    private StatisticsReport Report { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        Report = ReportsFactory.CreateClassicReport(App);
+    }
 }

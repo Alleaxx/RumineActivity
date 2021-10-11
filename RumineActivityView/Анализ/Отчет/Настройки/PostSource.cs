@@ -13,7 +13,6 @@ namespace RumineActivityView
     {
         public readonly PostSources Mode;
         public override string ToString() => Name;
-        public int TopicId { get; set; } = 1;
 
 
         public static PostSource Create(PostSources modes)
@@ -42,12 +41,8 @@ namespace RumineActivityView
         }
 
         public abstract bool Filter(Post post, IEnumerable<Topic> topics);
-        protected bool FilterOnlyChats(Post post, IEnumerable<Topic> topics)
-        {
-            var topic = topics.FirstOrDefault(t => t.ID == post.TopicID);
-            return topic != null && topic.IsChat;
-        }
     }
+
 
     public class PostSourceAll : PostSource
     {
@@ -60,7 +55,22 @@ namespace RumineActivityView
             return true;
         }
     }
-    public class PostSourceTopic : PostSource
+    
+
+    public abstract class SourceTopics : PostSource
+    {
+        public int TopicId { get; set; }
+        protected SourceTopics(PostSources source) : base(source)
+        {
+
+        }
+        protected bool FilterOnlyChats(Post post, IEnumerable<Topic> topics)
+        {
+            var topic = topics.FirstOrDefault(t => t.Id == post.TopicId);
+            return topic != null && topic.IsChat;
+        }
+    }
+    public class PostSourceTopic : SourceTopics
     {
         public PostSourceTopic(int id = 1) : base(PostSources.Topic)
         {
@@ -69,11 +79,10 @@ namespace RumineActivityView
         }
         public override bool Filter(Post post, IEnumerable<Topic> topics)
         {
-            return TopicId == post.TopicID;
+            return TopicId == post.TopicId;
         }
     }
-    
-    public class PostSourceChats : PostSource
+    public class PostSourceChats : SourceTopics
     {
         public PostSourceChats() : base(PostSources.OnlyChat)
         {
@@ -84,7 +93,7 @@ namespace RumineActivityView
             return FilterOnlyChats(post, topics);
         }
     }
-    public class PostSourceNotChat : PostSource
+    public class PostSourceNotChat : SourceTopics
     {
         public PostSourceNotChat() : base(PostSources.NotChat)
         {

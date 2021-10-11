@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 namespace RumineActivityView
 {
     //Отчет по существующим записям
-    public class ReportDefault : ReportCreator
+    public class CreateReportDefault : CreateReportCommand
     {
-        public ReportDefault(IForumSource source, ReportCreatorOptions options) : base(source, options) { }
+        public CreateReportDefault(IForumSource source, ReportCreatorOptions options) : base(source, options) { }
         protected override StatisticsReport Construct()
         {
             return new StatisticsReport($"Отчет по записям", SplitPosts(Options.Period.TimeInterval), Options);

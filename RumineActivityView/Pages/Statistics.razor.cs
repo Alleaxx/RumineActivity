@@ -23,7 +23,6 @@ namespace RumineActivityView.Pages
 
         private void CreateReport()
         {
-            Console.WriteLine("Rjvfylf оздание отчета");
             Report = ReportsFactory.CreateReport(ReportType, Options);
         }
 
@@ -39,12 +38,6 @@ namespace RumineActivityView.Pages
             return days;
         }
 
-
-        const string SelectedClass = "selected";
-        const string SelectableClass = "selectable";
-        private string GetCssClassYear(int year) => year == DateInterval.Year ? SelectedClass : SelectableClass;
-        private string GetCssClassMonth(int month) => month == DateInterval.Month ? SelectedClass : SelectableClass;
-        private string GetCssClassDay((int from, int to) day) => day.from == DateInterval.Day.from && day.to == DateInterval.Day.to ? SelectedClass : SelectableClass;
         private void Set(ReportType report)
         {
             ReportType = report;
@@ -52,7 +45,7 @@ namespace RumineActivityView.Pages
         }
         private void Set(PostSource mode)
         {
-            Options.TopicMode = mode;
+            Options.PostSource = mode;
             CreateReport();
         }
         private void Set(Period period)

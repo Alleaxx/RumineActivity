@@ -1,4 +1,6 @@
-﻿<style>
+﻿@inherits StatComponent
+
+<style>
     .menu-list a{
         display: block;
         padding: 5px;
@@ -30,7 +32,7 @@
             </NavLink>
         </li>
     </ul>
-    @*<section>
+    <section>
         <header>
             <img alt="Данные" src="images/database.svg" />
             <h2 class="menu-header">Данные</h2>
@@ -52,7 +54,7 @@
                 </NavLink>
             </li>
         </ul>
-    </section>*@
+    </section>
     <section>
         <header>
             <img alt="Данные" src="images/activity.svg" />
@@ -77,6 +79,17 @@
         </ul>
     </section>
     <footer class="menu-footer">
-
+        <p>
+            <span>Тем: @App.Topics.Count</span><br />
+            <span>Сообщений: @App.Posts.Count</span><br />
+            <input type="button" value="Загрузить инфу" @onclick="LoadDataFromApi"/>
+        </p>
     </footer>
 </nav>
+
+@code{
+    private async Task LoadDataFromApi()
+    {
+        await App.SetOnlineSource();
+    }
+}

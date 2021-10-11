@@ -33,4 +33,5 @@ header h2 {
     margin-top: 10px;
     border-top: 1px solid var(--border-brush);
     padding-top: 10px;
+    color: gray;
 }

@@ -1,4 +1,4 @@
-﻿@inherits StatComponent
+﻿@inherits EditComponent
 @page "/topics/view"
 
 <section class="topics-view">
@@ -14,12 +14,12 @@
             <th>Действия</th>
         </TableHeader>
         <RowTemplate>
-            <td class="id"><input type="number" min="1" max="100000" @bind-value="(Topic.ID)" /></td>
+            <td class="id"><input type="number" min="1" max="100000" @bind-value="(Topic.Id)" /></td>
             <td class="name"><input type="text" maxlength="80" size="80" @bind-value="(Topic.Name)" /></td>
             <td align="center"><input type="checkbox" @bind-value="(Topic.IsChat)" /></td>
             <td class="actions">
-                <input class="save" type="button" value="[ S ]" />
-                <input class="delete" type="button" value="[ X ]" @onclick="(() => App.Remove(Topic))" />
+                <input class="save" type="button" value="[ S ]" @onclick="(async () => await App.Update(Topic))"/>
+                <input class="delete" type="button" value="[ X ]" @onclick="(async () => await App.Remove(Topic))" />
             </td>
         </RowTemplate>
     </Table>

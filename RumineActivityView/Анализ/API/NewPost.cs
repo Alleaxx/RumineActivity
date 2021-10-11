@@ -8,6 +8,8 @@ namespace RumineActivityView
 {
     public class NewPost
     {
+        private readonly EditApp App;
+
         //Информация о посте
         public string Link
         {
@@ -35,15 +37,15 @@ namespace RumineActivityView
         {
             if (GetNumberFrom("showtopic-", link) is int topic)
             {
-                EditingPost.TopicID = topic;
+                EditingPost.TopicId = topic;
             }
             if (GetNumberFrom("findpost-", link) is int post)
             {
-                EditingPost.ID = post;
+                EditingPost.Id = post;
             }
             if (GetNumberFrom("message-", link) is int message)
             {
-                EditingPost.ID = message;
+                EditingPost.Id = message;
             }
             CheckEditingPost();
         }
@@ -106,19 +108,19 @@ namespace RumineActivityView
         }
         private void CheckPostProperties(OpResult result)
         {
-            if (EditingPost.ID < 0)
+            if (EditingPost.Id < 0)
             {
                 result.Add(true, true, "Нет ID");
             }
-            if(StatApp.App.Posts.Any(p => p.ID == EditingPost.ID))
+            if(App.Posts.Any(p => p.Id == EditingPost.Id))
             {
-                result.Add(false, false, "Пост уже есть в базе");
+                result.Add(true, false, "Пост уже есть в базе");
             }
             if (EditingPost.Date == new DateTime())
             {
                 result.Add(true, true, "Нет даты");
             }
-            if (EditingPost.TopicID < 0)
+            if (EditingPost.TopicId < 0)
             {
                 result.Add(true, true, "Нет темы");
             }
@@ -134,17 +136,18 @@ namespace RumineActivityView
 
 
 
-        public NewPost()
+        public NewPost(EditApp app)
         {
+            App = app;
             EditingPost = new Post();
             CheckResult = new OpResult(true, true, "Поста вообще нет!");
         }
-        public void SendPost()
+        public async Task SendPost()
         {
             if (IsOk)
             {
-                StatApp.App.Add(EditingPost);
-                AddingResult = new OpResult(false, false, $"Сообщение {EditingPost.ID} отправлено (всего {StatApp.App.Posts.Count})");
+                await App.Add(EditingPost);
+                AddingResult = new OpResult(false, false, $"Сообщение {EditingPost.Id} отправлено (всего {App.Posts.Count})");
                 EditingPost = new Post();
                 Link = "";
                 TopicInfo = "";

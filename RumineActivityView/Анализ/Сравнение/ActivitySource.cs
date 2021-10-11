@@ -24,8 +24,8 @@ namespace RumineActivityView
         //Задание источника
         public ActivitySource(Topic topic)
         {
-            Mode = PostSource.Create(topic.ID);
-            Name = $"{topic.Name} [{topic.ID}]";
+            Mode = PostSource.Create(topic.Id);
+            Name = $"{topic.Name} [{topic.Id}]";
         }
         public ActivitySource(PostSource mode)
         {

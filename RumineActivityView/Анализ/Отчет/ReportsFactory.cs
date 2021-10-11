@@ -7,7 +7,14 @@ namespace RumineActivityView
 {
     public static class ReportsFactory
     {
-        public static StatisticsReport CreateClassicReport()
+        private static StatApp App { get; set; }
+        public static void SetDefaultData(StatApp app)
+        {
+            App = app;
+        }
+
+
+        public static StatisticsReport CreateClassicReport(StatApp app)
         {
             return CreateReport(Reports.Periodical, new ReportCreatorOptions()
             {
@@ -18,16 +25,16 @@ namespace RumineActivityView
 
         public static StatisticsReport CreateReport(Reports type, ReportCreatorOptions options)
         {
-            return CreateReport(type, options, new ForumSourceApp());
+            return CreateReport(type, options, new ForumSource(App));
         }
         public static StatisticsReport CreateReport(Reports type, ReportCreatorOptions options, IForumSource source)
         {
             switch (type)
             {
                 case Reports.Fact:
-                    return new ReportDefault(source, options).Create();
+                    return new CreateReportDefault(source, options).Create();
                 case Reports.Periodical:
-                    return new ReportPeriods(source, options).Create();
+                    return new CreateReportPeriods(source, options).Create();
                 default:
                     throw new Exception("Отчет неизвестного типа");
             }

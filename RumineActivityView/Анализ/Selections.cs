@@ -15,7 +15,7 @@ namespace RumineActivityView
 
         //Настройки отчета
         public static Period[] Periods { get; private set; } = Enum.GetValues<Periods>().Select(d => Period.Create(d)).ToArray();
-        public static PostSource[] TopicModes { get; private set; } = Enum.GetValues<PostSources>().Select(u => PostSource.Create(u)).ToArray();
+        public static PostSource[] PostSourcesArr { get; private set; } = Enum.GetValues<PostSources>().Select(u => PostSource.Create(u)).ToArray();
         public static ReportType[] ReportTypes { get; private set; } = new Reports[] { Reports.Fact, Reports.Periodical }.Select(r => new ReportType(r)).ToArray();
 
         //Представление

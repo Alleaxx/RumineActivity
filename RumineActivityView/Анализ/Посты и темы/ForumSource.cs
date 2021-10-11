@@ -10,14 +10,14 @@ namespace RumineActivityView
         public IEnumerable<Post> Posts { get; }
         public IEnumerable<Topic> Topics { get; }
     }
-    public class ForumSourceApp : IForumSource
+    public class ForumSource : IForumSource
     {
-        public IEnumerable<Post> Posts => StatApp.App.Posts;
-        public IEnumerable<Topic> Topics => StatApp.App.Topics;
-    }
-    public class ForumSourceOwn : IForumSource
-    {
-        public ForumSourceOwn(IEnumerable<Post> posts, IEnumerable<Topic> topics)
+        public ForumSource(StatApp app)
+        {
+            Posts = app.Posts;
+            Topics = app.Topics;
+        }
+        public ForumSource(IEnumerable<Post> posts, IEnumerable<Topic> topics)
         {
             Posts = posts;
             Topics = topics;

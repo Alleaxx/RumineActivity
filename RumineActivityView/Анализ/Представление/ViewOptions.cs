@@ -13,7 +13,7 @@ namespace RumineActivityView
 
         public MeasureUnit MeasureUnit { get; set; }
         public MeasureMethod MeasureMethod { get; set; }
-        public OutputValue OutValue { get; set; }
+        private OutputValue OutValue { get; set; }
 
 
         public string FormatEntry(Entry entry)
@@ -27,22 +27,33 @@ namespace RumineActivityView
             {
                 return "???";
             }
-            else
+            
+            string format = NumberFormatDouble();
+            if(method == MeasureMethods.Total && MeasureUnit.Type == MeasureUnits.Messages)
             {
-                return value.ToString(NumberFormat());
+                format = NumberFormatInt();
             }
+
+            return value.ToString(format);
         }
 
-
-        public string ZeroFormat()
+        private string ZeroFormat()
         {
-            return string.Join("", Enumerable.Repeat("0", RoundAccuracy));
+            return ZeroFormat(RoundAccuracy);
         }
-        public string NumberFormat()
+        private string ZeroFormat(int amount)
+        {
+            return string.Join("", Enumerable.Repeat("0", amount));
+        }
+       
+        private string NumberFormatDouble()
         {
             return $"#,0.{ZeroFormat()}";
         }
-
+        public string NumberFormatInt()
+        {
+            return $"#,0";
+        }
 
         public ViewOptions()
         {

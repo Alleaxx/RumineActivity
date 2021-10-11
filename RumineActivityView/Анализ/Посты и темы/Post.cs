@@ -9,21 +9,21 @@ namespace RumineActivityView
     {
         public override string ToString()
         {
-            return $"Пост {ID}";
+            return $"Пост {Id}";
         }
 
         //*
-        public int ID { get; set; } = -1;
+        public int Id { get; set; } = -1;
         public DateTime Date { get; set; }
 
         //-
-        public int TopicID { get; set; } = -1;
+        public int TopicId { get; set; } = -1;
         public int TopicIndex { get; set; } = -1;
 
         public int Page => (int)Math.Floor((double)TopicIndex / 20);
 
 
-        public string AutoLink => $"https://ru-minecraft.ru/forum/showtopic-{TopicID}/findpost-{ID}/";
+        public string AutoLink => $"https://ru-minecraft.ru/forum/showtopic-{TopicId}/findpost-{Id}/";
 
         public Post()
         {
@@ -31,8 +31,21 @@ namespace RumineActivityView
         }
         public Post(int id, DateTime date)
         {
-            ID = id;
+            Id = id;
             Date = date;
         }
+    }
+    public class PostJson
+    {
+        public override string ToString()
+        {
+            return $"Пост {id}";
+        }
+
+        public int id { get; set; } = -1;
+        public DateTime date { get; set; }
+
+        public int topicID { get; set; } = -1;
+        public int topicIndex { get; set; } = -1;
     }
 }

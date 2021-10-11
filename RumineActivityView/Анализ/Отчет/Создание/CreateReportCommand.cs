@@ -5,21 +5,21 @@ using System.Threading.Tasks;
 
 namespace RumineActivityView
 {
-    interface IReportCreator
+    interface IReportCommand
     {
         StatisticsReport Create();
     }
 
 
     //Макет для создания отчетов на основе промежутков между двумя постами
-    public abstract class ReportCreator : IReportCreator
+    public abstract class CreateReportCommand : IReportCommand
     {
         protected Post[] Posts { get; private set; }
         protected ReportCreatorOptions Options { get; private set; }
 
         public bool IsEmptyReport => Posts.Length < 2;
 
-        public ReportCreator(IForumSource source, ReportCreatorOptions options)
+        public CreateReportCommand(IForumSource source, ReportCreatorOptions options)
         {
             if (options != null)
             {
@@ -40,7 +40,6 @@ namespace RumineActivityView
             }
             else
             {
-                Console.WriteLine("Создание отчета");
                 return Construct();
             }
         }
@@ -85,7 +84,7 @@ namespace RumineActivityView
 
         private Entry CreateFactEntry(int index, Post newPost, Post oldPost)
         {
-            return new Entry(index, newPost, oldPost, Options.Period.DateFormat, Options.TopicMode.Mode);
+            return new Entry(index, newPost, oldPost, Options);
         }
     }
 
@@ -108,46 +107,6 @@ namespace RumineActivityView
     }
     abstract class ReportStrategy
     {
-        protected Entry[] SplitPosts(Post[] posts)
-        {
-            return SplitPosts(posts,new TimeSpan(0));
-        }
-        protected Entry[] SplitPosts(Post[] Posts, TimeSpan maxDifference)
-        {
-            List<Entry> entries = new List<Entry>();
-            int prevIndexDiff = 1;
-            for (int i = 1; i < Posts.Length; i++)
-            {
-                Post prevPost = Posts[i - prevIndexDiff];
-                Post currPost = Posts[i];
-
-                TimeSpan dateDiff = currPost.Date - prevPost.Date;
-                if (dateDiff >= maxDifference)
-                {
-                    Entry newEntry = CreateFactEntry(null,entries.Count, currPost, prevPost);
-                    entries.Add(newEntry);
-                    prevIndexDiff = 1;
-                }
-                else
-                {
-                    prevIndexDiff++;
-                }
-
-                bool last = i == Posts.Length - 1;
-                if (last && !entries.Any())
-                {
-                    Entry newEntry = CreateFactEntry(null,entries.Count, currPost, prevPost);
-                    entries.Add(newEntry);
-                }
-            }
-            return entries.ToArray();
-
-
-        }
-        private Entry CreateFactEntry(ReportCreatorOptions Options,int index, Post newPost, Post oldPost)
-        {
-            return new Entry(index, newPost, oldPost, Options.Period.DateFormat, Options.TopicMode.Mode);
-        }
 
     }
     class FactStrategy : ReportStrategy

@@ -22,7 +22,7 @@
                         <ul class="options-list">
                             @foreach (var year in Selection.Years)
                             {
-                                <li class="@($"option-item {GetCssClassYear(year)}")" @onclick="(() => SetYear(year))">
+                                <li class="@($"{CssSelect(DateInterval.Year, year, "option-item")}")" @onclick="(() => SetYear(year))">
                                     @if (year == 0)
                                     {
                                         <span>Вся история</span>
@@ -41,7 +41,7 @@
                             <ul class="options-list">
                                 @foreach (var month in Selection.Months)
                                 {
-                                    <li class="@($"option-item {GetCssClassMonth(month)}")" @onclick="(() => SetMonth(month))">
+                                    <li class="@($"option-item {CssSelect(DateInterval.Month, month)}")" @onclick="(() => SetMonth(month))">
                                         @if (month == 0)
                                         {
                                             <span>Все</span>
@@ -88,7 +88,7 @@
             </section>
 
             <section class="options-section">
-                <Collection HeaderText="Источник:" List="Selection.TopicModes" Selected="Options.TopicMode" T="PostSource" OnSelectCallback="Set" />
+                <Collection HeaderText="Источник:" List="Selection.PostSourcesArr" Selected="Options.PostSource" T="PostSource" OnSelectCallback="Set" />
             </section>
 
             <details class="source">
@@ -120,10 +120,10 @@
                         }
                     </div>
                     <div class="more-options">
-                        @if (Options.TopicMode.Mode == PostSources.Topic)
+                        @if (Options.PostsTopic != null && Options.PostsTopic.Mode == PostSources.Topic)
                         {
                             <label for="topic-id">ID темы: </label>
-                            <input type="number" id="topic-id" min="1" max="20000" list="topicsList" @bind:event="oninput" @onchange="Update" @bind="(Options.TopicMode.TopicId)" />
+                            <input type="number" id="topic-id" min="1" max="20000" list="topicsList" @bind:event="oninput" @onchange="Update" @bind="(Options.PostsTopic.TopicId)" />
                             <DataTopics></DataTopics>
                         }
                     </div>

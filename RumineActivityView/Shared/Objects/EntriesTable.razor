@@ -17,7 +17,7 @@
         {
             <tr>
                 <th class="primary-key">@group.Key</th>
-                <td class="posts sum">@Table.TableSum[group.Key].ToString("#,0")</td>
+                <td class="posts sum">@Table.TableSum[group.Key].ToString(View.NumberFormatInt())</td>
 
                 @foreach (var col in group.Value)
                 {
@@ -28,7 +28,7 @@
                     else
                     {
                         <td class="posts" title="@($"{col.Value.Range.From.ToString(col.Value.DateFormat)}")" style="@($"background-color: {View.Rules.GetFor(col.Value).Color}")">
-                            @col.Value.PostsWritten.ToString("#,0")
+                            @View.FormatEntry(col.Value)
                         </td>
                     }
                 }

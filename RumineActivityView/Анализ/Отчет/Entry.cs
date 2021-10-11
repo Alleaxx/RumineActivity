@@ -28,26 +28,26 @@ namespace RumineActivityView
 
 
         //Периодический отчет
-        public Entry(int index, DateRange range, string format, PostSources topicMode)
+        public Entry(int index, DateRange range, ReportCreatorOptions options)
         {
             Index = index;
             SeparateDates = false;
             Range = range;
-            SetFormat(format);
+            SetFormat(options.Period.DateFormat);
 
-            SetMode(topicMode);
+            SetSourceMode(options.PostSource.Mode);
         }
 
         //Фактический отчет
-        public Entry(int index, Post newer, Post older, string format, PostSources topicMode)
+        public Entry(int index, Post newer, Post older, ReportCreatorOptions options)
         {
             Index = index;
             SeparateDates = true;
             Range = new DateRange(newer, older);
-            SetFormat(format);
+            SetFormat(options.Period.DateFormat);
 
             SetPostsDiff(newer, older);
-            SetMode(topicMode);
+            SetSourceMode(options.PostSource.Mode);
             SetLastPost(newer);
         }
 
@@ -56,7 +56,7 @@ namespace RumineActivityView
         //Редактирование записи
         protected void SetPostsDiff(Post newer, Post older)
         {
-            double postsDifferenceAll = newer.ID - older.ID;
+            double postsDifferenceAll = newer.Id - older.Id;
             double postsDifferenceTopic = Math.Max(0, newer.TopicIndex - older.TopicIndex);
 
             Posts[EntrySources.AllForum] = postsDifferenceAll;
@@ -67,7 +67,7 @@ namespace RumineActivityView
         {
             EndingPost = ending;
         }
-        protected void SetMode(PostSources mode)
+        protected void SetSourceMode(PostSources mode)
         {
             Dictionary<PostSources, EntrySources> Translate = new Dictionary<PostSources, EntrySources>()
             {
@@ -97,7 +97,7 @@ namespace RumineActivityView
 
         //Суммарно написано к моменту
         private Post EndingPost { get; set; }
-        public int LastPostIndex => EntrySource == EntrySources.Topics ? EndingPost.TopicIndex : EndingPost.ID;
+        public int LastPostIndex => EntrySource == EntrySources.Topics ? EndingPost.TopicIndex : EndingPost.Id;
         
         //Разница в постах
         private Dictionary<EntrySources, double> Posts { get; set; } = new Dictionary<EntrySources, double>

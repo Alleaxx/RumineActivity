@@ -1,4 +1,4 @@
-﻿@inherits StatComponent
+﻿@inherits EditComponent
 @page "/add"
 
 <section class="new-post">
@@ -42,7 +42,7 @@
         <div class="sending">
             @if (EditPost.IsOk)
             {
-                <button @onclick="@(() => EditPost.SendPost())">
+                <button @onclick="@(async () => await EditPost.SendPost())">
                     Добавить пост в базу
                 </button>
             }

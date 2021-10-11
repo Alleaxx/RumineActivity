@@ -15,7 +15,9 @@ namespace RumineActivityView
         public DateTime To { get; set; }
 
         public Period Period { get; set; }
-        public PostSource TopicMode { get; set; } 
+        public PostSource PostSource { get; set; }
+        public SourceTopics PostsTopic => PostSource as SourceTopics; 
+        
         public bool EmptyPeriodsEnabled { get; set; }
 
 
@@ -23,18 +25,18 @@ namespace RumineActivityView
         {
             DateRange = new DateRange(FoundationDate, DateTime.Now);
             Period = Period.Create(Periods.Month);
-            TopicMode = PostSource.Create(PostSources.All);
+            PostSource = PostSource.Create(PostSources.All);
             EmptyPeriodsEnabled = false;
         }
         public ReportCreatorOptions(PostSource mode) : this()
         {
-            TopicMode = mode;
+            PostSource = mode;
         }
 
         public Post[] GetPostsSource(IForumSource source)
         {
             return source.Posts
-                .Where(p => TopicMode.Filter(p, source.Topics))
+                .Where(p => PostSource.Filter(p, source.Topics))
                 .Where(p => DateRange.IsDateInside(p.Date))
                 .OrderBy(d => d.Date)
                 .ToArray();

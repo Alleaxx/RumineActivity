@@ -1,4 +1,4 @@
-﻿@inherits StatComponent
+﻿@inherits EditComponent
 @page "/posts/view"
 
 <style>
@@ -33,22 +33,22 @@
             <th>Действия</th>
         </TableHeader>
         <RowTemplate>
-            <td class="id"><input type="number" min="1" max="5000000" @bind-value="(Post.ID)" /></td>
+            <td class="id"><input type="number" min="1" max="5000000" @bind-value="(Post.Id)" /></td>
             <td><input type="date" @bind-value="(Post.Date)" /></td>
             <td><input type="time" @bind-value="(Post.Date)" /></td>
             <td class="id">
 
                 @if (ShowTopicNames)
-                { <span class="topic">@GetTopicName(Post.TopicID)</span> }
+                { <span class="topic">@GetTopicName(Post.TopicId)</span> }
 
                 else
-                { <input type="number" list="topicsList" min="1" max="100000" @bind-value="(Post.TopicID)" /> }
+                { <input type="number" list="topicsList" min="1" max="100000" @bind-value="(Post.TopicId)" /> }
 
             </td>
             <td class="id"><input type="number" min="1" max="5000000" @bind-value="(Post.TopicIndex)" /></td>
             <td class="actions">
-                <input class="save" type="button" value="[ S ]" />
-                <input class="delete" type="button" value="[ X ]" @onclick="(() => App.Remove(Post))" />
+                <input class="save" type="button" value="[ S ]" @onclick="(async () => await App.Update(Post))"/>
+                <input class="delete" type="button" value="[ X ]" @onclick="(async () => await App.Remove(Post))" />
             </td>
         </RowTemplate>
     </Table>
@@ -60,7 +60,7 @@
     private bool ShowTopicNames { get; set; } = false;
     private string GetTopicName(int topicId)
     {
-        var foundTopic = Topics.FirstOrDefault(t => t.ID == topicId);
+        var foundTopic = Topics.FirstOrDefault(t => t.Id == topicId);
         if(foundTopic != null)
         {
             return foundTopic.Name;
