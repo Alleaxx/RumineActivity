@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace RumineActivityView
+namespace RumineActivity.Core
 {
     public class ActivityWebApi
     {

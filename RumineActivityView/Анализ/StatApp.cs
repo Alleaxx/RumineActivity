@@ -23,6 +23,7 @@ namespace RumineActivityView
         public List<Post> Posts { get; private set; }
         public List<Topic> Topics { get; private set; }
 
+
         private void AddLocal(Post post)
         {
             Posts.Add(post);
@@ -33,10 +34,10 @@ namespace RumineActivityView
         }
 
 
-        public StatApp(HttpClient client)
+        public StatApp(HttpClient client, ActivityWebApi api)
         {
             Client = client;
-            WebApi = new ActivityWebApi("https://localhost:44341", Client);
+            WebApi = api;
             SetOfflineSource();
 
             ViewOptions = new ViewOptions();

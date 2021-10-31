@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace RumineActivityView
+namespace RumineActivity.Core
 {
     public class EditApp
     {
