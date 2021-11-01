@@ -24,7 +24,7 @@
         </div>
     </section>
 
-    <Table Items="Posts" Context="Post">
+    <Table Items="Forum.Posts" Context="Post">
         <TableHeader>
             <th class="id">ID</th>
             <th colspan="2">Дата</th>
@@ -47,8 +47,8 @@
             </td>
             <td class="id"><input type="number" min="1" max="5000000" @bind-value="(Post.TopicIndex)" /></td>
             <td class="actions">
-                <input class="save" type="button" value="[ S ]" @onclick="(async () => await App.Update(Post))"/>
-                <input class="delete" type="button" value="[ X ]" @onclick="(async () => await App.Remove(Post))" />
+                <input class="save" type="button" value="[ S ]" @onclick="(async () => await Api.Update(Post))"/>
+                <input class="delete" type="button" value="[ X ]" @onclick="(async () => await Api.Delete(Post))" />
             </td>
         </RowTemplate>
     </Table>
@@ -60,7 +60,7 @@
     private bool ShowTopicNames { get; set; } = false;
     private string GetTopicName(int topicId)
     {
-        var foundTopic = Topics.FirstOrDefault(t => t.Id == topicId);
+        var foundTopic = Forum.Topics.FirstOrDefault(t => t.Id == topicId);
         if(foundTopic != null)
         {
             return foundTopic.Name;

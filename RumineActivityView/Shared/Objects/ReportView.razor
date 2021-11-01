@@ -2,7 +2,7 @@
 
 <section class="data-view">
     <ul class="tabber">
-        @foreach(var mode in Selection.DataViews)
+        @foreach(var mode in DataViews)
         {
             <li class="@(Mode == mode ? "selected" : "")" @onclick="() => Set(mode)">
                 @if (!string.IsNullOrEmpty(mode.Icon)) { <img alt="@mode.Name" src="images/@mode.Icon" /> }
@@ -88,8 +88,9 @@
 
 @code {
 
+
     [Parameter]
-    public ViewType Mode { get; set; } = new ViewType(RumineActivityView.DViewTypes.Values);
+    public ViewType Mode { get; set; } = new ViewType(RumineActivity.View.DViewTypes.Values);
     [Parameter]
     public EventCallback<ViewType> ModeChanged { get; set; }
 

@@ -7,3 +7,10 @@
     }
 </datalist>
 
+@code{  
+    public IEnumerable<Topic> Topics { get; set; } = new List<Topic>();
+    protected async override Task OnInitializedAsync()
+    {
+        Topics = (await API.GetForum()).Topics;
+    }
+}

@@ -6,7 +6,7 @@
         <h2>Редактирование тем</h2>
     </header>
 
-    <Table Items="Topics" Context="Topic">
+    <Table Items="Forum.Topics" Context="Topic">
         <TableHeader>
             <th class="id">ID</th>
             <th>Название</th>
@@ -18,8 +18,8 @@
             <td class="name"><input type="text" maxlength="80" size="80" @bind-value="(Topic.Name)" /></td>
             <td align="center"><input type="checkbox" @bind-value="(Topic.IsChat)" /></td>
             <td class="actions">
-                <input class="save" type="button" value="[ S ]" @onclick="(async () => await App.Update(Topic))"/>
-                <input class="delete" type="button" value="[ X ]" @onclick="(async () => await App.Remove(Topic))" />
+                <input class="save" type="button" value="[ S ]" @onclick="(async () => await Api.Update(Topic))"/>
+                <input class="delete" type="button" value="[ X ]" @onclick="(async () => await Api.Delete(Topic))" />
             </td>
         </RowTemplate>
     </Table>

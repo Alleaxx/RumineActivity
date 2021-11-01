@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace RumineActivityView.Pages
+using RumineActivity.Core;
+namespace RumineActivity.View.Pages
 {
     public partial class Statistics : StatComponent
     {
@@ -12,18 +13,15 @@ namespace RumineActivityView.Pages
         private StatisticsReport Report
         {
             get => App.Report;
-            set
-            {
-                App.Report = value;
-            }
+            set => App.Report = value;
         }
 
 
         private ReportType ReportType { get; set; } = new ReportType(Reports.Periodical);
 
-        private void CreateReport()
+        private async void CreateReport()
         {
-            Report = ReportsFactory.CreateReport(ReportType, Options);
+            Report = await ReportsFactory.CreateReport(ReportType, Options);
         }
 
         public YearMonthDateSelector DateInterval { get; set; } = new YearMonthDateSelector(0, 0);

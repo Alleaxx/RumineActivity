@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
-namespace RumineActivityView.Pages
+using Microsoft.AspNetCore.Components;
+using RumineActivity.Core;
+namespace RumineActivity.View.Pages
 {
     public partial class ComparisonPage : StatComponent
     {
-        public Comparison Comparison => App.Comparison;
+        [Inject]
+        public IComparison Comparison { get; set; }
 
         private IEnumerable<ActivitySource> PossibleAll => Comparison.PossibleItems.Where(i => i.Mode.Mode != PostSources.Topic);
         private IEnumerable<ActivitySource> PossibleTopics => Comparison.PossibleItems.Where(i => i.Mode.Mode == PostSources.Topic);

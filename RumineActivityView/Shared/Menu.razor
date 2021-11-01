@@ -78,18 +78,18 @@
             </li>
         </ul>
     </section>
-    <footer class="menu-footer">
+    @*<footer class="menu-footer">
         <p>
             <span>Тем: @App.Topics.Count</span><br />
             <span>Сообщений: @App.Posts.Count</span><br />
             <input type="button" value="Загрузить инфу" @onclick="LoadDataFromApi"/>
         </p>
-    </footer>
+    </footer>*@
 </nav>
 
 @code{
-    private async Task LoadDataFromApi()
-    {
-        await App.SetOnlineSource();
-    }
+    //private async Task LoadDataFromApi()
+    //{
+    //    await App.SetOnlineSource();
+    //}
 }

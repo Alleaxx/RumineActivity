@@ -53,6 +53,7 @@
 
     protected async override Task OnInitializedAsync()
     {
-        Report = ReportsFactory.CreateClassicReport(App);
+        //Report = ReportsFactory.CreateClassicReport(App);
+        Report = await ReportsFactory.CreateClassicReport();
     }
 }
