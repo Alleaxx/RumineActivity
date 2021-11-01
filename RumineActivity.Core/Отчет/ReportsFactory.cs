@@ -28,15 +28,13 @@ namespace RumineActivity.Core
         }
         public async Task<StatisticsReport> CreateReport(Reports type, ReportCreatorOptions options)
         {
-            switch (type)
+            var forum = await API.GetForum();
+            return type switch
             {
-                case Reports.Fact:
-                    return new CreateReportDefault(await API.GetForum(), options).Create();
-                case Reports.Periodical:
-                    return new CreateReportPeriods(await API.GetForum(), options).Create();
-                default:
-                    throw new Exception("Отчет неизвестного типа");
-            }
+                Reports.Fact => new CreateReportDefault(forum, options).Create(),
+                Reports.Periodical => new CreateReportPeriods(forum, options).Create(),
+                _ => throw new Exception("Отчет неизвестного типа"),
+            };
         }
     }
 }

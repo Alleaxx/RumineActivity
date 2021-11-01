@@ -8,7 +8,7 @@ namespace RumineActivity.Core
     //Отчет с РАВНЫМИ периодами, достраивает недостающие данные
     public class CreateReportPeriods : CreateReportCommand
     {
-        public CreateReportPeriods(IForumSource source, ReportCreatorOptions options) : base(source, options)
+        public CreateReportPeriods(IForum source, ReportCreatorOptions options) : base(source, options)
         {
 
         }

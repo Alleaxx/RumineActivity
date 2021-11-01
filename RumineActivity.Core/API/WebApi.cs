@@ -32,12 +32,10 @@ namespace RumineActivity.Core
                 string json = await responce.Content.ReadAsStringAsync();
 
                 IEnumerable<T> collection = JsonSerializer.Deserialize<IEnumerable<T>>(json, JsonOptions);
-                Console.WriteLine($"Коллекция получена из API");
                 return collection;
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Не удалось получить коллекцию:");
                 Console.WriteLine(ex.Message);
             }
             return default;
@@ -49,32 +47,27 @@ namespace RumineActivity.Core
                 var responce = await Client.PostAsync(path, GetContent(post));
                 if (responce.IsSuccessStatusCode)
                 {
-                    Console.WriteLine($"Элемент {post} успешно добавлен или уже существует по API");
                     return post;
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Не удалось создать элемент:");
                 Console.WriteLine(ex.Message);
             }
             return default;
         }
         protected async Task<T> Update<T>(T post, string path)
         {
-
             try
             {
                 var responce = await Client.PutAsync(path, GetContent(post));
                 if (responce.IsSuccessStatusCode)
                 {
-                    Console.WriteLine($"Элемент {post} успешно обновлен по API");
                     return post;
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Не удалось обновить элемент:");
                 Console.WriteLine(ex.Message);
             }
             return default;
@@ -87,13 +80,11 @@ namespace RumineActivity.Core
                 var responce = await Client.DeleteAsync(deletePath);
                 if (responce.IsSuccessStatusCode)
                 {
-                    Console.WriteLine($"Элемент {post} успешно удален по API");
                     return post;
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Не удалось удалить элемент:");
                 Console.WriteLine(ex.Message);
             }
             return default;
@@ -104,7 +95,5 @@ namespace RumineActivity.Core
             string content = JsonSerializer.Serialize(obj, JsonOptions);
             return new StringContent(content, Encoding.UTF8, "application/json");
         }
-
     }
-
 }

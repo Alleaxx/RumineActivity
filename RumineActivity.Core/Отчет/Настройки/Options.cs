@@ -33,7 +33,7 @@ namespace RumineActivity.Core
             PostSource = mode;
         }
 
-        public Post[] GetPostsSource(IForumSource source)
+        public Post[] GetPostsSource(IForum source)
         {
             return source.Posts
                 .Where(p => PostSource.Filter(p, source.Topics))

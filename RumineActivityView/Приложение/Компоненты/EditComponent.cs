@@ -12,11 +12,11 @@ namespace RumineActivity.View
         //[Inject]
         //public IDataEditor App { get; set; }
         [Inject]
-        public INewPostEditor EditPost { get; set; }
+        public IPostEditor EditPost { get; set; }
         [Inject]
         public IActivityApi Api { get; set; }
 
-        public IForumSource Forum { get; private set; }
+        public IForum Forum { get; private set; }
         protected async override Task OnInitializedAsync()
         {
             Forum = await Api.GetForum();

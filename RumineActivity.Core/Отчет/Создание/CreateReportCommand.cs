@@ -19,7 +19,7 @@ namespace RumineActivity.Core
 
         public bool IsEmptyReport => Posts.Length < 2;
 
-        public CreateReportCommand(IForumSource source, ReportCreatorOptions options)
+        public CreateReportCommand(IForum source, ReportCreatorOptions options)
         {
             if (options != null)
             {

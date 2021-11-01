@@ -14,7 +14,6 @@ namespace RumineActivity.View
     public class Program
     {
 
-        private static readonly bool OnlineMode = false;
         public static async Task Main(string[] args)
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -22,7 +21,8 @@ namespace RumineActivity.View
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
-            if (OnlineMode)
+            bool onlineMode = false;
+            if (onlineMode)
             {
                 builder.Services.AddScoped<IActivityApi, ActivityWebStorageLoggedApi>();
             }
@@ -32,7 +32,7 @@ namespace RumineActivity.View
             }
 
             builder.Services.AddScoped<IStatApp, StatApp>();
-            builder.Services.AddScoped<INewPostEditor, NewPost>();
+            builder.Services.AddScoped<IPostEditor, PostEditor>();
             builder.Services.AddScoped<IReportsFactory, ReportsFactory>();
             builder.Services.AddScoped<IComparison, Comparison>();
 

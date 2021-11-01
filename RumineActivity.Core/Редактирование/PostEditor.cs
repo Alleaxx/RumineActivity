@@ -6,17 +6,17 @@ using System.Text.RegularExpressions;
 
 namespace RumineActivity.Core
 {
-    public interface INewPostEditor
+    public interface IPostEditor
     {
         string Link { get; set; }
         string TopicInfo { get; set; }
         Task SendPost();
 
-        OpResult CheckResult { get; }
-        OpResult AddingResult { get; }
+        CheckMessage CheckResult { get; }
+        CheckMessage AddingResult { get; }
         bool IsOk { get; }
     }
-    public class NewPost : INewPostEditor
+    public class PostEditor : IPostEditor
     {
         private readonly IActivityApi Api;
         private async Task<IEnumerable<Post>> Posts()
@@ -107,10 +107,10 @@ namespace RumineActivity.Core
 
         //Результаты
         private Post EditingPost { get; set; }
-        public OpResult CheckResult { get; private set; }
+        public CheckMessage CheckResult { get; private set; }
         private async Task CheckEditingPost()
         {
-            CheckResult = new OpResult(false, false, "");
+            CheckResult = new CheckMessage(false, false, "");
             await CheckPostProperties(CheckResult);
 
             bool error = CheckResult.Inner.Exists(r => r.Error);
@@ -121,7 +121,7 @@ namespace RumineActivity.Core
             CheckResult.Error = error;
             CheckResult.Message = error ? "Есть ошибки" : warning ? "Есть предупреждения" : "Всё отлично";
         }
-        private async Task CheckPostProperties(OpResult result)
+        private async Task CheckPostProperties(CheckMessage result)
         {
             var posts = await Posts();
             if (EditingPost.Id < 0)
@@ -152,11 +152,11 @@ namespace RumineActivity.Core
 
 
 
-        public NewPost(IActivityApi api)
+        public PostEditor(IActivityApi api)
         {
             Api = api;
             EditingPost = new Post();
-            CheckResult = new OpResult(true, true, "Поста вообще нет!");
+            CheckResult = new CheckMessage(true, true, "Поста вообще нет!");
         }
         public async Task SendPost()
         {
@@ -165,18 +165,18 @@ namespace RumineActivity.Core
                 var result = await Api.Create(EditingPost);
                 if (result != null)
                 {
-                    AddingResult = new OpResult(false, false, $"Сообщение {result.Id} ({result.TopicIndex}) отправлено!");
+                    AddingResult = new CheckMessage(false, false, $"Сообщение {result.Id} ({result.TopicIndex}) отправлено!");
                     EditingPost = new Post();
                     Link = "";
                     TopicInfo = "";
                 }
                 else
                 {
-                    AddingResult = new OpResult(true, false, $"Не удалось сохранить пост");
+                    AddingResult = new CheckMessage(true, false, $"Не удалось сохранить пост");
                 }
             }
         }
 
-        public OpResult AddingResult { get; set; }
+        public CheckMessage AddingResult { get; set; }
     }
 }

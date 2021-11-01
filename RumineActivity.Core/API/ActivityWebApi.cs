@@ -16,8 +16,8 @@ namespace RumineActivity.Core
         Task<Topic> Update(Topic topic);
         Task<Post> Delete(Post post);
         Task<Topic> Delete(Topic topic);
-        Task<IForumSource> GetForum();
-        Task<IForumSource> GetForum(DateRange range);
+        Task<IForum> GetForum();
+        Task<IForum> GetForum(DateRange range);
     }
     public class ActivityWebApi : WebApi, IActivityApi
     {
@@ -73,15 +73,15 @@ namespace RumineActivity.Core
             return await Get<Topic>(TopicPath);
         }
 
-        public async Task<IForumSource> GetForum()
+        public async Task<IForum> GetForum()
         {
             var posts = await GetAllPosts();
             var topics = await GetAllTopics();
             bool success = posts != null && topics != null;
 
-            return success ? new ForumSource(posts, topics) : default;
+            return success ? new Forum(posts, topics) : default;
         }
-        public async Task<IForumSource> GetForum(DateRange range)
+        public async Task<IForum> GetForum(DateRange range)
         {
             return await GetForum();
         }

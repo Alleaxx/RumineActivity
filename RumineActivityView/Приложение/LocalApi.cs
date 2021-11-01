@@ -43,11 +43,11 @@ namespace RumineActivity.View
             Topics.Remove(topic);
             return topic;
         }
-        public async Task<IForumSource> GetForum()
+        public async Task<IForum> GetForum()
         {
-            return new ForumSource(Posts, Topics);
+            return new Forum(Posts, Topics);
         }
-        public async Task<IForumSource> GetForum(DateRange range)
+        public async Task<IForum> GetForum(DateRange range)
         {
             return await GetForum();
         }

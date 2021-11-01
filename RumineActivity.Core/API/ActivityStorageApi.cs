@@ -17,7 +17,7 @@ namespace RumineActivity.Core
         private readonly IActivityApi Main;
 
         //Обращаться к АПИ с изменением данных
-        private bool UseApiChangeData { get; set; }
+        private bool UseApiChangeData { get; init; }
 
         private List<Post> Posts { get; set; }
         private List<Topic> Topics { get; set; }
@@ -104,11 +104,11 @@ namespace RumineActivity.Core
             return topic;
         }
 
-        public async Task<IForumSource> GetForum()
+        public async Task<IForum> GetForum()
         {
-            return new ForumSource(Posts, Topics);
+            return new Forum(Posts, Topics);
         }
-        public async Task<IForumSource> GetForum(DateRange range)
+        public async Task<IForum> GetForum(DateRange range)
         {
             return await GetForum();
         }

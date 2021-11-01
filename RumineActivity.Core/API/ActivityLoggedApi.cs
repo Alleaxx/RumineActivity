@@ -65,7 +65,7 @@ namespace RumineActivity.Core
         }
 
 
-        public async Task<IForumSource> GetForum()
+        public async Task<IForum> GetForum()
         {
             Console.WriteLine($"{Main}: Получение форума");
             var result = await Main.GetForum();
@@ -75,7 +75,7 @@ namespace RumineActivity.Core
                 Console.WriteLine($"{Main}: Не удалось получить форум");
             return result;
         }
-        public async Task<IForumSource> GetForum(DateRange range)
+        public async Task<IForum> GetForum(DateRange range)
         {
             return await GetForum();
         }
