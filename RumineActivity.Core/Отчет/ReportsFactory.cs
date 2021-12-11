@@ -28,7 +28,7 @@ namespace RumineActivity.Core
         }
         public async Task<StatisticsReport> CreateReport(Reports type, ReportCreatorOptions options)
         {
-            var forum = await API.GetForum();
+            var forum = await API.GetForum(options.DateRange);
             return type switch
             {
                 Reports.Fact => new CreateReportDefault(forum, options).Create(),

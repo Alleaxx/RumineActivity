@@ -28,7 +28,8 @@ namespace RumineActivity.View
             }
             else
             {
-                builder.Services.AddScoped<IActivityApi, LocalLoggedApi>();
+                //builder.Services.AddScoped<IActivityApi, LocalLoggedApi>();
+                builder.Services.AddScoped<IActivityApi, LocalApi>();
             }
 
             builder.Services.AddScoped<IStatApp, StatApp>();
