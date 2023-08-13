@@ -1,0 +1,83 @@
+﻿@inherits StatComponent
+
+<div class="settings-line">
+    <div class="setting @CssIsFalse(ShowSortingEntry, "collapsed")">
+        <label class="setting-label">Сортировка:</label>
+        <CollectionSelect List="SortExtensions.EntrySorts.Values"
+        Selected="ValuesViewConfig.SortingEntriesSelected"
+        T="Sorting<Entry, object>"
+            OnSelectCallback="Set"
+            BorderWidth="1"/>
+        <span class="sort-symbol" title="Поменять направление сортировки"
+            @onclick="() => ValuesViewConfig.SortingEntriesSelected.Descending = !ValuesViewConfig.SortingEntriesSelected.Descending">
+            <span style="padding: 0 2px; margin: 0 4px; cursor: pointer;" title="поменять направление сортировки">
+                @ValuesViewConfig.SortingEntriesSelected.GetSortSymbol()
+            </span>
+            
+        </span>
+    </div>
+    <div class="setting @CssIsFalse(ShowMeasureUnit, "collapsed")">
+        <label class="setting-label">Измерение:</label>
+        <CollectionSelect List="EnumValues.Units" Selected="ValuesViewConfig.MeasureUnit" T="MeasureUnit" OnSelectCallback="Set"
+                          BorderWidth="1" />
+    </div>
+    <div class="setting @CssIsFalse(ShowMeasureMethod, "collapsed")">
+        <CollectionSelect List="EnumValues.Methods" Selected="ValuesViewConfig.MeasureMethod" T="MeasureMethod" OnSelectCallback="Set"
+                          BorderWidth="1" />
+    </div>
+    <div class="setting @CssIsFalse(ShowRoundAccuracy, "collapsed")">
+        <label for="accuracy" class="setting-label">Округление:</label>
+        <input id="accuracy" type="number" size="3" @bind-value="ValuesViewConfig.RoundAccuracy" />
+    </div>
+    <div class="setting @CssIsFalse(ShowRelativeValues, "collapsed")">
+        <label for="relative" class="setting-label">Относительные значения:</label>
+        <input id="relative" type="checkbox" @bind="ValuesViewConfig.UseRelativeValues" />
+    </div>
+    <div class="setting @CssIsFalse(ShowRelativeValues && !ValuesViewConfig.UseRelativeValues, "collapsed")">
+        <label for="absolute" class="setting-label" title="Возможный максимум написанных сообщений в день">Макс. значение:</label>
+        <input id="absolute" type="number" min="100" max="100000" step="20" @bind-value="ValuesViewConfig.AbsoluteValue" />
+    </div>
+    <div class="setting @CssIsFalse(ShowCompareDifference, "collapsed")">
+        <label for="compare-values" class="setting-label">Показывать разницу значений в сравнении</label>
+        <input id="compare-values" type="checkbox" @bind="ValuesViewConfig.ShowCompareValueDifference" />
+    </div>
+    <div class="setting @CssIsFalse(ShowCompareView && ValuesViewConfig.ShowCompareValueDifference, "collapsed")">
+        <label class="setting-label">Формат разницы:</label>
+        <CollectionSelect List="EnumValues.CompareValues" Selected="ValuesViewConfig.CompareView" T="CompareDiffFormat" OnSelectCallback="Set"
+                          BorderWidth="1" />
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public bool ShowRoundAccuracy { get; set; } = true;
+    [Parameter]
+    public bool ShowRelativeValues { get; set; } = false;
+    [Parameter]
+    public bool ShowCompareDifference { get; set; } = false;
+    [Parameter]
+    public bool ShowCompareView { get; set; } = false;
+    [Parameter]
+    public bool ShowMeasureMethod { get; set; } = true;
+    [Parameter]
+    public bool ShowMeasureUnit { get; set; } = true;
+    [Parameter]
+    public bool ShowSortingEntry { get; set; } = false;
+
+    private void Set(MeasureUnit unit)
+    {
+        ValuesViewConfig.MeasureUnit = unit;
+    }
+    private void Set(MeasureMethod method)
+    {
+        ValuesViewConfig.MeasureMethod = method;
+    }
+    private void Set(Sorting<Entry,object> sort)
+    {
+        ValuesViewConfig.SortingEntriesSelected = sort;
+    }
+    private void Set(Core.Comparisons.CompareDiffFormat view)
+    {
+        ValuesViewConfig.CompareView = view;
+    }
+}

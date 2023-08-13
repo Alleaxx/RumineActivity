@@ -1,37 +1,11 @@
 ﻿@inherits CollectionComponent<T>
 @typeparam T
 
-<style>
-    .option-select {
-        display: flex;
-        justify-content: flex-end;
-    }
-
-        .option-select h4 {
-            flex: 1;
-            margin: 4px 0.5em;
-            font-size: 1em;
-            text-align: right;
-        }
-
-        .option-select select{
-            border: 0;
-            text-align: right;
-        }
-        .option-select select:focus-visible{
-            outline: none;
-        }
-
-        .option-select select option{
-
-        }
-</style>
-
 <section class="option-select">
     @if (!string.IsNullOrEmpty(HeaderText))
     {<h4>@HeaderText</h4>}
 
-    <select @bind="Item">
+    <select @bind="Item" style="border: @(BorderWidth)px solid silver">
         @for (int i = 0; i < List.Count(); i++)
         {
             <option value="@i">
@@ -42,4 +16,6 @@
 </section>
 
 @code {
+    [Parameter]
+    public int BorderWidth { get; set; } = 0;
 }

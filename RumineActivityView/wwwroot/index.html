@@ -8,6 +8,7 @@
     <base href="/" />
     <link href="css/app.css" rel="stylesheet" />
     <link href="css/edit.css" rel="stylesheet" />
+    <link href="css/stat.css" rel="stylesheet" />
     <link href="RumineActivity.View.styles.css" rel="stylesheet" />
     <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
     <link rel="icon" type="image/png" href="images/favicon.png">
@@ -18,16 +19,23 @@
         <div class="loading">
             <img src="images/loader.svg" />
             <span>
-                Собираем статистику...
+                Загрузка приложения...
             </span>
         </div>
     </div>
 
     <div id="blazor-error-ui">
-        An unhandled error has occurred.
-        <a href="" class="reload">Reload</a>
+        <h3>Ой... Необработанное исключение</h3>
+        <p>
+            В принципе ничего страшного, мы уже конечно знаем об ошибке и всей командой работаем над её устранением.
+        </p>
+        <p style="font-size: 0.8em">
+            В консоли на F12 можно найти больше подробностей. Но оно вам нужно?
+        </p>
+        <a href="" class="reload">Перезагрузить страницу</a>
         <a class="dismiss">🗙</a>
     </div>
+    <script src="saveAsFile.js"></script>
     <script src="_framework/blazor.webassembly.js"></script>
 </body>
 

@@ -1,0 +1,243 @@
+﻿@inherits ReportComponent
+
+<div class="tables">
+   
+    @* РЕКОРДЫ *@
+    <table class="values-table">
+        <colgroup>
+            <col style="width: 20%" />
+            <col style="width: 20%" />
+            <col style="width: 10%" />
+            <col style="width: 50%" />
+        </colgroup>
+        <thead>
+            <tr class="results-row">
+                <td colspan="4" class="td-separator cell-header" @onclick="() => ToggleVariable(ref ShowRecords)">
+                    РЕКОРДЫ @GetToggleSymbol(ShowRecords)
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            @if (ShowRecords)
+            {
+                <tr class="results-row">
+                    <td class="record-title" colspan="1">Самый активный период</td>
+                    <td class="record-date numbers" colspan="1">@Report?.MostActiveAverage?.GetName()</td>
+                    <td class="record-value numbers" colspan="1">@ValuesViewConfig.FormatEntryPosts(Report.MostActiveAverage)</td>
+                    <td class="record-value numbers" colspan="1"></td>
+                </tr>
+                <tr class="results-row">
+                    <td class="record-title" colspan="1">Самый мертвецкий период</td>
+                    <td class="record-date numbers" colspan="1">@Report?.MostInactiveAverage?.GetName()</td>
+                    <td class="record-value numbers" colspan="1">@ValuesViewConfig.FormatEntryPosts(Report.MostInactiveAverage)</td>
+                    <td class="record-value numbers" colspan="1"></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    
+    @* ПЕРИОДЫ *@
+    <table class="values-table">
+        <thead>
+            <tr>
+                <td colspan="8" class="td-separator cell-header" @onclick="() => ToggleVariable(ref ShowEntries)">
+                    ПЕРИОДЫ [@Report.Length] @GetToggleSymbol(ShowEntries)
+                    <button @onclick="SaveCSVFileAsync" title="Экспортировать в CSV формат">
+                        CSV
+                    </button>
+                </td>
+            </tr>
+            @if (ShowEntries)
+            {
+                <tr>
+                    <th class="text @CssIsEqual(Sorts[Sortings.Index],SortSelected, "cell-sorted", "cell-can-sort")"
+                        @onclick="() => ToggleSort(Sorts[Sortings.Index])">
+                        № 
+                    </th>
+                    <th class="text @CssIsEqual(Sorts[Sortings.Index],SortSelected, "cell-sorted", "cell-can-sort")" colspan="2"
+                        @onclick="() => ToggleSort(Sorts[Sortings.Index])">
+                        Периоды @GetSortSymbol(Sorts[Sortings.Index])
+                    </th>
+                    <th class="numbers @CssIsEqual(Sorts[Sortings.ValueTotal],SortSelected, "cell-sorted", "cell-can-sort")"
+                            @onclick="() => ToggleSort(Sorts[Sortings.ValueTotal])">
+                        @ValuesViewConfig.MeasureUnit.Name, всего @GetSortSymbol(Sorts[Sortings.ValueTotal])
+                    </th>
+                    <th class="numbers">
+                        <div style="display: flex; justify-content: flex-end">
+                            <CollectionSelect List="EnumValues.Units" Selected="ValuesViewConfig.MeasureUnit" T="MeasureUnit" OnSelectCallback="Set" />
+                            <CollectionSelect List="EnumValues.Methods" Selected="ValuesViewConfig.MeasureMethod" T="MeasureMethod" OnSelectCallback="Set" />
+                            <div style="margin: 1px 0;"
+                                    @onclick="() => ToggleSort(Sorts[Sortings.Value])">
+                                @GetSortSymbol(Sorts[Sortings.Value])
+                            </div>
+                        </div>
+                    </th>
+                    <th class="numbers @CssIsEqual(Sorts[Sortings.ValueTotal],SortSelected, "cell-sorted", "cell-can-sort")"
+                        @onclick="() => ToggleSort(Sorts[Sortings.ValueTotal])">
+                        % целого
+                        </th>
+                    <th class="numbers">Интервал</th>
+                    <th class="text">
+                        Точность
+                    </th>
+                </tr>
+            }
+        </thead>
+        <tbody>
+            @if (ShowEntries)
+            {
+                @foreach (var entry in GetSortedEntries())
+                {
+                    <tr>
+                        <td style="@($"background-color: {ValuesViewConfig.Rules.GetFor(entry).Color}")">
+                            @entry.Index
+                            </td>
+                        <td colspan="2">@entry.GetName()</td>
+                        <td class="numbers posts">
+                            @ValuesViewConfig.FormatEntryPosts(entry, MeasureMethods.Total)
+                        </td>
+                        <td class="numbers posts">
+                            @ValuesViewConfig.FormatEntryPosts(entry)
+                        </td>
+                        <td class="numbers posts">
+                            @entry.FractionMode.ToString("0.00%")
+                        </td>
+                        <td class="numbers">
+                            @entry.Range.Diff.GetFullDifferenceName()
+                        </td>
+                        <td class="text" title="@($"[{entry.PostBorders.GetMissedBeforeFirst()} - {entry.PostBorders.GetMissedAfterLast()}]")">
+                            @(entry.PostBorders.Accuracy.Name)
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    
+    @* ДОП. ЗАПИСИ *@
+    @if (Report.AdditionalEntries.Any())
+    {
+        <table class="values-table">
+            <thead>
+                <tr title="Эти значения нельзя достоверно ассоциировать с каким-то из периодов выше">
+                    <td colspan="9" class="td-separator cell-header" @onclick="() => ToggleVariable(ref ShowFactEntries)">
+                        НЕОПРЕДЕЛЕННЫЕ ЗНАЧЕНИЯ [@Report.AdditionalEntries.Count] @GetToggleSymbol(ShowFactEntries)
+                    </td>
+                </tr>
+                @if (ShowFactEntries)
+                {
+                    <tr>
+                        <th class="text">№</th>
+                        <th class="text" colspan="2">Временной интервал</th>
+                        <th class="numbers">
+                            @ValuesViewConfig.MeasureUnit.Name, всего
+                        </th>
+                        <th class="numbers">
+
+                        </th>
+                        <th class="numbers">
+                        </th>
+                        <th class="numbers">% целого</th>
+                        <th class="numbers">Разница</th>
+                        <th class="text"></th>
+                    </tr>
+                }
+            </thead>
+            <tbody>
+                @if (ShowFactEntries)
+                {
+                    @foreach (var entry in Report.AdditionalEntries)
+                    {
+                        <tr>
+                            <td style="@($"background-color: {ValuesViewConfig.Rules.GetFor(entry).Color}")">@entry.Index</td>
+
+                            <td class="date-value">@entry.FromDate.ToString("dd-MM-yyyy HH:mm")</td>
+                            <td class="date-value">@entry.ToDate.ToString("dd-MM-yyyy HH:mm")</td>
+                            <td class="numbers posts">@ValuesViewConfig.FormatEntryPosts(entry)</td>
+                            <td class="numbers posts"></td>
+                            <td class="numbers posts"></td>
+                            <td class="numbers posts">@entry.FractionMode.ToString("0.00000%")</td>
+                            <td class="numbers">@entry.Range.Diff.GetFullDifferenceName()</td>
+                            <td class="text"></td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    }
+
+</div>
+
+@code {
+    [Inject]
+    public IFileService FileService { get; set; }
+    [Inject]
+    public IJsonService JsonService { get; set; }
+
+    public bool ShowRecords = true;
+    public bool ShowEntries = true;
+    public bool ShowFactEntries = false;
+
+    private void Set(MeasureUnit unit)
+    {
+        ValuesViewConfig.MeasureUnit = unit;
+    }
+    private void Set(MeasureMethod method)
+    {
+        ValuesViewConfig.MeasureMethod = method;
+    }
+
+    private Dictionary<Sortings, Sorting<Entry, object>> Sorts => SortExtensions.EntrySorts;
+    private Sorting<Entry, object> SortSelected => ValuesViewConfig.SortingEntriesSelected;
+
+    private void ToggleSort(Sorting<Entry, object> sort)
+    {
+        if (ValuesViewConfig.SortingEntriesSelected != sort)
+        {
+            ValuesViewConfig.SortingEntriesSelected = sort;
+        }
+        else
+        {
+            SortSelected.Descending = !SortSelected.Descending;
+        }
+    }
+    private IEnumerable<Entry> GetSortedEntries()
+    {
+        if (SortSelected.Descending)
+        {
+            return Report.Entries.OrderByDescending(SortSelected.SortFunc);
+        }
+        else
+        {
+            return Report.Entries.OrderBy(SortSelected.SortFunc);
+        }
+    }
+
+    private void ToggleVariable(ref bool variable)
+    {
+        variable = !variable;
+    }
+    private string GetToggleSymbol(bool showVariable)
+    {
+        return showVariable ? "▼" : "▶";
+    }
+    private string GetSortSymbol(Sorting<Entry, object> sort)
+    {
+        if(sort == SortSelected)
+        {
+            return sort.GetSortSymbol();
+        }
+        else
+        {
+            return " ";
+        }
+    }
+
+
+    public async Task SaveCSVFileAsync()
+    {
+        string name = $"{Report.Name}.csv";
+        string content = Report.GetCSVString(ValuesViewConfig.MeasureMethod, ValuesViewConfig.MeasureUnit);
+        await FileService.SaveFile(name, content);
+    }
+}

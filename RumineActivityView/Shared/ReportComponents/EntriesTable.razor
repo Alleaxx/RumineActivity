@@ -1,0 +1,48 @@
+﻿@inherits ReportComponent
+
+<table class="table-activity">
+    <thead>
+        <tr>
+            <th class="title">@Report.Period.Name</th>
+            <th class="sum-title" title="Суммарно написано за период">Σ</th>
+            @foreach (var key in Table.ColGroups)
+            {
+                <th class="secondary-key">@key</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var group in Table.TableRows)
+        {
+            <tr>
+                <th class="primary-key">@group.Key</th>
+                <td class="posts sum" title="Суммарно написано за период">
+                    @ValuesViewConfig.FormatValue(Table.TableSum[group.Key], Report.Period)
+                </td>
+
+                @foreach (var col in group.Value)
+                {
+                    if (col.Value == null)
+                    {
+                        <td class="posts unknown">?</td>
+                    }
+                    else
+                    {
+                        <td class="posts" title="@($"{col.Value.GetName()}")" style="@($"background-color: {ValuesViewConfig.Rules.GetFor(col.Value).Color}")">
+                            @ValuesViewConfig.FormatEntryPosts(col.Value)
+                        </td>
+                    }
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+@code {
+    public TableGrouping Table { get; private set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await base.OnParametersSetAsync();
+        Table = new TableGrouping(ValuesViewConfig, Report);
+    }
+}

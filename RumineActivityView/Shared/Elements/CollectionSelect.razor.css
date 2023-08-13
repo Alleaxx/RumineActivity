@@ -1,0 +1,24 @@
+﻿
+.option-select {
+    display: flex;
+    justify-content: flex-end;
+}
+
+    .option-select h4 {
+        flex: 1;
+        margin: 4px 0.5em;
+        font-size: 1em;
+        text-align: right;
+    }
+
+    .option-select select {
+        border: 0;
+        text-align: right;
+    }
+
+        .option-select select:focus-visible {
+            outline: none;
+        }
+
+        .option-select select option {
+        }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using RumineActivity.Core.Logging;
+using RumineActivity.Core.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -6,19 +8,8 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace RumineActivity.Core
+namespace RumineActivity.Core.API
 {
-    public interface IActivityApi
-    {
-        Task<Post> Create(Post post);
-        Task<Topic> Create(Topic topic);
-        Task<Post> Update(Post post);
-        Task<Topic> Update(Topic topic);
-        Task<Post> Delete(Post post);
-        Task<Topic> Delete(Topic topic);
-        Task<IForum> GetForum();
-        Task<IForum> GetForum(DateRange range);
-    }
     public class ActivityWebApi : WebApi, IActivityApi
     {
         public override string ToString()
@@ -28,41 +19,20 @@ namespace RumineActivity.Core
 
         private readonly string MsgPath;
         private readonly string TopicPath;
-        public ActivityWebApi(HttpClient client, string path = "https://localhost:44341") : base(client, path)
+
+        public event Action OnLoaded;
+
+        public bool? IsLoaded => true;
+
+        public ActivityWebApi(HttpClient client, ILogger logger, string path = "https://localhost:44341") : base(client, logger, path)
         {
             MsgPath = $"{Path}/Messages";
             TopicPath = $"{Path}/Topics";
         }
-        public async Task<Post> Create(Post post)
+        public async Task LoadData()
         {
-            return await Create(post, MsgPath);
+            OnLoaded?.Invoke();
         }
-        public async Task<Topic> Create(Topic topic)
-        {
-            return await Create(topic, TopicPath);
-        }
-
-
-        public async Task<Post> Update(Post post)
-        {
-            return await Update(post, MsgPath);
-        }
-        public async Task<Topic> Update(Topic topic)
-        {
-            return await Update(topic, TopicPath);
-        }
-
-
-        public async Task<Post> Delete(Post post)
-        {
-            return await Delete(post, MsgPath, post.Id);
-        }
-        public async Task<Topic> Delete(Topic topic)
-        {
-            return await Delete(topic, TopicPath, topic.Id);
-        }
-
-
 
         private async Task<IEnumerable<Post>> GetAllPosts()
         {
@@ -79,19 +49,11 @@ namespace RumineActivity.Core
             var topics = await GetAllTopics();
             bool success = posts != null && topics != null;
 
-            return success ? new Forum(posts, topics) : default;
+            return success ? new Forum(posts, topics, null) : default;
         }
         public async Task<IForum> GetForum(DateRange range)
         {
             return await GetForum();
-        }
-    }
-
-    public class ActivityWebStorageLoggedApi : ActivityStorageApi
-    {
-        public ActivityWebStorageLoggedApi(HttpClient client) : base(new ActivityLoggedApi(new ActivityWebApi(client)), false)
-        {
-
         }
     }
 }

@@ -9,6 +9,8 @@ using RumineActivityAPI.Services;
 using Microsoft.EntityFrameworkCore;
 
 using RumineActivity.Core;
+using RumineActivity.Core.Models;
+
 namespace RumineActivityAPI.Controllers
 {
     [ApiController]

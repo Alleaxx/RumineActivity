@@ -1,0 +1,41 @@
+﻿
+article {
+    margin: 5px 10px;
+}
+.content h2 {
+    border-bottom: 1px solid gainsboro;
+    padding-bottom: 5px;
+}
+
+.content p {
+    line-height: 140%;
+    margin: 12px 0;
+}
+
+.report-blocks {
+    display: flex;
+    margin: 10px 5px;
+}
+
+.report-options {
+    margin: 1em;
+}
+
+.content {
+    padding: 0.1em 1em;
+    max-width: 900px;
+}
+
+    .content h3 {
+        margin: 5px 0;
+        border-bottom: 1px solid gainsboro;
+    }
+
+    h4{
+        margin: 12px 0;
+        margin-bottom: 4px;
+    }
+
+dt {
+    font-weight: 600;
+}

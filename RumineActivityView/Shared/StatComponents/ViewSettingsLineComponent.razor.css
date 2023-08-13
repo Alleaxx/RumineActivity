@@ -1,0 +1,28 @@
+﻿.settings-line{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 4px;
+}
+.setting{
+    margin: 2px 4px;
+    display: flex;
+    align-items: center;
+}
+.setting-label {
+    font-size: 0.8em;
+    margin: 0px 4px;
+}
+#accuracy{
+    width: 2em;
+}
+#absolute {
+    width: 5em;
+}
+
+.sort-symbol{
+    user-select: none;
+}
+.sort-symbol:hover{
+    cursor: pointer;
+}

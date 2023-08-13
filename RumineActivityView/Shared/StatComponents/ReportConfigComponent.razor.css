@@ -1,0 +1,180 @@
+﻿.content{
+    margin: 0 8px;
+}
+
+
+.table-periods {
+    border: 1px solid gainsboro;
+    border-collapse: collapse;
+    margin: 4px;
+    margin-left: 1.5em;
+    margin-right: 1.5em;
+    width: 95%;
+}
+
+    .table-periods th {
+        padding: 6px 4px;
+        border-top: 1px solid gainsboro;
+        border-bottom: 1px solid gainsboro;
+        border-right: 1px solid gainsboro;
+        background-color: whitesmoke;
+    }
+
+    .table-periods td {
+        user-select: none;
+    }
+
+    .table-periods .year-cell {
+        padding: 4px 16px;
+        border-right: 1px solid gainsboro;
+        text-align: center;
+        font-size: 0.9em;
+    }
+
+        .table-periods .year-cell:hover {
+            cursor: pointer;
+            background-color: lightpink;
+        }
+
+    .table-periods .month-cell {
+        padding: 2px 8px;
+        font-size: 0.85em;
+    }
+
+    .table-periods .info-cell {
+        font-size: 0.8em;
+        padding: 4px;
+        border-bottom: 1px solid gainsboro;
+    }
+
+    .table-periods .month-cell-blocked {
+        color: transparent;
+        background-color: white;
+    }
+
+    .table-periods .cell-results {
+        border-top: 1px solid gainsboro;
+        font-size: 0.9em;
+        padding-left: 8px;
+    }
+
+.month-cell.picked {
+    background-color: #c9ffc9;
+}
+
+.info-cell.picked {
+    color: forestgreen;
+}
+
+.month-cell.bordered.picked {
+    background-color: lightpink;
+}
+
+.info-cell.bordered.picked {
+    color: #e50000;
+}
+
+.month-cell.not-picked {
+    color: rgb(96,96,96);
+    background-color: white;
+}
+
+.month-cell.picked:hover {
+    cursor: pointer;
+    background-color: #ffdddd;
+}
+
+.month-cell.not-picked:hover {
+    cursor: pointer;
+    background-color: #ffdddd;
+}
+.month-cell.picked.bordered {
+}
+
+.month-cell-content {
+    text-align: center;
+}
+
+
+
+.options {
+}
+
+.option {
+}
+    .options-list-header {
+        margin: 12px 0;
+        font-size: 1em;
+    }
+
+    .option ul {
+        display: flex;
+        flex-wrap: wrap;
+        list-style: none;
+        margin: 0 0;
+        padding-left: 1.5em;
+    }
+
+    .option li {
+        display: block;
+        padding: 6px 12px;
+        border: 1px solid transparent;
+        border-radius: 1px;
+        cursor: pointer;
+        color: rgb(64,64,64);
+        border: 1px solid gainsboro;
+        margin: 0 2px;
+        user-select: none;
+    }
+
+        .option li:hover {
+            background-color: whitesmoke;
+        }
+        .option li.selected {
+            background-color: whitesmoke;
+            border: 1px solid var(--border-brush);
+        }
+    .option .safe-period {
+        color: green;
+    }
+    .option .dangerous-period {
+        color: red;
+    }
+
+
+.create-report-button {
+    display: flex;
+    margin: 15px 0px;
+    padding: 5px;
+    font-size: 1.1em;
+    text-decoration: none;
+    padding: 6px;
+    border: 1px solid gainsboro;
+    border-radius: 4px;
+    color: royalblue;
+    cursor: pointer;
+    user-select: none;
+}
+
+    .create-report-button.disabled {
+        color: black;
+        background-color: whitesmoke;
+        cursor: default;
+    }
+
+    .create-report-button:hover {
+        color: blue;
+        background-color: whitesmoke;
+        border-color: silver;
+    }
+    .create-report-button.disabled:hover {
+        color: black;
+        background-color: whitesmoke;
+        cursor: default;
+    }
+
+    .create-report-button:active {
+        color: darkblue;
+        background-color: gainsboro;
+        border-color: gray;
+    }

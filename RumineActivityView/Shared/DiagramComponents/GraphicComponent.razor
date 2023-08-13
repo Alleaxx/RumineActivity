@@ -1,0 +1,81 @@
+﻿@inherits DiagramComponent
+<section class="diagram">
+    <h4 class="diagram-header">@ValuesViewConfig.MeasureUnit.Name / @ValuesViewConfig.MeasureMethod.Name / за @Report.DateRangeAll.GetName(Report.Period.EntryDateFunc)</h4>
+    <div class="diagram-settings" >
+        <ViewSettingsLineComponent ShowRelativeValues="true"></ViewSettingsLineComponent>
+    </div>
+    <svg height="@Config.Height" viewBox="@($"0 0 {Config.Width} {Config.Height}")">
+        <line class="help-line" x1="0" x2="@Config.Width" y1="@(Config.HeightChart)" y2="@(Config.HeightChart)" />
+
+        @foreach (var lineLegend in Graphic.LegendLines)
+        {
+            <g>
+                <title>@lineLegend.TitleValue</title>
+                <line class="legend-line"
+                    x1="@GetValueForAttr(lineLegend.Line.X1)"
+                    x2="@GetValueForAttr(lineLegend.Line.X2)"
+                    y1="@GetValueForAttr(lineLegend.Line.Y1)"
+                    y2="@GetValueForAttr(lineLegend.Line.Y2)" />
+                <g>
+                    <text class="name"
+                            x="@GetValueForAttr(lineLegend.Line.X1)"
+                            y="@GetValueForAttr((lineLegend.Line.Y1 - 5))">
+                        @lineLegend.TitleValue
+                    </text>
+                </g>
+            </g>
+        }
+        @foreach (var entry in Graphic.Lines)
+        {
+            <g title="@entry.TitleCombined">
+                <title>@entry.TitleCombined)</title>
+                <circle class="point" cx="@GetValueForAttr(entry.Point.X)" cy="@GetValueForAttr(entry.Point.Y)" r="1"></circle>
+                <line class="activity-line-graph" 
+                    x1="@GetValueForAttr(entry.Line.X1)"
+                    x2="@GetValueForAttr(entry.Line.X2)"
+                    y1="@GetValueForAttr(entry.Line.Y1)"
+                    y2="@GetValueForAttr(entry.Line.Y2)" />
+                <line class="help-line"
+                    x1="@(GetValueForAttr(entry.Line.X1))"
+                    x2="@(GetValueForAttr(entry.Line.X1))"
+                    y1="@(GetValueForAttr(entry.Line.Y1))"
+                    y2="@(GetValueForAttr(Config.HeightChart))" />
+                @if (CheckWriting(entry))
+                {
+                    <g>
+                        <text class="name"
+                            x="@GetValueForAttr(entry.Line.X1)"
+                            y="@GetValueForAttr((Config.HeightChart + 20))">
+                            @entry.TitleName
+                        </text>
+                        <text class="value"
+                            x="@GetValueForAttr(entry.Line.X1)"
+                            y="@GetValueForAttr((Config.HeightChart + 40))">
+                            @entry.TitleValue
+                        </text>
+                    </g>
+                }
+            </g>
+        }
+    </svg>
+    <div class="collapsed">
+        <DiagramConfigComponent Config="Config"></DiagramConfigComponent>
+    </div>
+</section>
+
+@code {
+    [Parameter]
+    public DiagramConfig Config { get; set; }
+
+    private Graphic Graphic { get; set; }
+
+    private bool CheckWriting(DiagramEntryObject obj)
+    {
+        return Config.CheckShowBottomTitle(obj, Report.Length);
+    }
+    protected override async Task OnParametersSetAsync()
+    {
+        await base.OnParametersSetAsync();
+        Graphic = new Graphic(ValuesViewConfig, Report, Config);
+    }
+}

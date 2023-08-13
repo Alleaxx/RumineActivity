@@ -1,0 +1,34 @@
+﻿
+<table class="debug-table">
+    <tr>
+        <th>№</th>
+        <th>Имя</th>
+        <th>Интервал</th>
+        <th colspan="2">Посты </th>
+        <th colspan="4" class="inner">внутренние границы</th>
+        <th colspan="4" class="outer">внешние границы</th>
+    </tr>
+    @foreach (var entry in Entries)
+    {
+        <tr>
+            <td>@entry.Index</td>
+            <td>@entry.GetName()</td>
+            <td>@entry.FromDate.ToString("dd.MM.yyyy") - @entry.ToDate.ToString("dd.MM.yyyy")</td>
+            <td>@entry.PostsWrittenTotal</td>
+            <td> @entry.PostsWrittenAverage.ToString("#,0")</td>
+            <td class="post-info inner">@entry.PostBorders.PostInnerBorders.PostX?.Id</td>
+            <td class="post-info inner">@entry.PostBorders.PostInnerBorders.PostY?.Id</td>
+            <td class="post-info inner">[@entry.PostBorders.PostInnerBorders.PostX?.Date.ToString("dd-MM-yyyy HH:mm")]</td>
+            <td class="post-info inner">[@entry.PostBorders.PostInnerBorders.PostY?.Date.ToString("dd-MM-yyyy HH:mm")]</td>
+            <td class="post-info outer">@entry.PostBorders.PostOuterBorders.PostX?.Id</td>
+            <td class="post-info outer">@entry.PostBorders.PostOuterBorders.PostY?.Id</td>
+            <td class="post-info outer">[@entry.PostBorders.PostOuterBorders.PostX?.Date.ToString("dd-MM-yyyy HH:mm")]</td>
+            <td class="post-info outer">[@entry.PostBorders.PostOuterBorders.PostY?.Date.ToString("dd-MM-yyyy HH:mm")]</td>
+        </tr>
+    }
+</table>
+
+@code {
+    [Parameter]
+    public IEnumerable<Entry> Entries { get; set; }
+}

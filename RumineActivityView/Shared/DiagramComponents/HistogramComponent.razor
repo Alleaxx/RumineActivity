@@ -1,0 +1,90 @@
+﻿@inherits DiagramComponent
+<section class="diagram">
+    <h4 class="diagram-header">@ValuesViewConfig.MeasureUnit.Name / @ValuesViewConfig.MeasureMethod.Name / за @Report.DateRangeAll.GetName(Report.Period.EntryDateFunc)</h4>
+    <div class="diagram-settings">
+        <ViewSettingsLineComponent ShowRelativeValues="true" ShowSortingEntry="true"></ViewSettingsLineComponent>
+    </div>
+    <svg height="@Config.Height"
+         viewBox="@($"0 0 {Config.Width} {Config.Height}")">
+        <line class="help-line" x1="0" x2="@Config.Width" y1="@(Config.HeightChart)" y2="@(Config.HeightChart)" />
+        @foreach (var lineLegend in Histogram.LegendLines)
+        {
+            <g>
+                <title>@lineLegend.TitleValue</title>
+                <line class="legend-line"
+                    x1="@GetValueForAttr(lineLegend.Line.X1)"
+                    x2="@GetValueForAttr(lineLegend.Line.X2)"
+                    y1="@GetValueForAttr(lineLegend.Line.Y1)"
+                    y2="@GetValueForAttr(lineLegend.Line.Y2)" />
+                <g>
+                    <text class="name"
+                        x="@GetValueForAttr(@lineLegend.Line.X1)"
+                        y="@GetValueForAttr((lineLegend.Line.Y1 - 5))">
+                        @lineLegend.TitleValue
+                    </text>
+                </g>
+            </g>
+        }
+        @foreach (var entry in Histogram.Rectangles)
+        {
+            <g title="@entry.TitleCombined">
+                <title>@entry.TitleCombined</title>
+                <rect class="trasparent-rect"
+                  x="@GetValueForAttr(entry.Empty.X)"
+                  y="@GetValueForAttr(entry.Empty.Y)"
+                  height="@GetValueForAttr(entry.Empty.Height)"
+                  width="@GetValueForAttr(entry.Empty.Width)" />
+                <rect x="@GetValueForAttr(entry.Filled.X)"
+                  y="@GetValueForAttr(entry.Filled.Y)"
+                  height="@GetValueForAttr(entry.Filled.Height)"
+                  width="@GetValueForAttr(entry.Filled.Width)"
+                  fill="@entry.ColorMain"
+                  stroke="gray" />
+            </g>
+        }
+        @foreach (var entry in Histogram.LegendLabels)
+        {
+            <g title="@entry.TitleCombined">
+                <title>@entry.TitleCombined</title>
+                <line class="help-line"
+                  x1="@GetValueForAttr(entry.LeftBorder.X1)"
+                  x2="@GetValueForAttr(entry.LeftBorder.X2)"
+                  y1="@GetValueForAttr(entry.LeftBorder.Y1)"
+                  y2="@GetValueForAttr(entry.LeftBorder.Y2)" />
+                <text class="name"
+                  text-anchor="middle"
+                  x="@GetValueForAttr(entry.Center.X)"
+                  y="@GetValueForAttr(entry.Center.Y)">
+                    @entry.TitleName
+                </text>
+                <text class="value"
+                  text-anchor="middle"
+                  x="@GetValueForAttr(entry.Center.X)"
+                  y="@GetValueForAttr(entry.Center.Y + 20)">
+                    @entry.TitleValue
+                </text>
+                <line class="help-line"
+                    x1="@GetValueForAttr(entry.RightBorder.X1)"
+                    x2="@GetValueForAttr(entry.RightBorder.X2)"
+                    y1="@GetValueForAttr(entry.RightBorder.Y1)"
+                    y2="@GetValueForAttr(entry.RightBorder.Y2)"/>
+            </g>
+        }
+    </svg>
+    <div class="collapsed">
+        <DiagramConfigComponent Config="Config"></DiagramConfigComponent>
+    </div>
+</section>
+@code {
+    [Parameter]
+    public DiagramConfig Config { get; set; }
+
+
+    private Histogram Histogram { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await base.OnParametersSetAsync();
+        Histogram = new Histogram(ValuesViewConfig, Report, Config);
+    }
+}

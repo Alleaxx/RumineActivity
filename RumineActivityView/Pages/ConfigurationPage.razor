@@ -1,0 +1,115 @@
+﻿@inherits StatComponent
+@page "/configuration"
+
+<section>
+    <header class="page-header">
+        <img alt="Отчет" src="images/clipboard.svg" />
+        <h2>Настройки отображения</h2>
+    </header>
+
+    <section class="rules">
+        <div class="content">
+            <section class="options-section">
+                <Collection HeaderText="Единицы измерения:" List="EnumValues.Units" Selected="ValuesViewConfig.MeasureUnit" T="MeasureUnit" OnSelectCallback="Set" />
+            </section>
+            <section class="options-section">
+                <Collection HeaderText="Метод измерения:" List="EnumValues.Methods" Selected="ValuesViewConfig.MeasureMethod" T="MeasureMethod" OnSelectCallback="Set" />
+            </section>
+            <section class="options-section">
+                <Collection HeaderText="Сравнение значений:" List="EnumValues.CompareValues" Selected="ValuesViewConfig.CompareView" T="CompareDiffFormat" OnSelectCallback="Set" />
+            </section>
+
+
+
+            <section class="config-display-values">
+                <h4>Отображение значений:</h4>
+                <ul>
+                    <li>
+                        <div class="option-accuracy">
+                            <label>
+                                <span class="label-value-info">Точность округления: </span>
+                                <input type="number" min="0" max="10" @bind-value="ValuesViewConfig.RoundAccuracy" />
+                                <span>знака</span>
+                            </label>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="option-accuracy">
+                            <label>
+                                <span>
+                                    <label for="relative-values" class="label-value-info">Использовать относительные значения</label>
+                                    <input id="relative-values" type="checkbox" @bind="ValuesViewConfig.UseRelativeValues" />
+                                </span>
+                            </label>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="option-accuracy">
+                            <label>
+                                <span>
+                                    <label for="difference-values" class="label-value-info">Показывать разницу значений в сравнении</label>
+                                    <input id="difference-values" type="checkbox" @bind="ValuesViewConfig.ShowCompareValueDifference" />
+                                </span>
+                            </label>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h4 style="margin: 10px 0px">
+                    Цветовые правила:
+                </h4>
+                <table class="rules-table">
+                    <caption class="rules-header">используется некий усредненный показатель активности</caption>
+                    <colgroup>
+                        <col style="width:20%" />
+                        <col style="width:20%" />
+                        <col style="width:30%" />
+                        <col style="width:30%" />
+                    </colgroup>
+                    <tr>
+                        <th colspan="1">Со значения</th>
+                        <th colspan="1">До значения</th>
+                        <th colspan="2">Использовать цвет</th>
+                    </tr>
+                    @foreach (var rule in ValuesViewConfig.Rules.List)
+                    {
+                        if (rule is RuleRanged ruleRanged)
+                        {
+                            <tr>
+                                <td class="rule-range">
+                                    <input type="number" min="0" max="2000" @bind-value="ruleRanged.Min">
+                                </td>
+                                <td class="rule-range">
+                                    <input type="number" min="0" max="2000" @bind-value="ruleRanged.Max">
+                                </td>
+                                <td>
+                                    <input type="text" @bind-value="rule.Color">
+                                </td>
+                                <td class="rule-color" style="@($"background-color: {rule.Color}")">
+                                </td>
+                            </tr>
+                        }
+                    }
+                </table>
+            </section>
+        </div>
+    </section>
+</section>
+
+
+@code {
+    private void Set(MeasureUnit unit)
+    {
+        ValuesViewConfig.MeasureUnit = unit;
+    }
+    private void Set(MeasureMethod method)
+    {
+        ValuesViewConfig.MeasureMethod = method;
+    }
+    private void Set(Core.Comparisons.CompareDiffFormat view)
+    {
+        ValuesViewConfig.CompareView = view;
+    }
+}

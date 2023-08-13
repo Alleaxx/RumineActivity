@@ -1,0 +1,235 @@
+﻿@using RumineActivity.Core.Comparisons
+@inherits ReportComponent
+
+<div class="reports-section">
+    <h3>Настройки</h3>
+    <table class="table-reports">
+        <colgroup>
+            <col style="width: 15%" />
+            <col style="width: 85%" />
+        </colgroup>
+        <tr>
+            <td class="report-header-info">Текущий отчет</td>
+            <td class="report-cell">
+                <span style="margin: 0 4px">
+                    @Report.DateRangeAll.GetName()
+                </span>
+            </td>
+        </tr>
+        <tr>
+            <td class="report-header-info">Доступные отчеты:</td>
+            <td class="report-cell">
+                <section class="reports-list">
+                    @if (ReportsSamePeriodAsMain.Any())
+                    {
+                        @foreach (var report in ReportsSamePeriodAsMain)
+                        {
+                            <div class="reports-list-item" @onclick="() => ToggleCompareReport(report)">
+                                <label>
+                                    @report.DateRangeAll.GetName()
+                                </label>
+                                @if (ComparedReports.Contains(report))
+                                {
+                                    <input type="checkbox" checked />
+                                }
+                                else
+                                {
+                                    <input type="checkbox" />
+                                }
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="reports-list-item">
+                            <label>
+                                нет
+                            </label>
+                        </div>
+                    }
+                </section>
+            </td>
+        </tr>
+        <tr>
+            <td class="report-header-info">Дополнительно:</td>
+            <td class="config-cell">
+                <div class="setting">
+                    <label for="compare-values" class="setting-label">Показывать разницу</label>
+                    <input id="compare-values" type="checkbox" @bind="ValuesViewConfig.ShowCompareValueDifference" />
+                    <div style="margin: 0 4px">
+                        <CollectionSelect List="EnumValues.CompareValues" Selected="ValuesViewConfig.CompareView" T="CompareDiffFormat" OnSelectCallback="Set"
+                                          BorderWidth="1" />
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+@if(ComparedReports.Count() > 1)
+{   
+    <section class="reports-section">
+        <h3>Результаты сравнения</h3>
+        <table class="reports-comparison-rows">
+            <tr>
+                <th class="cell-header">Отчет</th>
+                @foreach (var key in ComparisonReports.CompareKeyReports)
+                {
+                    <th class="cell-header">@key.Title</th>
+                }
+            </tr>
+            @foreach (var report in Comparison.ReportForCompare)
+            {
+                <tr class="@CssIsEqual(report, Report, "row-selected-report" , "row-selectable-report")" @onclick="() => SelectReport(report)">
+                    <td class="cell-property-header @CssIsEqual(report, Report, "main-element-col")">
+                        @report.DateRangeAll.GetName()
+                    </td>
+                    @foreach (var compareProperty in Comparison.GetPropertiesByReport(report))
+                    {
+                        <td class="cell-property">
+                            <div class="cell-property-content">
+                                <span class="text-value">
+                                    @compareProperty.GetFormattedValue()
+                                </span>
+                                <span style="margin: 0 8px;"></span>
+                                <span class="text-compare @CssIsFalse(ShowDifference, "hidden") @CssIsEqual(report, Report, "hidden") @CssIsTrue(compareProperty.IsNoDifference(), "equal", CssIsTrue(compareProperty.GetTotalDiff() > 0, "more", "less"))">
+                                    @compareProperty.GetFormattedCompareValue(CompareView)
+                                </span>
+                            </div>
+                        </td>
+                    }
+                </tr>
+            }
+        </table>
+    </section>
+    <section class="reports-section">
+        <h3>Результаты сравнения записей</h3>
+        <div class="index-nav row">
+            <button class="index-nav-button" @onclick="MovePreviousEntry">
+                ← назад
+            </button>
+            <select class="index-nav-select" id="selectedEntryIndex" @bind="SelectedEntryIndex">
+                @foreach (var index in Report.Entries.Select(e => e.Index).Distinct())
+                {
+                    <option value="@index">
+                        @(index + 1) запись
+                    </option>
+                }
+            </select>
+            <button class="index-nav-button" @onclick="MoveNextEntry">
+                вперед →
+            </button>
+        </div>
+        
+        <table class="reports-comparison-rows">
+            <tr>
+                @foreach (var key in ComparisonReports.CompareKeyEntries)
+                {
+                    <th class="cell-header">@key.Title</th>
+                }
+            </tr>
+            @foreach (var report in Comparison.ReportForCompare)
+            {
+                <tr class="@CssIsEqual(report, Report, "row-selected-report", "row-selectable-report")" @onclick="() => SelectReport(report)">
+                    @foreach (var compareProperty in Comparison.GetPropertiesByReportEntries(report, SelectedEntryIndex))
+                    {
+                        <td class="cell-property">
+                            <div class="cell-property-content">
+                                <span class="text-value">
+                                    @compareProperty.GetFormattedValue()
+                                </span>
+                                <span style="margin: 0 8px;"></span>
+                                <span class="text-compare @CssIsFalse(ShowDifference, "hidden") @CssIsEqual(report, Report, "hidden") @CssIsTrue(compareProperty.IsNoDifference(), "equal", CssIsTrue(compareProperty.GetTotalDiff() > 0, "more", "less"))">
+                                    @compareProperty.GetFormattedCompareValue(CompareView)
+                                </span>
+                            </div>
+                        </td>
+                    }
+                </tr>
+            }
+        </table>
+    </section>
+}
+else
+{
+    <div class="reports-section">
+        <h3>Результаты</h3>
+        <p>
+            Пока что сравнивать не с чем
+        </p>
+    </div>
+}
+
+@code {
+    protected override async Task OnParametersSetAsync()
+    {
+        await base.OnParametersSetAsync();
+        Comparison = new ComparisonReports(Report, ComparedReports);
+        App.ReportsCollection.OnReportsCompareCollectionChanged += report =>
+        {
+            StateHasChanged();
+            Comparison = new ComparisonReports(Report, ComparedReports);
+        };
+    }
+
+    private bool ShowDifference => ValuesViewConfig.ShowCompareValueDifference;
+    private CompareDiffFormats CompareView => App.ValuesViewConfig.CompareView.Type;
+    private void Set(Core.Comparisons.CompareDiffFormat view)
+    {
+        ValuesViewConfig.CompareView = view;
+    }
+
+    private IEnumerable<StatisticsReport> AllActiveReports => App.ReportsCollection.ActiveReports;
+    private IEnumerable<StatisticsReport> AllCompareReports => App.ReportsCollection.CompareReports;
+
+    private IEnumerable<StatisticsReport> ReportsSamePeriodAsMain => AllActiveReports.Where(r => r.Period.Type == Report.Period.Type && r != Report);
+    private IEnumerable<StatisticsReport> NoneActiveReports => AllActiveReports.Where(r => !App.ReportsCollection.CompareReports.Contains(r) && r.Period.Type == Report.Period.Type && r != Report);
+    private IEnumerable<StatisticsReport> ComparedReports => AllCompareReports.Where(r => r.Period.Type == Report.Period.Type).Union(new StatisticsReport[] { Report });
+    private ComparisonReports Comparison { get; set; }
+
+
+    private void AddReport(StatisticsReport report)
+    {
+        App.ReportsCollection.AddCompareReport(report);
+    }
+    void ToggleCompareReport(StatisticsReport report)
+    {
+        if (App.ReportsCollection.CompareReports.Contains(report))
+        {
+            App.ReportsCollection.RemoveCompareReport(report);
+        }
+        else
+        {
+            App.ReportsCollection.AddCompareReport(report);
+        }
+    }
+    private void SelectReport(StatisticsReport report)
+    {
+        App.ReportsCollection.AddCompareReport(Report);
+        App.ReportsCollection.SelectReport(report);
+    }
+
+
+    private int SelectedEntryIndex { get; set; }
+    private void MoveNextEntry()
+    {
+        if(SelectedEntryIndex + 1 < Report.Length)
+        {
+            SelectedEntryIndex++;
+        }
+        else
+        {
+            SelectedEntryIndex = 0;
+        }
+    }
+    private void MovePreviousEntry()
+    {
+        if (SelectedEntryIndex - 1 > -1)
+        {
+            SelectedEntryIndex--;
+        }
+        else
+        {
+            SelectedEntryIndex = Report.Length - 1;
+        }
+    }
+}

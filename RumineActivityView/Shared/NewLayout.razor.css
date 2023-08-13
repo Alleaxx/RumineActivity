@@ -5,10 +5,10 @@
 .container {
     display: grid;
     grid-template-rows: auto auto auto;
-    grid-auto-columns: 1fr 6fr;
+    grid-auto-columns: 4fr 18fr;
     grid-template-areas:
         "logo logo"
-        "menu content"
+        "content content"
         "footer footer";
     margin: auto;
     background-color: white;
@@ -18,8 +18,11 @@
     max-width: 1400px;
 }
 
-
-    main {
+    .main-content{
         grid-area: content;
-        padding: var(--inner-padding);
+        display: flex;
+    }
+    main {
+        min-height: 80vh;
+        flex: 18;
     }

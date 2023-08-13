@@ -1,0 +1,187 @@
+﻿@using static RumineActivity.View.ReportConfigEditor;
+
+@inherits StatComponent
+
+<section class="options">
+    <header class="page-header">
+        <img alt="Отчет" src="images/settings.svg" />
+        <h2>Настройка нового отчета</h2>
+    </header>
+
+    <div class="content">
+
+        <section class="dates">
+            <section class="options-section">
+                <h4 class="options-list-header">Временные рамки:</h4>
+
+                <table class="table-periods">
+                    <tr>
+                        <th>Легенда:</th>
+                        <td colspan="3" class="info-cell bordered picked">ЛКМ - выбрать начальный месяц</td>
+                        <td colspan="3" class="info-cell bordered picked">ПКМ - выбрать конечный месяц</td>
+                        <td colspan="4" class="info-cell picked">Месяца между ними выбираются автоматически</td>
+                        <td colspan="2" class="info-cell"></td>
+                    </tr>
+                    <tr>
+                        <th>Год</th>
+                        <th colspan="12">Месяцы</th>
+                    </tr>
+                    @foreach (var yearCells in DateRangePickerAdvanced.Periods.GroupBy(p => p.Year).OrderBy(p => p.Key))
+                    {
+                        <tr>
+                            <td class="year-cell" @onclick="(e) => ProcessCellsPick(yearCells)" title="выделить весь год">@yearCells.Key</td>
+                            @foreach (var monthCell in yearCells)
+                            {
+                                @if(monthCell.DateTo < RumineValues.FoundationDate)
+                                {
+                                    <td class="month-cell-blocked">
+                                        <div class="month-cell-content">
+                                            <span>@monthCell.GetName()</span>
+                                        </div>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td class="month-cell @CssIsTrue(monthCell.IsIncluded,"picked","not-picked") @CssIsTrue(monthCell.IsBordered,"bordered") @CssIsTrue(monthCell.IsFirstPicked,"first-picked")"
+                                        @onclick="(e) => PickFirstCell(e, monthCell)"
+                                        @oncontextmenu="e => PickLastCell(e, monthCell)"
+                                        @oncontextmenu:preventDefault="true"
+                                        title="Выделить этот месяц">
+                                        <div class="month-cell-content">
+                                            <span>@monthCell.GetName()</span>
+                                        </div>
+                                    </td>
+                                }
+                            }
+                        </tr>
+                    }
+                    <tr>
+                        <th>Итого</th>
+                        <td colspan="12" class="cell-results">
+                            <span style="text-align: center">
+                                <span>
+                                    C
+                                </span>
+                                <span>
+                                    <select id="dateto" @bind="DateRangePickerAdvanced.FirstCell.DayFrom">
+                                        @foreach (var optionDay in DateRangePickerAdvanced.FirstCell.GetAvailableDays(false))
+                                        {
+                                            <option value="@optionDay.day">
+                                                @optionDay.text
+                                            </option>
+                                        }
+                                    </select>
+                                    @DateRangePickerAdvanced.FirstCell.DateFrom.ToString("MMMM yyyy")
+                                </span>
+                                <span style="margin-left:4px; margin-right: 4px;">по</span>
+                                <span>
+                                    <select id="dateto" @bind="DateRangePickerAdvanced.LastCell.DayTo">
+                                        @foreach (var optionDay in DateRangePickerAdvanced.LastCell.GetAvailableDays(true))
+                                        {
+                                            <option value="@optionDay.day">
+                                                @optionDay.text
+                                            </option>
+                                        }
+                                    </select>
+                                    @DateRangePickerAdvanced.LastCell.DateTo.ToString("MMMM yyyy")
+                                </span>
+                                <span>
+                                    включительно
+                                </span>
+                            </span>
+
+                        </td>
+                    </tr>
+                </table>
+
+            </section>
+
+
+        </section>
+
+        <section class="options-section">
+            <section class="option">
+                <h4 class="options-list-header">Периодичность: </h4>
+                <ul>
+                    @foreach (var period in EnumValues.Periods)
+                    {
+                        <li class="@CssIsTrue(ReportConfig.DateRange.IsOkWithPeriod(period), "safe-period", "dangerous-period") @(CssIsSelected(period, ReportConfig.Period))"
+                            @onclick="() =>Set(period)">
+                            <span>
+                                @period.ToString()
+                                @if (ReportConfig.Period == period && period.Type == Periods.Own)
+                                {
+                                    <label for="input-days">(раз в</label>
+                                    <input id="input-days" class="entry-interval-input" type="number" min="1" step="1" max="3650" @bind:event="oninput" @bind="(period.Days)" />
+                                    <span>дней)</span>
+                                }
+                            </span>
+                        </li>
+                    }
+                </ul>
+            </section>
+        </section>
+
+        <div>
+            @if (ReportConfig.IsCorrect())
+            {
+                <a href="statistics" class="create-report-button" @onclick="CreateReport">
+                    <span style="flex:1">Создать @ReportConfig.Period.NameReport.ToLower().Replace("ая","ый") отчет за @GetDateReportName()</span>
+                    <span>~ @EstPeriodsCount.ToString("0") периодов</span>
+                </a>
+            }
+            else
+            {
+                <a class="create-report-button disabled">
+                    <span style="flex:1">@ReportConfig.Period.NameReport.Replace("ая","ый") отчет создать не выйдет, мало / много периодов</span>
+                    <span>~ @EstPeriodsCount.ToString("0") периодов</span>
+                </a>
+            }
+        </div>
+    </div>
+
+</section>
+
+@code {
+    public ReportConfigEditor ReportConfigEditor => App.ReportConfigEditor;
+    public ConfigurationReport ReportConfig => ReportConfigEditor.CurrentConfig;
+    public DateRangePickerAdvanced DateRangePickerAdvanced => ReportConfigEditor.DateRangePickerAdvanced;
+    public DateRangePickerSimple DateRangePickerSimple => ReportConfigEditor.DateRangePickerSimple;
+
+    private double EstPeriodsCount => ReportConfig.DateRange.GetEntriesCapacityForRange(ReportConfig.Period);
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        ReportConfigEditor.OnConfigChanged += config => StateHasChanged();
+    }
+
+    private void Set(Period period)
+    {
+        ReportConfig.Period = period;
+    }
+
+    private string GetDateReportName()
+    {
+        return ReportConfig.DateRange.GetName().ToLower();
+    }
+
+    private async Task CreateReport()
+    {
+        await App.ReportsCollection.AddReport(ReportConfig);
+        ReportConfigEditor.SetNewConfig(new ConfigurationReport(ReportConfig));
+    }
+
+    private void ProcessCellsPick(IEnumerable<DateRangeCell> cells)
+    {
+        DateRangePickerAdvanced.PickCells(cells);
+    }
+    private void PickFirstCell(MouseEventArgs e, DateRangeCell cell)
+    {
+        DateRangePickerAdvanced.PickFirstCell(cell);
+    }
+    private void PickLastCell(MouseEventArgs e, DateRangeCell cell)
+    {
+        DateRangePickerAdvanced.PickLastCell(cell);
+    }
+}

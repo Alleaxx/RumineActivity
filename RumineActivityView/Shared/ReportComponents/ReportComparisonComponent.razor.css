@@ -1,0 +1,130 @@
+﻿.reports-comparison-cols,
+.reports-comparison-rows,
+.table-reports{
+    max-width: 99%;
+    border-collapse: collapse;
+    font-size: 0.9em;
+    margin: 12px 8px;
+}
+
+.cell-header {
+    text-align: left;
+    padding: 6px 8px;
+    border: 1px solid gainsboro;
+}
+.cell-property-header {
+    padding: 6px 8px;
+    border: 1px solid gainsboro;
+    vertical-align: top;
+}
+.cell-property {
+    padding: 6px 8px;
+    border: 1px solid gainsboro;
+    text-align: right;
+    border-bottom: 1px solid white;
+}
+.reports-comparison-rows .cell-property{
+    border-bottom: 1px solid gainsboro;
+}
+.cell-property-compare {
+    padding: 2px 8px;
+    border: 1px solid gainsboro;
+    text-align: right;
+    padding-left: 4em;
+}
+
+.main-element-col {
+    color: blue;
+}
+
+
+.reports-section{
+    margin: 12px 8px;
+}
+.reports-section h3{
+    font-size: 0.9em;
+    margin: 6px 0;
+    margin-top: 24px;
+    text-align: left;
+}
+.reports-list{
+    display: flex;
+    flex-wrap: wrap;
+}
+.reports-list-item {
+    display: flex;
+    align-items: center;
+    padding: 0 4px;
+    user-select: none;
+    cursor: pointer;
+}
+
+.text-compare {
+    color: gray;
+    font-size: 0.9em;
+}
+.less{
+    color: red;
+}
+.more {
+    color: #18c818;
+}
+.equal{
+    color: gray;
+}
+.text-value{
+
+}
+.cell-property-content{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.table-reports{
+}
+.report-header-info {
+    font-size: 1em;
+    border: 1px solid gainsboro;
+    padding: 8px 4px;
+    text-align: right;
+}
+.report-cell {
+    font-size: 0.9em;
+    border: 1px solid gainsboro;
+    padding: 0 4px;
+}
+.config-cell{
+    border: 1px solid gainsboro;
+    font-size: 0.9em;
+    padding: 0 8px;
+}
+
+.report-selectable:hover{
+    cursor: pointer;
+    background-color: whitesmoke;
+}
+
+.index-nav{
+    margin: 12px 8px;
+}
+.index-nav-button{
+
+}
+.index-nav-select {
+    margin: 0 4px;
+}
+
+.row-selected-report {
+    background-color: whitesmoke;
+}
+.row-selectable-report:hover{
+    background-color: whitesmoke;
+    cursor: pointer;
+}
+
+.setting{
+    display: flex;
+    align-items: center;
+}

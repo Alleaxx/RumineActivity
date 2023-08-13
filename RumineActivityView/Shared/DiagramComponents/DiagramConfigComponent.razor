@@ -1,0 +1,31 @@
+﻿
+<details class="diagram-config-details column">
+    <summary>Настройки</summary>
+    <div class="diagram-config-list">
+        <span>
+            <label for="legend-items" class="config-name">Легенда</label>
+            <input id="legend-items" type="number" @bind-value="Config.LegendItemsCount" />
+        </span>
+        <span>
+            <label for="width-chart" class="config-name">Ширина графика</label>
+            <input id="width-chart" type="number" @bind-value="Config.WidthChart" />
+        </span>
+        <span>
+            <label for="width-legend" class="config-name">Ширина легенды</label>
+            <input id="width-legend" type="number" @bind-value="Config.WidthLegend" />
+        </span>
+        <span>
+            <label for="write-items" class="config-name">Количество подписей</label>
+            <input id="write-items" type="number" @bind-value="Config.MaxAllowedEntries" />
+        </span>
+        <span>
+            <label for="chart-height" class="config-name">Высота графика</label>
+            <input id="chart-height" type="number" @bind-value="Config.HeightChart" />
+        </span>
+    </div>
+</details>
+
+@code {
+    [Parameter]
+    public DiagramConfig Config { get; set; }
+}

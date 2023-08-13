@@ -1,0 +1,90 @@
+﻿.report {
+}
+
+.report-info {
+}
+
+.report-view {
+}
+
+
+.stat-params-row {
+    display: flex;
+    justify-content: center;
+    margin: 1em;
+}
+
+.parameter {
+    display: flex;
+    align-items: center;
+    margin: 0 1em;
+}
+.parameter-name {
+    margin: 0 8px;
+    font-size: 1.1em;
+    color: gray;
+}
+
+.parameter-value {
+    font-size: 1.3em;
+    letter-spacing: 2px;
+}
+
+
+.report-navigation{
+    display: flex;
+    justify-content: space-between;
+    margin: 6px 0;
+}
+.nav-link{
+    margin: 4px 12px;
+    text-decoration: none;
+    padding: 4px 16px;
+    border: 1px solid gainsboro;
+    color: royalblue;
+    border-radius: 2px;
+    user-select: none;
+    text-align: center;
+}
+.nav-link:hover{
+    color: blue;
+}
+    .nav-link.copy{
+    }
+    .nav-link.prev {
+    }
+    .nav-link.next {
+    }
+
+
+.creation {
+    display: flex;
+    justify-content: left;
+    margin: 14px 8px;
+}
+
+    .creation button {
+        padding: 5px 10px;
+        margin: 5px;
+        font-size: 1em;
+        background-color: transparent;
+        border-color: lightgreen;
+        cursor: pointer;
+    }
+
+        .creation button:hover {
+            background-color: lightgreen;
+        }
+
+
+
+
+.load-report-section{
+    margin: 8px;
+}
+.load-report-header{
+    margin-bottom: 4px;
+}
+.load-report-message{
+
+}

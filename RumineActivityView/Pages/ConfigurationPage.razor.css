@@ -1,0 +1,72 @@
+﻿
+.rules {
+    flex: 1;
+    margin: 0 8px;
+}
+
+    /* НАСТРОЙКИ ОТОБРАЖЕНИЯ */
+
+    .rules h2 {
+        margin: 0;
+        padding: 5px 0;
+        font-size: 1.3em;
+    }
+
+    .rules .content {
+        font-size: 0.9em;
+        padding: 0;
+        padding-left: 1em;
+    }
+
+.option-accuracy input {
+    width: 3em;
+}
+
+
+/* ТАБЛИЦА ЦВЕТОВЫХ ПРАВИЛ */
+
+.rules-table {
+    width: 50%;
+    border-collapse: collapse;
+    border: 1px solid silver;
+    margin-left: 1em;
+}
+
+    .rules-table th {
+        text-align: left;
+        border-bottom: 1px solid gainsboro;
+        padding: 5px 10px;
+        font-weight: 500;
+    }
+
+    .rules-table td {
+        padding: 5px 10px;
+    }
+
+    .rules-table input {
+        max-width: 100%;
+    }
+
+.rule-range {
+    max-width: 35px;
+}
+
+.rule-color {
+    max-width: 50px;
+}
+
+.rules-header {
+    text-align: right;
+    color: gray;
+    font-size: 0.9em;
+    margin: 3px;
+}
+
+.label-value-info {
+    display: inline-block;
+    width: 20em;
+}
+
+.config-display-values h4 {
+    margin: 10px 0;
+}

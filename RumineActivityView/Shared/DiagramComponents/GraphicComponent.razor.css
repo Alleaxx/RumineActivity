@@ -1,0 +1,57 @@
+﻿
+/* ДИАГРАММЫ */
+
+/* подписи к диаграммам */
+.name {
+    font-size: 0.7em;
+    max-width: 50px;
+    text-wrap: normal;
+    color: gray;
+}
+
+.value {
+    font-size: 0.8em;
+    max-width: 50px;
+}
+
+/* элементы диаграмм */
+.activity-line {
+    fill: #ffd8a8;
+    stroke: #e3830e;
+}
+
+.activity-line-graph {
+    stroke: orange;
+    stroke-width: 2px;
+    cursor: pointer;
+}
+
+    .activity-line-graph:hover {
+        stroke-width: 4px;
+    }
+
+.help-line {
+    stroke: gainsboro;
+    stroke-width: 1px;
+    cursor: pointer;
+}
+.legend-line {
+    stroke: whitesmoke;
+    stroke-width: 1px;
+    cursor: pointer;
+}
+
+.point {
+    fill: darkred;
+}
+
+
+.trasparent-rect {
+    fill: transparent;
+    stroke: transparent;
+    cursor: pointer;
+}
+
+    .trasparent-rect:hover {
+        fill: whitesmoke;
+    }

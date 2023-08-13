@@ -1,0 +1,33 @@
+﻿.debug-table {
+    font-size: 0.8em;
+    border-collapse: collapse;
+    border: 1px solid silver;
+}
+
+    .debug-table td {
+        padding: 4px;
+        border-bottom: 1px solid gainsboro;
+        border-right: 1px solid gainsboro;
+    }
+
+    .debug-table th {
+        padding: 8px 4px;
+        border-bottom: 1px solid gainsboro;
+        border-right: 1px solid gainsboro;
+    }
+
+    .debug-table .post-info {
+        padding: 4px 6px;
+    }
+
+    .debug-table .inner {
+        background-color: lightyellow
+    }
+
+    .debug-table .outer {
+        background-color: lightpink;
+    }
+
+    .debug-table .accurate {
+        background-color: lightblue;
+    }

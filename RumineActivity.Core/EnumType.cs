@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace RumineActivity.Core
 {
-    public class EnumType<T> : Named
+    public class EnumType<T>
     {
         public readonly T Type;
         public override string ToString()
@@ -13,11 +13,12 @@ namespace RumineActivity.Core
             return Name;
         }
 
+        public virtual string Name { get; protected set; }
+
         public EnumType(T type)
         {
             Type = type;
         }
-
 
         public override bool Equals(object obj)
         {

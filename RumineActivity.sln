@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31613.86
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RumineActivity.View", "RumineActivityView\RumineActivity.View.csproj", "{7D649758-F645-4C36-8F64-DF4154FB808C}"
 EndProject
@@ -10,9 +10,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RumineActivityAPI", "RumineActivityAPI\RumineActivityAPI.csproj", "{2F711DC3-D842-42A1-AB4E-ED802222AADA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RumineActivity.API", "RumineActivityAPI\RumineActivity.API.csproj", "{2F711DC3-D842-42A1-AB4E-ED802222AADA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RumineActivity.Core", "RumineActivity.Core\RumineActivity.Core.csproj", "{7651EF9B-4472-4B69-8D48-1659F60DD315}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RumineActivity.Console", "RumineActivity.Console\RumineActivity.Console.csproj", "{F4E67729-3C81-4D4E-8A4C-D39316CCAA52}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7651EF9B-4472-4B69-8D48-1659F60DD315} = {7651EF9B-4472-4B69-8D48-1659F60DD315}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,6 +37,10 @@ Global
 		{7651EF9B-4472-4B69-8D48-1659F60DD315}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7651EF9B-4472-4B69-8D48-1659F60DD315}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7651EF9B-4472-4B69-8D48-1659F60DD315}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4E67729-3C81-4D4E-8A4C-D39316CCAA52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4E67729-3C81-4D4E-8A4C-D39316CCAA52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4E67729-3C81-4D4E-8A4C-D39316CCAA52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4E67729-3C81-4D4E-8A4C-D39316CCAA52}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

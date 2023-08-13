@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 
 using RumineActivityAPI.Models;
 using RumineActivity.Core;
+using RumineActivity.Core.Models;
+
 namespace RumineActivityAPI.Services
 {
     public class RsContext : DbContext

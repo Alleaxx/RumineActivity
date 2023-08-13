@@ -9,6 +9,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 using RumineActivity.Core;
+using RumineActivity.Core.API;
+using RumineActivity.Core.Comparisons;
+
 namespace RumineActivity.View
 {
     public class Program
@@ -20,22 +23,29 @@ namespace RumineActivity.View
             builder.RootComponents.Add<App>("#app");
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            builder.Services.AddScoped<Core.Logging.ILogger, Core.Logging.ConsoleLogger>();
+            builder.Services.AddScoped<IJsonService, JsonServiceDefault>();
+            builder.Services.AddScoped<IFileService, FileService>();
+            builder.Services.AddScoped<ILocalStorageService, LocalStorageService>();
 
             bool onlineMode = false;
+
             if (onlineMode)
             {
-                builder.Services.AddScoped<IActivityApi, ActivityWebStorageLoggedApi>();
+                builder.Services.AddScoped<IActivityApi, ActivityWebApi>();
             }
             else
             {
-                //builder.Services.AddScoped<IActivityApi, LocalLoggedApi>();
-                builder.Services.AddScoped<IActivityApi, LocalApi>();
+                var filePathV4 = JsonFileInfo.FromObjectJson("data/ForumPostsV4.json", true);
+
+                builder.Services.AddScoped<IActivityApi, ActivityFileApi>(sc =>
+                {
+                    return new ActivityFileApi(sc.GetService<HttpClient>(), sc.GetService<Core.Logging.ILogger>(), filePathV4);
+                });
             }
 
             builder.Services.AddScoped<IStatApp, StatApp>();
-            builder.Services.AddScoped<IPostEditor, PostEditor>();
             builder.Services.AddScoped<IReportsFactory, ReportsFactory>();
-            builder.Services.AddScoped<IComparison, Comparison>();
 
             await builder.Build().RunAsync();
         }

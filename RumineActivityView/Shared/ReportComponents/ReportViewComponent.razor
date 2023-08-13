@@ -1,0 +1,100 @@
+﻿@inherits ReportComponent
+
+@if(!Report.IsEmpty)
+{
+    <section class="data-view">
+        <ul class="tabber">
+            @foreach(var mode in ReportDisplayTypes.Where(v => v.IsOkWithReport(Report)))
+            {
+                <li class="@CssIsEqual(Mode.Type, mode.Type, "selected")" @onclick="() => Set(mode)">
+                    @if (!string.IsNullOrEmpty(mode.Icon))
+                    {
+                        <img alt="@mode.Name" src="images/@mode.Icon" />
+                    }
+                    <span>
+                        @mode.Name
+                    </span>
+                </li>
+            }
+        </ul>
+
+        <div class="content">
+            @if (Mode.Type == DisplayTypes.Histogram)
+            {
+                <HistogramComponent Report="Report" Config="DiagramConfig" />
+            }
+            else if (Mode.Type == DisplayTypes.Graphic)
+            {
+                <GraphicComponent Report="Report" Config="DiagramConfig" />
+            }
+            else if (Mode.Type == DisplayTypes.BarChart)
+            {
+                <GraphicRichComponent Report="Report" Config="DiagramConfig" />
+            }
+            else if (Mode.Type == DisplayTypes.Table)
+            {
+                <div class="diagram-settings">
+                    <ViewSettingsLineComponent ShowRelativeValues="false"></ViewSettingsLineComponent>
+                </div>
+                <EntriesTable Report="Report" />
+            }
+            else if (Mode.Type == DisplayTypes.Values)
+            {
+                <EntriesList Report="Report" />
+            }
+            else if (Mode.Type == DisplayTypes.Debug)
+            {
+                <section style="margin: 4px 8px">
+                    <h3>Общие сведения</h3>
+                    <ul class="debug-info-list">
+                        <li><p><i>Период:</i>  @Report.Period.Name</p>
+                            <ul>
+                                <li><p><i>Интервал:</i>  @Report.Period.TimeInterval</p></li>
+                                <li><p><i>Дней:</i>  @Report.Period.Days</p></li>
+                            </ul>    
+                        </li>
+                        <li><p><i>DateRangeAll:</i>  @Report.DateRangeAll</p></li>
+                        <li><p><i>DateRangePost:</i>  @Report.DateRangePosts</p></li>
+                    </ul>
+                    <h3>Записи (@Report.Entries.Count)</h3>
+                    <EntriesTableDebug entries="@Report.Entries" />
+                    <h3>Фактические записи (@Report.AdditionalEntries.Count)</h3>
+                    <EntriesTableDebug entries="@Report.AdditionalEntries" />
+                </section>
+            }
+            else if (Mode.Type == DisplayTypes.Comparison)
+            {
+                <ReportComparisonComponent Report="Report"></ReportComparisonComponent>
+            }
+            else
+            {
+                <p>Что-то</p>
+            }
+
+        </div>
+    </section>
+}
+
+
+
+@code {
+    public DisplayType Mode => ValuesViewConfig.DisplayType;
+
+    private void Set(DisplayType mode)
+    {
+        ValuesViewConfig.DisplayType = mode;
+    }
+
+    private DiagramConfig DiagramConfig { get; set; }
+
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await base.OnParametersSetAsync();
+        ValuesViewConfig.OnValuesChanged += config => StateHasChanged();
+
+        DiagramConfig = new DiagramConfig();
+    }
+
+    public static DisplayType[] ReportDisplayTypes { get; private set; } = Enum.GetValues<DisplayTypes>().Select(d => new DisplayType(d)).ToArray();
+}

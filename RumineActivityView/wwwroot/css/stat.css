@@ -1,0 +1,16 @@
+﻿.diagram{
+
+}
+.diagram-header{
+    margin: 8px;
+    margin-bottom: 0;
+}
+svg {
+    width: 100%;
+    margin-bottom: 10px;
+}
+.diagram-settings {
+    margin: 4px 2px;
+    display: flex;
+    justify-content: flex-end;
+}

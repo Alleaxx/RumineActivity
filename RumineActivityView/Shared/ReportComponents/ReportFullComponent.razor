@@ -1,0 +1,131 @@
+﻿@inherits ReportComponent
+
+@if(Report != null)
+{
+    <div class="report">
+        <header class="page-header">
+            <img alt="Отчет" src="images/clipboard.svg" />
+            <h2>@Report.Name</h2>
+        </header>
+
+        <div class="content">
+
+            <div class="report-info">
+                <div class="report-navigation">
+                    <a class="nav-link link-copy @CssIsNull(DeeperPeriod, "hidden")" href="statistics" @onclick="CreateThisDeeper">
+                        Глубже ↓
+                    </a>
+                    <div class="row">
+                        @if (PrevDateRange.IsInsideRumineBorders() && PrevDateRange.IsAnyPeriod())
+                        {
+                            <a class="nav-link link-prev" href="statistics" @onclick="CreatePrev">
+                                ← @PrevDateRange.GetName()
+                            </a>
+                        }
+                        <a class="nav-link link-copy" href="create" @onclick="CreateFromThis">
+                            Создать новый отчет!
+                        </a>
+                        @if (NextDateRange.IsInsideRumineBorders() && NextDateRange.IsAnyPeriod())
+                        {
+                            <a class="nav-link link-next" href="statistics" @onclick="CreateNext">
+                                @NextDateRange.GetName() →
+                            </a>
+                        }
+                    </div>
+                    <a class="nav-link link-copy @CssIsNull(HeigherPeriod, "hidden")" href="statistics" @onclick="CreateThisHeigher">
+                        Выше ↑
+                    </a>
+                </div>
+
+                <section class="stat-params-row">
+                    <div class="parameter">
+                        <span class="parameter-name">Дней:</span>
+                        <span class="parameter-value">@Report.DateRangePosts.DaysDifference.ToString("#,0")</span>
+                    </div>
+                    <div class="parameter">
+                        <span class="parameter-name">Сообщений:</span>
+                        <span class="parameter-value">@Report.GetTotalValue(MeasureUnits.Messages).ToString("#,0")</span>
+                    </div>
+                    <div class="parameter">
+                        <span class="parameter-name">Записей:</span>
+                        <span class="parameter-value">@Report.Length</span>
+                    </div>
+                </section>
+            </div>
+
+            <div class="report-view">
+                <ReportViewComponent Report="@Report" />
+            </div>
+
+        </div>
+
+    </div>
+}
+else if(API.IsLoaded.HasValue)
+{
+    <section class="load-report-section">
+        <h2 class="load-report-header">Загрузка статистики</h2>
+        <p class="load-report-message">Получаем данные, конструируем могучие диаграммы и длинные списки...</p>
+    </section>
+}
+
+@code {
+    [Inject]
+    public NavigationManager NavigationManager { get; set; }
+
+    public override async Task SetParametersAsync(ParameterView parameters)
+    {
+        await base.SetParametersAsync(parameters);
+        if (!API.IsLoaded.HasValue)
+        {
+            NavigationManager.NavigateTo("create");
+        }
+    }
+
+
+    private ConfigurationReport ReportConfig => Report.Configuration;
+
+    private DateRange NextDateRange => ReportConfig.DateRangeNext;
+    private DateRange PrevDateRange => ReportConfig.DateRangePrevious;
+
+    private Period? DeeperPeriod => Report.GetDeeperPeriod();
+    private Period? HeigherPeriod => Report.GetHeigherPeriod();
+
+    private async Task CreateThisDeeper()
+    {
+        if(DeeperPeriod == null)
+        {
+            return;
+        }
+
+        var newConfig = ReportConfig.CopyThisWithPeriod(DeeperPeriod);
+        await App.ReportsCollection.AddReport(newConfig);
+    }
+    private async Task CreateThisHeigher()
+    {
+        if(HeigherPeriod == null)
+        {
+            return;
+        }
+
+        var newConfig = ReportConfig.CopyThisWithPeriod(HeigherPeriod);
+        await App.ReportsCollection.AddReport(newConfig);
+    }
+
+    private async Task CreateNext()
+    {
+        var newConfig = ReportConfig.CopyThisWithNewRange(NextDateRange);
+        await App.ReportsCollection.AddReport(newConfig);
+    }
+    private async Task CreatePrev()
+    {
+        var newConfig = ReportConfig.CopyThisWithNewRange(PrevDateRange);
+        await App.ReportsCollection.AddReport(newConfig);
+    }
+
+    private void CreateFromThis()
+    {
+        var newConfig = ReportConfig.CopyThisWithNewRange(ReportConfig.DateRange);
+        App.ReportConfigEditor.SetNewConfig(newConfig);
+    }
+}

@@ -1,5 +1,6 @@
 ﻿@inherits StatComponent
 
+@* СТИЛИ ЗДЕСЬ ИСКЛЮЧИТЕЛЬНО РАДИ ССЫЛОК *@
 <style>
     .menu-list a{
         display: block;
@@ -23,73 +24,97 @@
         .menu-list a:hover {
             background-color: gainsboro;
         }
+
+        .menu-list .report-link.selected {
+            border-left: 2px solid var(--selected-color);
+            border-right: 2px solid var(--selected-color);
+            border-top: 1px solid silver;
+            border-bottom: 1px solid silver;
+        }
 </style>
+
 <nav class="menu">
     <ul class="menu-list">
         <li class="menu-list-item">
             <NavLink href="" Match="NavLinkMatch.All" class="menu-list-link">
-                А это как?
+                О приложении
+            </NavLink>
+        </li>
+        <li class="menu-list-item">
+            <NavLink href="lastchanges" Match="NavLinkMatch.All" class="menu-list-link">
+                Последние изменения
             </NavLink>
         </li>
     </ul>
-    <section hidden>
-        <header>
-            <img alt="Данные" src="images/database.svg" />
-            <h2 class="menu-header">Данные</h2>
-        </header>
-        <ul class="menu-list">
-            <li class="menu-list-item">
-                <NavLink href="add" class="menu-list-link">
-                    Добавить
-                </NavLink>
-            </li>
-            <li class="menu-list-item">
-                <NavLink href="posts/view" class="menu-list-link">
-                    Посты
-                </NavLink>
-            </li>
-            <li class="menu-list-item">
-                <NavLink href="topics/view" class="menu-list-link">
-                    Темы
-                </NavLink>
-            </li>
-        </ul>
-    </section>
     <section>
         <header>
             <img alt="Данные" src="images/activity.svg" />
-            <h2>Статистика</h2>
+            <h2 class="menu-list-header">Статистика</h2>
         </header>
         <ul class="menu-list">
             <li class="menu-list-item">
-                <NavLink href="classic" class="menu-list-link">
-                    Классическая
+                <NavLink href="create" class="menu-list-link">
+                    Создать новый отчет
                 </NavLink>
             </li>
-            <li class="menu-list-item">
-                <NavLink href="statistics" Match="NavLinkMatch.All" class="menu-list-link">
-                    Отчеты
-                </NavLink>
+            <li>
+                <hr />
             </li>
-            <li class="menu-list-item">
-                <NavLink href="statistics/compare" class="menu-list-link">
-                    Сравнение
-                </NavLink>
-            </li>
+            @foreach (var reportGroup in this.App.ReportsCollection.ActiveReports.GroupBy(r => r.Period).OrderByDescending(r => r.Key.TimeInterval))
+            {
+                <li>
+                    <span class="menu-list-mini-header">@reportGroup.Key.NameCategory</span>
+                </li>
+                @foreach(var report in reportGroup.OrderBy(r => r.DateRangeAll.From))
+                {
+                    <li class="menu-list-item report-link @CssIsTrue(IsStatisticsPage(report), "selected", "selectable")" style="display: flex;" @onclick="() => SelectReport(report)">
+                        <a href="statistics" class="menu-list-link" style="flex: 1">
+                            @report.DateRangeAll.GetName()
+                        </a>
+                        <a role="button" class="report-link-remove" @onclick="() => RemoveReport(report)">
+                            X
+                        </a>
+                    </li>
+                }
+            }
         </ul>
     </section>
-    @*<footer class="menu-footer">
-        <p>
-            <span>Тем: @App.Topics.Count</span><br />
-            <span>Сообщений: @App.Posts.Count</span><br />
-            <input type="button" value="Загрузить инфу" @onclick="LoadDataFromApi"/>
-        </p>
-    </footer>*@
 </nav>
 
 @code{
-    //private async Task LoadDataFromApi()
-    //{
-    //    await App.SetOnlineSource();
-    //}
+    [Inject]
+    public NavigationManager Navigation { get; set; }
+
+    private string GetRelativeURI()
+    {
+        return Navigation.Uri.Split("/").LastOrDefault();
+    }
+    private bool IsStatisticsPage(StatisticsReport report)
+    {
+        bool res1 = GetRelativeURI() == "statistics";
+        bool res2 = report == App.ReportsCollection.SelectedReport;
+        return res1 && res2;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        App.ReportsCollection.OnReportsCollectionChanged += report => StateHasChanged();
+        App.ReportsCollection.OnReportSelected += report => StateHasChanged();
+        Navigation.LocationChanged += (e, a) => StateHasChanged();
+    }
+
+    private void ThrowException()
+    {
+        throw new Exception("Вызвано исключение! Всё ради теста, разумеется");
+    }
+
+    private void SelectReport(StatisticsReport report)
+    {
+        App.ReportsCollection.SelectReport(report);
+    }
+    private void RemoveReport(StatisticsReport report)
+    {
+        App.ReportsCollection.RemoveReport(report);
+    }
 }

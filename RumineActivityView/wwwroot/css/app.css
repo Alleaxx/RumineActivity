@@ -26,7 +26,20 @@ html, body {
 
 
 .content{
-    padding: 1em;
+
+}
+
+
+
+.visible{
+    display: inherit !important;
+    visibility: inherit !important;
+}
+.hidden{
+    visibility: hidden !important;
+}
+.collapsed{
+    display: none !important;
 }
 
 
@@ -71,7 +84,11 @@ td.numbers, th.numbers {
     padding: 0.6rem 1.25rem 0.7rem 1.25rem;
     position: fixed;
     width: 100%;
+    height: 10em;
     z-index: 1000;
+}
+#blazor-error-ui h3{
+    margin: 4px 0;
 }
 
     #blazor-error-ui .dismiss {
@@ -79,4 +96,24 @@ td.numbers, th.numbers {
         position: absolute;
         right: 0.75rem;
         top: 0.5rem;
+    }
+
+
+
+
+
+.page-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(250,250,250);
+    border-bottom: 1px solid gainsboro;
+}
+    .page-header img {
+        height: 25px;
+        margin: 0 10px;
+    }
+    .page-header h2 {
+        margin: 0;
+        padding: 15px 0;
     }

@@ -1,0 +1,102 @@
+﻿
+.tables {
+    flex: 3;
+}
+
+/* ТАБЛИЦА РЕКОРДОВ */
+.records-table {
+    margin: 8px 0;
+}
+
+    .records-table td {
+        padding: 4px 10px;
+    }
+
+    .records-table caption {
+        text-align: left;
+    }
+
+    .records-table h3 {
+        margin: 5px 0px;
+    }
+
+
+/* ТАБЛИЦА СО СПИСКОМ ЗНАЧЕНИЙ */
+
+.values-table {
+    border-collapse: collapse;
+    font-size: 0.85em;
+    width: 100%;
+    font-variant-numeric: lining-nums tabular-nums;
+}
+
+    .values-table h2 {
+        margin: 8px 0;
+    }
+
+    .values-table caption {
+        font-size: 1.5em;
+        padding: 8px 0;
+        background-color: whitesmoke;
+    }
+
+    .values-table td {
+    }
+    .values-table td, .values-table th {
+        padding: 0.5em 0.5em 0.75em 0.5em;
+        line-height: 1;
+        border-bottom: 1px solid gainsboro;
+    }
+    .values-table tr td:first-child{
+    }
+
+    .values-table th {
+        border-bottom: 1px solid gainsboro;
+    }
+
+    td.posts{
+        text-align: right;
+    }
+
+
+    .values-table .record-title{
+        border-bottom: 1px solid transparent;
+    }
+.values-table .record-date {
+    border-bottom: 1px solid transparent;
+}
+.values-table .record-value {
+    border-bottom: 1px solid transparent;
+}
+
+    .values-table .td-separator {
+        border-bottom: 1px solid silver;
+        font-weight: 600;
+        padding-top: 12px;
+        padding-bottom: 12px;
+        user-select: none;
+    }
+
+.results-row{
+
+}
+
+.cell-header{
+    text-align: center;
+}
+.cell-header:hover{
+    cursor: pointer;
+    background-color: whitesmoke;
+}
+
+.cell-can-sort, .cell-sorted{
+    user-select: none;
+}
+
+.cell-can-sort{
+    cursor: pointer;
+}
+.cell-sorted {
+    cursor: pointer;
+    background-color: whitesmoke !important;
+}
