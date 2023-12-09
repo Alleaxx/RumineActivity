@@ -9,7 +9,7 @@ article {
 
 .content p {
     line-height: 140%;
-    margin: 12px 0;
+    margin: 8px 0;
 }
 
 .report-blocks {
@@ -27,13 +27,14 @@ article {
 }
 
     .content h3 {
-        margin: 5px 0;
+        margin: 8px 0 4px;
         border-bottom: 1px solid gainsboro;
     }
 
     h4{
         margin: 12px 0;
         margin-bottom: 4px;
+        font-size: 0.9em;
     }
 
 dt {

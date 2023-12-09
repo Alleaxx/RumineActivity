@@ -67,8 +67,8 @@
                 </li>
                 @foreach(var report in reportGroup.OrderBy(r => r.DateRangeAll.From))
                 {
-                    <li class="menu-list-item report-link @CssIsTrue(IsStatisticsPage(report), "selected", "selectable")" style="display: flex;" @onclick="() => SelectReport(report)">
-                        <a href="statistics" class="menu-list-link" style="flex: 1">
+                    <li class="menu-list-item report-link @CssIsTrue(IsStatisticsPage(report), "selected", "selectable")" style="display: flex;">
+                        <a href="statistics" class="menu-list-link" style="flex: 1" @onclick="() => SelectReport(report)">
                             @report.DateRangeAll.GetName()
                         </a>
                         <a role="button" class="report-link-remove" @onclick="() => RemoveReport(report)">

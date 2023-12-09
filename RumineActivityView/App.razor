@@ -1,10 +1,15 @@
-<Router AppAssembly="@typeof(Program).Assembly" PreferExactMatches="@true">
+<Router AppAssembly="@typeof(Program).Assembly">
     <Found Context="routeData">
         <RouteView RouteData="@routeData" DefaultLayout="@typeof(NewLayout)" />
     </Found>
     <NotFound>
         <LayoutView Layout="@typeof(NewLayout)">
-            <p>Sorry, there's nothing at this address.</p>
+            <div style="display: flex; align-items: center; flex-direction: column;">
+                <p style="text-align: center; font-size: 1.2em;">
+                    404, Content Not Found! Sorry :(
+                </p>
+                <img src="images/404.png" height="500" />
+            </div>
         </LayoutView>
     </NotFound>
 </Router>

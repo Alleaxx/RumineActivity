@@ -83,7 +83,7 @@ namespace RumineActivity.View
         /// </summary>
         public void SelectReport(StatisticsReport report)
         {
-            if(!Reports.Contains(report))
+            if(report == null || !Reports.Contains(report))
             {
                 return;
             }
@@ -109,7 +109,7 @@ namespace RumineActivity.View
             RemoveCompareReport(report);
             if (SelectedReport == report)
             {
-                SelectedReport = Reports.FirstOrDefault();
+                SelectReport(Reports.FirstOrDefault());
             }
             OnReportsCollectionChanged?.Invoke(report);
         }

@@ -1,0 +1,49 @@
+﻿
+
+.report-type-block {
+    display: flex;
+    border: 1px solid silver;
+    border-radius: 2px;
+    padding: 0.4em 0.2em;
+    margin: 0 5px;
+}
+
+a.report-type-block {
+    text-decoration: none;
+    cursor: pointer;
+    color: rgb(64,64,64);
+}
+
+a.report-type-block {
+    color: black;
+}
+
+    a.report-type-block:hover img {
+        opacity: 1;
+    }
+
+    a.report-type-block:hover {
+        opacity: 1;
+        cursor: pointer;
+        background-color: whitesmoke;
+    }
+
+    a.report-type-block:visited {
+        color: black;
+    }
+
+.report-type-block img {
+    height: 36px;
+    margin: 0 8px;
+    opacity: 0.5;
+}
+
+.report-type-block-text {
+}
+.report-type-text{
+    font-size: 0.9em;
+}
+.report-type-block-header {
+    font-weight: 600;
+    font-size: 1.05em;
+}

@@ -57,20 +57,26 @@ namespace RumineActivity.Core
             if(firstCell != null)
             {
                 FirstCell = firstCell;
-                firstCell.DayFrom = range.From.Day;
             }
             if(lastCell != null)
             {
                 LastCell = lastCell;
-                lastCell.DayTo = range.To.Day;
             }
             UpdateAllCells();
+            if (firstCell != null)
+            {
+                firstCell.DayFrom = range.From.Day;
+            }
+            if (lastCell != null)
+            {
+                lastCell.DayTo = range.To.Day;
+            }
             OnDateRangeUpdated?.Invoke(this);
         }
 
         public void PickCells(IEnumerable<DateRangeCell> cells)
         {
-            var sortedCells = cells.OrderBy(c => c.DateFrom);
+            var sortedCells = cells.Where(c => c.DateTo > RumineValues.FoundationDate).OrderBy(c => c.DateFrom);
             FirstCell = sortedCells.FirstOrDefault();
             LastCell = sortedCells.LastOrDefault();
             UpdateAllCells();

@@ -161,7 +161,7 @@ namespace RumineActivity.Core.Comparisons
     {
         public override double GetTotalDiff()
         {
-            return (Value.From - ValueCompareWith.From).TotalDays;
+            return Value != null && ValueCompareWith != null ? (Value.From - ValueCompareWith.From).TotalDays : 0;
         }
         public override double GetModDiff()
         {

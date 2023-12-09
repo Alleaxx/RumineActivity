@@ -51,7 +51,7 @@ namespace RumineActivity.View
                 case DisplayTypes.Table:
                     Name = "Таблица";
                     Icon = "grid.svg";
-                    CheckReportFunc = (report) => report.Period.Type != Periods.Week;
+                    CheckReportFunc = (report) => report.Period.Type != Periods.Week && report.Period.Type != Periods.Own;
                     break;
                 case DisplayTypes.Comparison:
                     Name = "Сравнение";

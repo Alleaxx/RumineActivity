@@ -33,7 +33,7 @@ namespace RumineActivity.View
 
         public event Action<StatisticsReport> OnLoadEnded;
 
-        public DateTime LastUpdateInfo { get; init; } = new DateTime(2023, 12, 7);
+        public DateTime LastUpdateInfo { get; init; } = new DateTime(2023, 12, 9);
         public string VersionInfo { get; init; } = "0.95";
 
         public ReportsCollection ReportsCollection { get; init; }

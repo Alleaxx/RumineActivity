@@ -1,2 +1,61 @@
-﻿body {
+﻿.update-list{
+    margin: 0 12px;
+    max-width: 50em;
+
+}
+.update-item{
+    margin: 20px 0;
+}
+p{
+    margin: 4px 0;
+}
+.update-version-header {
+    margin: 12px 0;
+    margin-bottom: 4px;
+    border-bottom: 1px solid gainsboro;
+}
+.update-info{
+}
+.update-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9em;
+    padding: 4px 0;
+}
+.update-date {
+    font-size: 0.9em;
+    color: rgb(64,64,64);
+}
+.update-info-row a{
+
+}
+.last-version-tag{
+    font-size: 0.8em;
+    color: royalblue;
+    border: 1px solid silver;
+    border-radius: 2px;
+    padding: 2px 4px;
+    margin: 2px 8px;
+}
+
+
+
+
+.update-changes{
+    margin: 12px 0;
+    margin-left: 16px;
+}
+.update-changes h4{
+    margin: 8px 0;
+}
+    .update-changes ul {
+        margin: 4px 0;
+    }
+    .update-changes li p {
+        margin: 4px 0;
+    }
+.update-description {
+    font-size: 0.95em;
+    line-height: 140%;
 }
