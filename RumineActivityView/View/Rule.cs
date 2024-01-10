@@ -31,8 +31,7 @@ namespace RumineActivity.View
             Add("#C7DFFA", 15, 30);
             Add("#d8bee8", 30, 70);
             Add("#fccd6f", 70, 200);
-            Add("#6ff2fc", 200, 1000);
-            List.Add(new Rule());
+            Add("#6ff2fc", 200, 10000);
         }
         //Правила по интенсивности (один цвет)
         private void SetIntenseColors()
