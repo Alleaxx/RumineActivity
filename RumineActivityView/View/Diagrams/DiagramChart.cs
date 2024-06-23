@@ -39,11 +39,11 @@ namespace RumineActivity.View.Diagrams
             {
                 if(ValuesConfig.MeasureMethod.Type == MeasureMethods.Total)
                 {
-                    return Report.MostActiveTotal.GetValue(ValuesConfig.MeasureMethod, ValuesConfig.MeasureUnit) * MaxedValueMod;
+                    return Report.MostActiveTotal?.GetValue(ValuesConfig.MeasureMethod, ValuesConfig.MeasureUnit) * MaxedValueMod ?? 0;
                 }
                 else
                 {
-                    return Report.MostActiveAverage.GetValue(ValuesConfig.MeasureMethod, ValuesConfig.MeasureUnit) * MaxedValueMod;
+                    return Report.MostActiveAverage?.GetValue(ValuesConfig.MeasureMethod, ValuesConfig.MeasureUnit) * MaxedValueMod ?? 0;
                 }
             }
             else
