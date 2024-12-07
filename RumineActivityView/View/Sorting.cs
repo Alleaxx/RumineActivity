@@ -11,7 +11,12 @@ namespace RumineActivity.View
         Value,
         ValueTotal,
         Accuracy,
-        Trend
+        Trend,
+
+        RageTitle,
+        RageCountUniq,
+        RageCountTotal,
+        RageCoeff,
     }
     public class Sorting<T,TKey>
     {

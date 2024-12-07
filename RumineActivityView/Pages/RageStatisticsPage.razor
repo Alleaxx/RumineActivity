@@ -1,0 +1,269 @@
+﻿@inherits StatComponent
+@page "/rages"
+@using RumineActivity.Core.API
+
+<div class="rages-statistics">
+    <h2>Статистика использования рейджей</h2>
+    @if (RagesApi.IsLoaded != true)
+    {
+        <p>
+            Загрузка...
+        </p>
+    }
+    else
+    {
+        int counter = 0;
+        int total = RageEntries.Sum(r => r.Stat.CountTotal);
+        int uniq = RageEntries.Sum(r => r.Stat.CountUniq);
+        double coeff = uniq > 0 ? 1.0 * total / uniq : 0;
+
+        <p>
+            Информация с 2011 по 2022 год включительно. Учитывается только форум. Для сортировки - клик по столбцу.
+        </p>
+
+        <section class="filters">
+            <h4>
+                Пояснения к колонкам:
+            </h4>
+            <ul>
+                <li>
+                    <i>Упоминаний</i> - несколько одинаковых рейджей в одном сообщении будут засчитаны как одно упоминание.
+                </li>
+                <li>
+                    <i>Проставлено</i> - засчитываются все рейджи в сообщении со всеми повторами.
+                </li>
+                <li>
+                    <i>Спам-коэффициент</i> - среднее число рейджей указанного типа на сообщение.
+                </li>
+            </ul>
+        </section>
+        @* <section class="filters">
+            <h4>
+                Опции
+            </h4>
+            <ul>
+                <li>
+                    <label>
+                        Показывать неупомянутые рейджи
+                        <input type="checkbox" @bind="ShowNotMentionedRages" />
+                    </label>
+                </li>
+            </ul>
+        </section> *@
+        <section class="filters">
+            <h4>
+                Фильтры
+            </h4>
+            <div class="filters-list">
+                @foreach (var filter in FiltersAvailable)
+                {
+                    <span class="filter-item @(filter == Filter ? "current" : "available")"
+                        @onclick="() => Select(filter)">
+                        @filter
+                    </span>
+                }
+            </div>
+        </section>
+
+        <table class="rages-table">
+            <tr class="overall">
+                <td>
+                </td>
+                <td class="rage-title" colspan="2">
+                    Все рейджи
+                </td>
+                <td class="rage-posts">
+                    @uniq.ToString("#,0")
+                </td>
+                <td class="rage-total">
+                    @total.ToString("#,0")
+                </td>
+                <td class="rage-coeff">
+                    @coeff.ToString("0.00")
+                </td>
+            </tr>
+            <tr>
+                <th class="rage-position">
+                    №
+                </th>
+                <th class="rage-title sortable" @onclick="() => SelectSort(0)" colspan="2">
+                    <span>Рейдж</span> <span class="sort-symbol">@GetSortSign(0)</span>
+                </th>
+                <th class="rage-posts sortable" @onclick="() => SelectSort(1)">
+                    <span>Упоминаний</span> <span class="sort-symbol">@GetSortSign(1)</span>
+                </th>
+                <th class="rage-total sortable" @onclick="() => SelectSort(2)">
+                    <span>Проставлено</span> <span class="sort-symbol">@GetSortSign(2)</span>
+                </th>
+                <th class="rage-coeff sortable" @onclick="() => SelectSort(3)">
+                    <span>Спам-коэффицент</span> <span class="sort-symbol">@GetSortSign(3)</span>
+                </th>
+            </tr>
+            @foreach (var rage in GetSorted(RageEntries.Where(CheckRage)))
+            {
+                string extension = "png";
+                if (rage.RageTitle == "bayan")
+                {
+                    extension = "gif";
+                }
+
+                counter++;
+                <tr>
+                    <td class="rage-position">@counter</td>
+                    <td class="rage-image"><img class="rage" src="https://ru-minecraft.ru/engine/data/emoticons/@rage.RageTitle.@extension" /></td>
+                    <td class="rage-title">@rage.RageTitle</td>
+                    <td class="rage-posts">@rage.Stat.CountUniq.ToString("#,0")</td>
+                    <td class="rage-total">@rage.Stat.CountTotal.ToString("#,0")</td>
+                    <td class="rage-coeff">@rage.Stat.CoeffSpam.ToString("0.00")</td>
+                </tr>
+            }
+        </table>
+    }
+</div>
+
+
+@code {
+    [Inject]
+    public IRagesApi RagesApi { get; set; }
+
+    private IEnumerable<Rage> Rages { get; set; }
+
+    private IEnumerable<RageEntry> RageEntries { get; set; } = Array.Empty<RageEntry>();
+    private string[] FiltersAvailable { get; set; }
+    private string Filter { get; set; }
+
+    private Sorting<RageEntry, object>[] Sorts { get; set; }
+    private Sorting<RageEntry, object> Sorting { get; set; }
+
+    private bool ShowNotMentionedRages{ get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        if(RagesApi.IsLoaded != true)
+        {
+            await RagesApi.LoadData();
+        }
+        Rages = await RagesApi.GetRages();
+
+        ShowNotMentionedRages = true;
+        CreateFilters();
+        CreateSorts();
+        UpdateEntries();
+    }
+    private void CreateFilters()
+    {
+        FiltersAvailable = new string[]
+        {
+            "Всего",
+            "2011",
+            "2012",
+            "2013",
+            "2014",
+            "2015",
+            "2016",
+            "2017",
+            "2018",
+            "2019",
+            "2020",
+            "2021",
+            "2022",
+        };
+        Filter = FiltersAvailable[0];
+
+    }
+    private void CreateSorts()
+    {
+        var sortTitle = new Sorting<RageEntry, object>()
+        {
+            Title = "Название",
+            SortFunc = rage => rage.RageTitle,
+            Descending = false
+        };
+        var sortUniq = new Sorting<RageEntry, object>()
+        {
+            Title = "Упоминания",
+            SortFunc = rage => rage.Stat.CountUniq,
+            Descending = true
+        };
+        var sortTotal = new Sorting<RageEntry, object>()
+        {
+            Title = "Проставлено",
+            SortFunc = rage => rage.Stat.CountTotal,
+            Descending = true
+        };
+        var sortCoeff = new Sorting<RageEntry, object>()
+        {
+            Title = "Коэффицент",
+            SortFunc = rage => rage.Stat.CoeffSpam,
+            Descending = true
+        };
+
+
+        Sorting = sortUniq;
+        Sorts = new Sorting<RageEntry, object>[]
+        {
+            sortTitle,
+            sortUniq,
+            sortTotal,
+            sortCoeff
+        };
+
+    }
+
+    private void Select(string filter)
+    {
+        Filter = filter;
+        UpdateEntries();
+    }
+    private void SelectSort(int index)
+    {
+        var newSort = Sorts[index];
+        if(Sorting == newSort)
+        {
+            Sorting.Descending = !Sorting.Descending;
+        }
+        else
+        {
+            Sorting = Sorts[index];
+        }
+    }
+    private string GetSortSign(int index)
+    {
+        var sort = Sorts[index];
+        if(Sorting != sort)
+        {
+            return string.Empty;
+        }
+        else
+        {
+            return Sorting.GetSortSymbol();
+        }
+    }
+
+    private IEnumerable<RageEntry> GetSorted(IEnumerable<RageEntry> rages)
+    {
+        if (Sorting.Descending)
+        {
+            return rages.OrderByDescending(Sorting.SortFunc);
+        }
+        else
+        {
+            return rages.OrderBy(Sorting.SortFunc);
+        }
+    }
+
+    private void UpdateEntries()
+    {
+        RageEntries = Rages.Select(r => new RageEntry(r, Filter));
+    }
+    private bool CheckRage(RageEntry rage)
+    {
+        bool isEmtyOk = ShowNotMentionedRages || rage.Stat.CountUniq > 0;
+        if (!isEmtyOk)
+        {
+            return false;
+        }
+        return true;
+    }
+}

@@ -26,3 +26,10 @@
         min-height: 80vh;
         flex: 18;
     }
+
+@media (max-device-width:480px) {
+    .main-content {
+        flex-direction: column;
+    }
+}
+

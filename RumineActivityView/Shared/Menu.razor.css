@@ -52,3 +52,10 @@ header h2 {
     user-select: none;
     color: red;
 }
+
+
+@media (max-device-width:480px) {
+    .menu {
+        flex: 0;
+    }
+}

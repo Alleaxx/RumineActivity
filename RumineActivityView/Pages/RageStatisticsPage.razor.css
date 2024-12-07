@@ -1,0 +1,86 @@
+﻿.rages-statistics{
+    margin: 0 8px;
+}
+.rages-table {
+    border-collapse: collapse;
+    border: 1px solid gainsboro;
+    margin: 8px;
+}
+
+    .rages-table td {
+        padding: 2px 4px;
+        border-bottom: 1px solid gainsboro;
+    }
+
+    .rages-table th {
+        padding: 4px;
+        border-bottom: 1px solid silver;
+        text-align: left;
+    }
+    .sortable:hover{
+        background-color: whitesmoke;
+        cursor: pointer;
+        user-select: none;
+    }
+    .sort-symbol{
+        display: inline-block;
+        width: 1em;
+        font-size: 0.8em;
+    }
+
+    .rages-table .overall td{
+        padding: 12px 4px;
+    }
+
+    .rages-table .rage-position {
+        text-align: center;
+    }
+
+    .rages-table .rage-title {
+        text-align: left;
+    }
+
+.rage-image img {
+    width: 30px;
+}
+
+.rage-posts {
+    text-align: right;
+}
+
+.rage-total {
+    text-align: right;
+}
+.rage-coeff{
+    text-align: right;
+}
+
+.filters ul{
+    font-size: 0.9em;
+}
+
+.filters-list{
+    display: flex;
+    margin: 8px;
+}
+.filter-item{
+    display: block;
+    padding: 4px 6px;
+    border: 1px solid rgb(240,240,240);
+}
+.filter-item:hover{
+    background-color: gainsboro;
+    cursor: pointer;
+}
+
+.filter-item.current{
+    background-color: gainsboro;
+    border-color: silver;
+}
+.filters-list label{
+}
+
+
+h4{
+    margin-bottom: 8px;
+}

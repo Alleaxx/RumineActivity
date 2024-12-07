@@ -44,6 +44,14 @@ namespace RumineActivity.View
                 });
             }
 
+            var ragesFile = JsonFileInfo.FromObjectJson("data/RageStatisticsV1.json", true);
+
+            builder.Services.AddScoped<IRagesApi, RagesFileApi>(sc =>
+            {
+                return new RagesFileApi(sc.GetService<HttpClient>(), sc.GetService<Core.Logging.ILogger>(), ragesFile);
+            });
+
+
             builder.Services.AddScoped<IStatApp, StatApp>();
             builder.Services.AddScoped<IReportsFactory, ReportsFactory>();
 
