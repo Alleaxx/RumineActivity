@@ -3,15 +3,23 @@
 
 /* подписи к диаграммам */
 .name {
-    font-size: 0.7em;
+    font-size: 0.75em;
     max-width: 50px;
-    text-wrap: normal;
     color: gray;
 }
 
 .value {
     font-size: 0.8em;
     max-width: 50px;
+    display: none;
+}
+.value.above{
+    display: initial;
+    font-size: 0.6em;
+    fill: rgb(140, 140, 140);
+}
+.value.above.False{
+    display: none;
 }
 
 /* элементы диаграмм */
@@ -31,7 +39,7 @@
     }
 
 .help-line {
-    stroke: gainsboro;
+    stroke: gray;
     stroke-width: 1px;
     cursor: pointer;
 }
@@ -47,7 +55,9 @@
     fill: darkred;
 }
 
-
+rect{
+    z-index: 1;
+}
 .trasparent-rect {
     fill: transparent;
     stroke: transparent;

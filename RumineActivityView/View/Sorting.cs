@@ -45,7 +45,7 @@ namespace RumineActivity.View
 
         public string GetSortSymbol()
         {
-            return Descending ? "🡦" : "🡥";
+            return Descending ? "▼" : "▲";
         }
 
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,16 +27,16 @@ namespace RumineActivity.View.Diagrams
         /// Модификатор "верхнего" потолка диаграммы
         /// </summary>
         private double MaxedValueMod { get; init; }
-        /// <summary>
-        /// Соотношение максимально допустимого количества показываемых записей и имеющихся по факту
-        /// </summary>
-        private double AllowedEntriesMode { get; init; }
+
+        protected string OwnLegendFormat { get; set; }
+
         /// <summary>
         /// Получить максимальное значение для диаграммы (абсолютно или относительно в зависимости от настроек)
         /// </summary>
         public virtual double GetMaxedValue()
         {
-            if (ValuesConfig.UseRelativeValues)
+
+            if (ValuesConfig.MaxValue.Type == MaxValues.Relative)
             {
                 if(ValuesConfig.MeasureMethod.Type == MeasureMethods.Total)
                 {
@@ -51,7 +52,7 @@ namespace RumineActivity.View.Diagrams
                 var method = ValuesConfig.MeasureMethod.Type;
                 var period = Report.Period.Type;
                 var unit = ValuesConfig.MeasureUnit.Type;
-                double maximumMessagesPerDay = ValuesConfig.AbsoluteValue;
+                double maximumMessagesPerDay = ValuesConfig.MaxValue.Value * 20;
 
 
                 if (method == MeasureMethods.ByHour)
@@ -72,7 +73,7 @@ namespace RumineActivity.View.Diagrams
                     {
                         maximumMessagesPerDay *= 30;
                     }
-                    else if (period == Periods.Season)
+                    else if (period == Periods.Quarter)
                     {
                         maximumMessagesPerDay *= 90;
                     }
@@ -102,7 +103,6 @@ namespace RumineActivity.View.Diagrams
             Report = report;
             DiagramConfig = size;
             MaxedValueMod = 1.05;
-            AllowedEntriesMode = (double)report.Length / size.MaxAllowedEntries;
 
             if (!Report.IsEmpty)
             {
@@ -135,7 +135,7 @@ namespace RumineActivity.View.Diagrams
             var legendValues = GetLegendValues();
             foreach (var legendItem in legendValues)
             {
-                var newLine = new LineObject(this, legendItem.mode, legendItem.value, Report.Period);
+                var newLine = new LineObject(this, legendItem.mode, legendItem.value, Report.Period, OwnLegendFormat);
                 linesLegend.Add(newLine);
             }
             LegendLines = linesLegend.ToArray();
@@ -148,31 +148,84 @@ namespace RumineActivity.View.Diagrams
         {
             int legendItemsCount = DiagramConfig.LegendItemsCount;
             var maxed = GetMaxedValue();
-            var onePart = maxed / legendItemsCount;
+
+            var legendValueStepBase = maxed / legendItemsCount;
+            var legendValueStep = GetLegendStepValue(legendValueStepBase);
+
             List<(double value, double mode)> values = new List<(double value, double mode)>();
-            for (int i = 1; i <= legendItemsCount; i++)
+
+            int i = 1;
+            while (true)
             {
-                double usedI = i == legendItemsCount ? i - 1 + 0.5 : i;
+                var newLegendValue = legendValueStep * i;
 
-                var fraction = usedI / legendItemsCount;
-                var valBeforeProcessing = onePart * usedI;
-                var valAfterProcessing = StatExtensions.FindNearestMultiFive(valBeforeProcessing, 1);
-
-                if(!values.Any(v => v.value == valAfterProcessing))
+                if (!values.Any(v => v.value == newLegendValue))
                 {
-                    values.Add((valAfterProcessing, valAfterProcessing / maxed));
+                    values.Add((newLegendValue, newLegendValue / maxed));
                 }
-                //values.Add((valBeforeProcessing, valBeforeProcessing / maxed));
+
+                if(newLegendValue >= maxed * 0.95)
+                {
+                    break;
+                }
+                i++;
             }
             return values.ToArray();
         }
+        /// <summary>
+        /// Рассчитать шаг значения легенды. Он должен быть производным от чисел 1; 2; 2,5; 5
+        /// </summary>
+        private double GetLegendStepValue(double originalStep)
+        {
+            int counter = originalStep > 1
+                ? StatExtensions.GetTens(originalStep)
+                : StatExtensions.GetZeros(originalStep);
+
+            double[] baseNumbers = new double[]
+            {
+                1.0,
+                2.0,
+                2.5,
+                5.0
+            };
+            List<double> stepValues = new List<double>();
+            foreach (double value in baseNumbers)
+            {
+                if(originalStep > 1)
+                {
+                    stepValues.Add(value * Math.Pow(10, counter - 1 - 1));
+                    stepValues.Add(value * Math.Pow(10, counter - 1));
+                    stepValues.Add(value * Math.Pow(10, counter - 1 + 1));
+                }
+                else
+                {
+                    stepValues.Add(value / Math.Pow(10, counter - 1));
+                    stepValues.Add(value / Math.Pow(10, counter));
+                    stepValues.Add(value / Math.Pow(10, counter + 1));
+                }
+            }
+
+            double newStep = stepValues[0];
+            foreach (var step in stepValues)
+            {
+                var currentdiff = Math.Abs(originalStep - newStep);
+                var newDiff = Math.Abs(originalStep - step);
+                if (newDiff < currentdiff)
+                {
+                    newStep = step;
+                }
+            }
+            return newStep;
+        }
+
+
 
         /// <summary>
         /// Создает метки легенды привязанные к конкретным объектам диаграммы
         /// </summary>
         protected virtual void FillLegendLabels(IEnumerable<DiagramEntryObject> diagramEntries)
         {
-            var func = GetEntriesDateGroupingFunc(Report.Period, ValuesConfig.SortingEntriesSelected.Key);
+            var func = GetEntriesDateGroupingFunc(diagramEntries, ValuesConfig.SortingEntriesSelected.Key).GroupingFunc;
             var entriesGrouped = func.Invoke(diagramEntries);
             
             List<DiagramLegendObject> legendObjects = new List<DiagramLegendObject>();
@@ -230,119 +283,35 @@ namespace RumineActivity.View.Diagrams
         /// <summary>
         /// Возвращает функцию группировки записей по периодам, чтобы все подписи помещались в имеющееся пространство
         /// </summary>
-        private Func<IEnumerable<DiagramEntryObject>, IEnumerable<IGrouping<string, DiagramEntryObject>>> GetEntriesDateGroupingFunc(Period periodObj, Sortings sort)
+        private EntryDateGrouping GetEntriesDateGroupingFunc(IEnumerable<DiagramEntryObject> diagramEntries, Sortings sort)
         {
-            var period = periodObj.Type;
-            var everyEntryN = AllowedEntriesMode;
-
-            Func<Entry, string> test = entry => entry.GetNameChart();
-
-            //стандартная функция сохраняющая оригинальное имя
-            Func<IEnumerable<DiagramEntryObject>, IEnumerable<IGrouping<string, DiagramEntryObject>>>
-                defaultFunc = entries => entries.GroupBy(e => e.Entry.GetNameChart());
-
-            //10-19 дек 2012
-            Func<IEnumerable<DiagramEntryObject>, IEnumerable<IGrouping<string, DiagramEntryObject>>>
-                dayMonthPartFunc = entries => entries.GroupBy(e => $"{DateExtensions.DefineDayMonthPartString(e.Entry.FromDate)} {e.Entry.FromDate.Month.GetMonthName("MMM")} {e.Entry.FromDate:yyyy}");
-
-            //дек 2012
-            Func<IEnumerable<DiagramEntryObject>, IEnumerable<IGrouping<string, DiagramEntryObject>>>
-                shortMonthYearFunc = entries => entries.GroupBy(e => $"{e.Entry.FromDate.Month.GetMonthName("MMM")} {e.Entry.FromDate:yyyy}");
-
-            //IV кв. 2012
-            Func<IEnumerable<DiagramEntryObject>, IEnumerable<IGrouping<string, DiagramEntryObject>>>
-                seasonFunc = entries => entries.GroupBy(e => $"{DateExtensions.DefineSeasonSymbol(e.Entry.FromDate)} кв. {e.Entry.FromDate:yyyy}");
-
-            //1-е п. 2012
-            Func<IEnumerable<DiagramEntryObject>, IEnumerable<IGrouping<string, DiagramEntryObject>>>
-                halfYearFunc = entries => entries.GroupBy(e => $"{DateExtensions.DefineHalfYear(e.Entry.FromDate)}-е п. {e.Entry.FromDate:yyyy}");
-
-            //2013 год
-            Func<IEnumerable<DiagramEntryObject>, IEnumerable<IGrouping<string, DiagramEntryObject>>>
-                yearFunc = entries => entries.GroupBy(e => e.Entry.FromDate.ToString("yyyy год"));
-
-            var groupingFunc = defaultFunc;
-
-            //группировка по дате бессмысленна, если сортировка стоит не по дате
             if(sort != Sortings.Index)
             {
-                return groupingFunc;
+                return EntryDateGrouping.DefaultGrouping;
             }
 
-            //От 18
-            if (everyEntryN > 1)
+            var allDateGroupings = new EntryDateGrouping[]
             {
-                if (period == Periods.Day)
-                {
-                    groupingFunc = dayMonthPartFunc;
-                }
-                else if (period == Periods.Week)
-                {
-                    groupingFunc = shortMonthYearFunc;
-                }
-                else if (period == Periods.Month)
-                {
-                    groupingFunc = seasonFunc;
-                }
-                else if (period == Periods.Season)
-                {
-                    groupingFunc = halfYearFunc;
-                }
-            }
-            //От 27
-            if (everyEntryN >= 1.5)
+                EntryDateGrouping.YearGrouping,
+                EntryDateGrouping.QuartedGrouping,
+                EntryDateGrouping.SeasonGrouping,
+                EntryDateGrouping.MonthShortGrouping,
+                EntryDateGrouping.MonthFullGrouping,
+                EntryDateGrouping.DayMonthGrouping,
+                EntryDateGrouping.DayGrouping,
+            };
+
+            var allowedEntries = allDateGroupings
+                .Where(g => g.CheckEntries(diagramEntries))
+                .OrderByDescending(g => g.Level)
+                .ToArray();
+
+            if (allowedEntries.Length == 0)
             {
-                if (period == Periods.Week)
-                {
-                    groupingFunc = shortMonthYearFunc;
-                }
-                else if (period == Periods.Month)
-                {
-                    groupingFunc = halfYearFunc;
-                }
-                else if (period == Periods.Season)
-                {
-                    groupingFunc = yearFunc;
-                }
-            }
-            //От 45
-            if (everyEntryN >= 2.5)
-            {
-                if (period == Periods.Week)
-                {
-                    groupingFunc = shortMonthYearFunc;
-                }
-                else if (period == Periods.Month)
-                {
-                    groupingFunc = halfYearFunc;
-                }
-            }
-            //От 54
-            if (everyEntryN >= 3)
-            {
-                if (period == Periods.Week)
-                {
-                    groupingFunc = shortMonthYearFunc;
-                }
-            }
-            //От 100
-            if (everyEntryN >= 5.5)
-            {
-                if (period == Periods.Day)
-                {
-                    groupingFunc = shortMonthYearFunc;
-                }
-                else if (period == Periods.Week)
-                {
-                    groupingFunc = seasonFunc;
-                }
-                else if (period == Periods.Month)
-                {
-                    groupingFunc = yearFunc;
-                }
+                return EntryDateGrouping.DefaultGrouping;
             }
 
-            return groupingFunc;
+            return allowedEntries.Last();
         }
         
         #endregion

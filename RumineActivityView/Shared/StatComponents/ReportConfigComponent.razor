@@ -57,7 +57,7 @@
                     }
                     <tr>
                         <th>Итого</th>
-                        <td colspan="12" class="cell-results">
+                        <td colspan="8" class="cell-results">
                             <span style="text-align: center">
                                 <span>
                                     C
@@ -89,7 +89,9 @@
                                     включительно
                                 </span>
                             </span>
-
+                        </td>
+                        <td class="cell-results all-time" colspan="4" @onclick="PickAllTime">
+                            Выделить всё время
                         </td>
                     </tr>
                 </table>
@@ -101,9 +103,9 @@
 
         <section class="options-section">
             <section class="option">
-                <h4 class="options-list-header">Периодичность: </h4>
+                <h4 class="options-list-header">Деление: </h4>
                 <ul>
-                    @foreach (var period in EnumValues.Periods)
+                    @foreach (var period in EnumValues.PeriodsList)
                     {
                         <li class="@CssIsTrue(ReportConfig.DateRange.IsOkWithPeriod(period), "safe-period", "dangerous-period") @(CssIsSelected(period, ReportConfig.Period))"
                             @onclick="() =>Set(period)">
@@ -183,5 +185,19 @@
     private void PickLastCell(MouseEventArgs e, DateRangeCell cell)
     {
         DateRangePickerAdvanced.PickLastCell(cell);
+    }
+    private void PickAllTime()
+    {
+        var periodsSorted = DateRangePickerAdvanced.Periods.Where(p => p.DateTo >= RumineValues.FoundationDate).OrderBy(p => p.DateFrom);
+        if (!periodsSorted.Any())
+        {
+            return;
+        }
+
+        var first = periodsSorted.First();
+        var last = periodsSorted.Last();
+
+        PickFirstCell(new MouseEventArgs(), first);
+        PickLastCell(new MouseEventArgs(), last);
     }
 }

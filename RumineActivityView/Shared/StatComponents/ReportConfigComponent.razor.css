@@ -178,3 +178,12 @@
         background-color: gainsboro;
         border-color: gray;
     }
+
+    .all-time{
+        text-align: center;
+        background-color: transparent;
+        border: 0;
+    }
+    .all-time:hover{
+        background-color: lightpink;
+    }

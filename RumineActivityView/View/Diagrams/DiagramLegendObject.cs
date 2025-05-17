@@ -23,6 +23,11 @@ namespace RumineActivity.View.Diagrams
         public Point Center { get; private set; }
 
         /// <summary>
+        /// Центральная точка между границами для текста НАД столбцом
+        /// </summary>
+        public Point CenterAboveRectangle { get; private set; }
+
+        /// <summary>
         /// Правая граница периода
         /// </summary>
         public Line RightBorder { get; private set; }
@@ -30,7 +35,6 @@ namespace RumineActivity.View.Diagrams
         public DiagramLegendObject(DiagramChart chart, StatisticsReport report, IGrouping<string, DiagramEntryObject> objects, DiagramLegendObject previous) : base(chart)
         {
             TitleName = objects.Key;
-
 
             var ordered = objects;
             var firstObject = ordered.First();
@@ -90,6 +94,13 @@ namespace RumineActivity.View.Diagrams
                 X = !isInverted ? xStart + Math.Abs(xEnd - xStart) / 2 : xEnd + Math.Abs(xEnd - xStart) / 2,
                 Y = yStart + 15
             };
+
+            bool startLineFromZero = false;
+            if (startLineFromZero)
+            {
+                LeftBorder.Y1 = 0;
+                RightBorder.Y1 = 0;
+            }
         }
 
         /// <summary>
@@ -108,6 +119,7 @@ namespace RumineActivity.View.Diagrams
                 HideTitles();
             }
         }
+
         /// <summary>
         /// Скрыть границы
         /// </summary>
@@ -128,6 +140,7 @@ namespace RumineActivity.View.Diagrams
                 Y2 = 0
             };
         }
+
         /// <summary>
         /// Скрыть названия
         /// </summary>

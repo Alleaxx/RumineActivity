@@ -5,7 +5,6 @@
 .name {
     font-size: 0.7em;
     max-width: 50px;
-    text-wrap: normal;
     color: gray;
 }
 
@@ -16,7 +15,7 @@
 
 /* элементы диаграмм */
 .activity-line {
-    fill: #ffd8a8;
+    fill: #ff991d4d;
     stroke: #e3830e;
 }
 
@@ -31,7 +30,7 @@
     }
 
 .help-line {
-    stroke: gainsboro;
+    stroke: gray;
     stroke-width: 1px;
     cursor: pointer;
 }

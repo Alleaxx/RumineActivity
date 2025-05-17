@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RumineActivity.Core
 {
@@ -15,17 +16,21 @@ namespace RumineActivity.Core
 
             sb.Append("Index");
             sb.Append(sep);
-            sb.Append("Period");
+            sb.Append("PeriodTitle");
             sb.Append(sep);
-            sb.Append("PeriodStart");
+            sb.Append("DateStart");
             sb.Append(sep);
-            sb.Append("PeriodEnd");
+            sb.Append("DateEnd");
             sb.Append(sep);
-            sb.Append("TotalWritten");
+            sb.Append("PagesTotal");
             sb.Append(sep);
-            sb.Append("AverageWritten");
+            sb.Append($"PagesAverage{method}");
             sb.Append(sep);
-            sb.Append("Mode");
+            sb.Append("PostsTotal");
+            sb.Append(sep);
+            sb.Append($"PostsAverage{method}");
+            sb.Append(sep);
+            sb.Append("Fraction");
             sb.Append(sep);
             sb.Append("Accuracy");
             sb.Append("\n");
@@ -39,9 +44,13 @@ namespace RumineActivity.Core
                 sb.Append(sep);
                 sb.Append(entry.ToDate.ToString());
                 sb.Append(sep);
-                sb.Append(entry.GetValue(MeasureMethods.Total, unit));
+                sb.Append(entry.GetValue(MeasureMethods.Total, MeasureUnits.Pages).ToString("0.00"));
                 sb.Append(sep);
-                sb.Append(entry.GetValue(method, unit));
+                sb.Append(entry.GetValue(method, unit: MeasureUnits.Pages).ToString("0.00"));
+                sb.Append(sep);
+                sb.Append(entry.GetValue(MeasureMethods.Total, MeasureUnits.Messages));
+                sb.Append(sep);
+                sb.Append(entry.GetValue(method, unit: MeasureUnits.Messages).ToString("0.00"));
                 sb.Append(sep);
                 sb.Append(entry.FractionMode);
                 sb.Append(sep);
@@ -95,16 +104,35 @@ namespace RumineActivity.Core
 
         public static Period? GetDeeperPeriod(this StatisticsReport report)
         {
-            return EnumValues.Periods.OrderByDescending(p => p.TimeInterval)
+            return EnumValues.PeriodsList.OrderByDescending(p => p.TimeInterval)
                 .FirstOrDefault(p => report.DateRangeAll.IsOkWithPeriod(p) && p.TimeInterval < report.Period.TimeInterval && p.Type != Periods.Own);
         }
         public static Period? GetHeigherPeriod(this StatisticsReport report)
         {
-            return EnumValues.Periods.OrderBy(p => p.TimeInterval)
+            return EnumValues.PeriodsList.OrderBy(p => p.TimeInterval)
                 .FirstOrDefault(p => report.DateRangeAll.IsOkWithPeriod(p) && p.TimeInterval > report.Period.TimeInterval && p.Type != Periods.Own);
         }
 
+        public static int GetTens(double val)
+        {
+            int counter = 1;
+            while (val / Math.Pow(10.0, counter) >= 1)
+            {
+                counter++;
+            }
+            return counter;
+        }
+        public static int GetZeros(double val)
+        {
+            int counter = 1;
+            while (val * Math.Pow(10.0, counter) < 1)
+            {
+                counter++;
+            }
+            return counter;
+        }
 
+        [Obsolete]
         public static double FindNearestMultiFive(double val, double precision = 2)
         {
             return Math.Round(val * precision) / precision;

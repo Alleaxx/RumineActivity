@@ -1,9 +1,11 @@
 ﻿@inherits DiagramComponent
 <section class="diagram">
-    <h4 class="diagram-header">@ValuesViewConfig.MeasureUnit.Name / Написано к сроку / @Report.DateRangeAll.GetName(Report.Period.EntryDateFunc)</h4>
     <div class="diagram-settings">
-        <ViewSettingsLineComponent ShowMeasureMethod="false" ShowRelativeValues="false"></ViewSettingsLineComponent>
+        <ViewSettingsLineComponent ShowMeasureMethod="false" ShowRelativeValues="false" ShowRoundAccuracy="false">
+
+        </ViewSettingsLineComponent>
     </div>
+    <h4 class="diagram-header">@ValuesViewConfig.MeasureUnit.Name / Написано к сроку / @Report.DateRangeAll.GetName(Report.Period.EntryDateFunc)</h4>
     <svg height="@Config.Height" viewBox="@($"0 0 {Config.Width} {Config.Height}")">
         <line class="help-line" x1="0" x2="@Config.Width" y1="@(Config.HeightChart)" y2="@(Config.HeightChart)" />
 
@@ -26,7 +28,7 @@
                 </g>
         }
         <g>
-            <path class="activity-line" d="@GraphicRich.CreatePathAttribute()" />
+            <path class="activity-line" stroke-width="1.5" d="@GraphicRich.CreatePathAttribute()" />
         </g>
 
 

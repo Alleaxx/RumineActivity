@@ -22,6 +22,12 @@
 
 .sort-symbol{
     user-select: none;
+    border: 1px solid gainsboro;
+    margin: 0 4px;
+    color: rgb(64,64,64);
+}
+.sort-symbol:hover{
+    background-color: whitesmoke;
 }
 .sort-symbol:hover{
     cursor: pointer;

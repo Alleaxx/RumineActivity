@@ -14,9 +14,15 @@ namespace RumineActivity.View.Diagrams
         /// <summary>
         /// Создание линии легенды
         /// </summary>
-        public LineObject(DiagramChart chart, double mod, double value, Period period) : base(chart)
+        public LineObject(DiagramChart chart, double mod, double value, Period period, string ownLegendFormat) : base(chart)
         {
-            TitleValue = chart.ValuesConfig.FormatValue(value, period);
+            TitleValue = chart.ValuesConfig.FormatValue(value, period, ownFormat: ownLegendFormat);
+            if(mod >= 0.96)
+            {
+                //не показываем значение легенды, если оно слишком близко к верхней границе
+                TitleValue = string.Empty;
+            }
+
             double height = ((1 - mod) * MaxAllowedHeight);
             double y = height;
 

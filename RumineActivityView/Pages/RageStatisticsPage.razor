@@ -21,55 +21,31 @@
             Информация с 2011 по 2022 год включительно. Учитывается только форум. Для сортировки - клик по столбцу.
         </p>
 
-        <section class="filters">
-            <h4>
-                Пояснения к колонкам:
-            </h4>
-            <ul>
-                <li>
-                    <i>Упоминаний</i> - несколько одинаковых рейджей в одном сообщении будут засчитаны как одно упоминание.
-                </li>
-                <li>
-                    <i>Проставлено</i> - засчитываются все рейджи в сообщении со всеми повторами.
-                </li>
-                <li>
-                    <i>Спам-коэффициент</i> - среднее число рейджей указанного типа на сообщение.
-                </li>
-            </ul>
+        <section class="definitions">
+            <dl>
+                <dt>Упоминаний</dt>
+                <dd>несколько одинаковых рейджей в одном сообщении будут засчитаны как одно упоминание.</dd>
+                <dt>Проставлено</dt>
+                <dd>засчитываются все рейджи в сообщении со всеми повторами.</dd>
+                <dt>Спам-коэффициент</dt>
+                <dd>среднее число рейджей указанного типа на сообщение.</dd>
+            </dl>
         </section>
-        @* <section class="filters">
-            <h4>
-                Опции
-            </h4>
-            <ul>
-                <li>
-                    <label>
-                        Показывать неупомянутые рейджи
-                        <input type="checkbox" @bind="ShowNotMentionedRages" />
-                    </label>
-                </li>
-            </ul>
-        </section> *@
+
         <section class="filters">
-            <h4>
-                Фильтры
-            </h4>
-            <div class="filters-list">
-                @foreach (var filter in FiltersAvailable)
-                {
-                    <span class="filter-item @(filter == Filter ? "current" : "available")"
-                        @onclick="() => Select(filter)">
-                        @filter
-                    </span>
-                }
-            </div>
+
+            <Collection HeaderText="Период:" List="FiltersAvailable" Selected="Filter" T="string" OnSelectCallback="Select" />
+
         </section>
 
         <table class="rages-table">
+            <tr>
+                <th class="rage-overall-stat" colspan="6">
+                    Итого за @Filter
+                </th>
+            </tr>
             <tr class="overall">
-                <td>
-                </td>
-                <td class="rage-title" colspan="2">
+                <td class="rage-title" colspan="3">
                     Все рейджи
                 </td>
                 <td class="rage-posts">
@@ -155,7 +131,7 @@
     {
         FiltersAvailable = new string[]
         {
-            "Всего",
+            "Все время",
             "2011",
             "2012",
             "2013",

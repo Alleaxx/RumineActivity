@@ -21,18 +21,6 @@ namespace RumineActivity.View
 
         public ViewRules Rules { get; private set; }
 
-        public int AbsoluteValue
-        {
-            get => absoluteValue;
-            set
-            {
-                if (value >= 1 && value < RumineValues.MaximumMessagesPerDayAbsolute)
-                {
-                    absoluteValue = value;
-                    OnValueChanged();
-                }
-            }
-        }
         public int RoundAccuracy
         {
             get => roundAccuracy;
@@ -63,12 +51,12 @@ namespace RumineActivity.View
                 OnValueChanged();
             }
         }
-        public bool UseRelativeValues
+        public MaxValue MaxValue
         {
-            get => useRelativeValues;
+            get => maxValue;
             set
             {
-                useRelativeValues = value;
+                maxValue = value;
                 OnValueChanged();
             }
         }
@@ -126,10 +114,9 @@ namespace RumineActivity.View
         }
 
         private int roundAccuracy;
-        private int absoluteValue;
         private MeasureUnit measureUnit;
         private MeasureMethod measureMethod;
-        private bool useRelativeValues;
+        private MaxValue maxValue;
         private bool showCompareValueDifference;
         private DisplayType displayType;
         private CompareDiffFormat compareView;
@@ -145,7 +132,7 @@ namespace RumineActivity.View
             var unit = unitParam ?? MeasureUnit.Type;
             return FormatValue(entry.GetValue(method, unit), entry.Period, method, unit);
         }
-        public string FormatValue(double value, Periods period, MeasureMethods? methodParam = null, MeasureUnits? unitParam = null, bool forceNoZeros = false)
+        public string FormatValue(double value, Periods period, MeasureMethods? methodParam = null, MeasureUnits? unitParam = null, string ownFormat = null)
         {
             var method = methodParam ?? MeasureMethod.Type;
             var unit = unitParam ?? MeasureUnit.Type;
@@ -155,6 +142,11 @@ namespace RumineActivity.View
                 return "???";
             }
 
+            if (!string.IsNullOrEmpty(ownFormat))
+            {
+                return value.ToString(ownFormat);
+            }
+
             string format = GetNumberFormatDouble();
             if (method == MeasureMethods.Total && unit == MeasureUnits.Messages)
             {
@@ -162,17 +154,17 @@ namespace RumineActivity.View
             }
             if (method == MeasureMethods.Total && (unit == MeasureUnits.Pages || unit == MeasureUnits.OldPages))
             {
-                return Math.Ceiling(value).ToString(GetNumberFormatInt());
+                //return Math.Ceiling(value).ToString(GetNumberFormatInt());
             }
             if (method == MeasureMethods.ByDay && period == Periods.Day && (unit == MeasureUnits.Pages || unit == MeasureUnits.OldPages))
             {
-                return Math.Ceiling(value).ToString(GetNumberFormatInt());
+                //return Math.Ceiling(value).ToString(GetNumberFormatInt());
             }
             if (method == MeasureMethods.ByDay && unit == MeasureUnits.Messages && period == Periods.Day)
             {
                 format = GetNumberFormatInt();
             }
-            if (forceNoZeros)
+            if(value >= 50)
             {
                 format = GetNumberFormatInt();
             }
@@ -214,8 +206,7 @@ namespace RumineActivity.View
             measureUnit = new MeasureUnit(MeasureUnits.Pages);
             measureMethod = MeasureMethod.Create(MeasureMethods.ByDay);
             displayType = new DisplayType(DisplayTypes.Histogram);
-            absoluteValue = 2500;
-            useRelativeValues = true;
+            maxValue = new MaxValue(MaxValues.Relative);
             showCompareValueDifference = true;
             compareView = CompareDiffFormat.Create(CompareDiffFormats.Absolute);
             sortingEntriesSelected = SortExtensions.EntrySorts.Values.FirstOrDefault();
@@ -261,12 +252,11 @@ namespace RumineActivity.View
             return new SavedViewSettings()
             {
                 RoundAccuracy = this.roundAccuracy,
-                AbsoluteValue = this.absoluteValue,
-                UseRelativeValues = this.UseRelativeValues,
                 ShowCompareValueDifference = this.ShowCompareValueDifference,
                 CompareView = this.CompareView,
                 MeasureUnit = this.measureUnit,
                 MeasureMethod = this.measureMethod,
+                MaxValue = this.maxValue,
                 DisplayType = this.displayType,
                 SortingEntriesSelected = this.SortingEntriesSelected.Key,
                 SortingEntriesDescending = this.sortingEntriesSelected.Descending
@@ -275,30 +265,14 @@ namespace RumineActivity.View
         private void ApplySavedSettings(SavedViewSettings savedSettings)
         {
             roundAccuracy = savedSettings.RoundAccuracy;
-            absoluteValue = savedSettings.AbsoluteValue;
-            useRelativeValues = savedSettings.UseRelativeValues;
             showCompareValueDifference = savedSettings.ShowCompareValueDifference;
 
-            //sortingEntriesSelected = SortExtensions.EntrySorts[savedSettings.SortingEntriesSelected];
-            //sortingEntriesSelected.Descending = savedSettings.SortingEntriesDescending;
             compareView = CompareDiffFormat.Create(savedSettings.CompareView);
-            measureMethod = EnumValues.Methods.FirstOrDefault(m => m.Type == savedSettings.MeasureMethod);
-            measureUnit = EnumValues.Units.FirstOrDefault(m => m.Type == savedSettings.MeasureUnit);
+            measureMethod = EnumValues.Methods.FirstOrDefault(m => m.Type == savedSettings.MeasureMethod) ?? EnumValues.Methods.First();
+            measureUnit = EnumValues.Units.FirstOrDefault(m => m.Type == savedSettings.MeasureUnit) ?? EnumValues.Units.First();
+            maxValue = EnumValues.MaximumValues.FirstOrDefault(m => m.Type == savedSettings.MaxValue) ?? EnumValues.MaximumValues.First();
             displayType = new DisplayType(savedSettings.DisplayType);
             OnValuesChanged?.Invoke(this);
         }
-    }
-    public class SavedViewSettings
-    {
-        public int RoundAccuracy { get; set; }
-        public int AbsoluteValue { get; set; }
-        public MeasureUnits MeasureUnit { get; set; }
-        public MeasureMethods MeasureMethod { get; set; }
-        public bool UseRelativeValues { get; set; }
-        public bool ShowCompareValueDifference { get; set; }
-        public DisplayTypes DisplayType { get; set; }
-        public Sortings SortingEntriesSelected { get; set; }
-        public CompareDiffFormats CompareView { get; set; }
-        public bool SortingEntriesDescending { get; set; }
     }
 }

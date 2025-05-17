@@ -55,30 +55,15 @@
     text-align: right;
 }
 
-.filters ul{
-    font-size: 0.9em;
+.definitions {
 }
-
-.filters-list{
-    display: flex;
-    margin: 8px;
-}
-.filter-item{
-    display: block;
-    padding: 4px 6px;
-    border: 1px solid rgb(240,240,240);
-}
-.filter-item:hover{
-    background-color: gainsboro;
-    cursor: pointer;
-}
-
-.filter-item.current{
-    background-color: gainsboro;
-    border-color: silver;
-}
-.filters-list label{
-}
+    .definitions dt {
+        font-size: 0.9em;
+        margin-top: 8px;
+    }
+    .definitions dd {
+        font-size: 0.8em;
+    }
 
 
 h4{

@@ -26,7 +26,7 @@ namespace RumineActivity.Core.Models
             RageTitle = rage.RageTitle;
             Stat = rage.Statistics.FirstOrDefault(r => r.Title == filter)
                 ?? rage.Statistics.FirstOrDefault()
-                ?? new RageStat() { Title = "Всего" };
+                ?? new RageStat() { Title = "Все время" };
         }
     }
     public class RageStat

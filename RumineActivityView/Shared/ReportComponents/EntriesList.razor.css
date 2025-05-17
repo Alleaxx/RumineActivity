@@ -83,6 +83,7 @@
 
 .cell-header{
     text-align: center;
+    background-color: whitesmoke;
 }
 .cell-header:hover{
     cursor: pointer;
@@ -93,10 +94,22 @@
     user-select: none;
 }
 
+.th-content{
+    display: flex;
+    justify-content: space-between;
+}
+.numbers .th-content{
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+}
+
 .cell-can-sort{
     cursor: pointer;
 }
+    .cell-can-sort:hover {
+        background-color: whitesmoke;
+    }
 .cell-sorted {
     cursor: pointer;
-    background-color: whitesmoke !important;
+    color: royalblue;
 }

@@ -118,7 +118,7 @@ namespace RumineActivity.View.Diagrams
                 X2 = xEnd,
                 Y2 = yEnd
             };
-            TitleValue = chart.ValuesConfig.FormatValue(thisValue + currentSum, Periods.Month, MeasureMethods.Total, forceNoZeros: true);
+            TitleValue = chart.ValuesConfig.FormatValue(thisValue + currentSum, Periods.Month, MeasureMethods.Total, ownFormat: "#,0");
         }
 
         /// <summary>

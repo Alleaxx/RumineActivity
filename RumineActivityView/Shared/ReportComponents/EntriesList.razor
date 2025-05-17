@@ -7,12 +7,14 @@
         <colgroup>
             <col style="width: 20%" />
             <col style="width: 20%" />
-            <col style="width: 10%" />
-            <col style="width: 50%" />
+            <col style="width: 15%" />
+            <col style="width: 15%" />
+            <col style="width: 15%" />
+            <col style="width: 15%" />
         </colgroup>
         <thead>
             <tr class="results-row">
-                <td colspan="4" class="td-separator cell-header" @onclick="() => ToggleVariable(ref ShowRecords)">
+                <td colspan="6" class="td-separator cell-header" @onclick="() => ToggleVariable(ref ShowRecords)">
                     РЕКОРДЫ @GetToggleSymbol(ShowRecords)
                 </td>
             </tr>
@@ -20,27 +22,67 @@
         <tbody>
             @if (ShowRecords)
             {
+                var entries = new[]
+                {
+                    Report.MostActiveAverage,
+                    Report.MostInactiveAverage
+                };
                 <tr class="results-row">
-                    <td class="record-title" colspan="1">Самый активный период</td>
-                    <td class="record-date numbers" colspan="1">@Report?.MostActiveAverage?.GetName()</td>
-                    <td class="record-value numbers" colspan="1">@ValuesViewConfig.FormatEntryPosts(Report.MostActiveAverage)</td>
-                    <td class="record-value numbers" colspan="1"></td>
+                    <th class="text">Характеристика</th>
+                    <th class="numbers">Период</th>
+                    <th class="numbers">Страниц всего</th>
+                    <th class="numbers">@ValuesViewConfig.MeasureMethod.Name</th>
+                    <th class="numbers">Постов всего</th>
+                    <th class="numbers">@ValuesViewConfig.MeasureMethod.Name</th>
                 </tr>
-                <tr class="results-row">
-                    <td class="record-title" colspan="1">Самый мертвецкий период</td>
-                    <td class="record-date numbers" colspan="1">@Report?.MostInactiveAverage?.GetName()</td>
-                    <td class="record-value numbers" colspan="1">@ValuesViewConfig.FormatEntryPosts(Report.MostInactiveAverage)</td>
-                    <td class="record-value numbers" colspan="1"></td>
-                </tr>
+                @foreach(var entry in entries)
+                {
+                    <tr class="results-row">
+                        <td class="record-title">
+                            @if(entry == Report.MostActiveAverage)
+                            {
+                                <span>Самый активный период</span>
+                            }
+                            else
+                            {
+                                <span>Самый мертвецкий период</span>
+                            }
+                        </td>
+                        <td class="record-date numbers">
+                            @entry.GetName()
+                        </td>
+                        <td class="record-value numbers">
+                            @ValuesViewConfig.FormatEntryPosts(entry, MeasureMethods.Total, unitParam: MeasureUnits.Pages)
+                        </td>
+                        <td class="record-value numbers">
+                            @ValuesViewConfig.FormatEntryPosts(entry, unitParam: MeasureUnits.Pages)
+                        </td>
+                        <td class="record-value numbers">
+                            @ValuesViewConfig.FormatEntryPosts(entry, MeasureMethods.Total, unitParam: MeasureUnits.Messages)
+                        </td>
+                        <td class="record-value numbers">
+                            @ValuesViewConfig.FormatEntryPosts(entry, unitParam: MeasureUnits.Messages)
+                        </td>
+                    </tr>
+                }
             }
         </tbody>
     </table>
     
     @* ПЕРИОДЫ *@
     <table class="values-table">
+        <colgroup>
+            <col style="width: 5%" />
+            <col style="width: auto" />
+            <col style="width: 15%" />
+            <col style="width: 15%" />
+            <col style="width: 15%" />
+            <col style="width: 15%" />
+            <col style="width: 15%" />
+        </colgroup>
         <thead>
             <tr>
-                <td colspan="8" class="td-separator cell-header" @onclick="() => ToggleVariable(ref ShowEntries)">
+                <td colspan="7" class="td-separator cell-header" @onclick="() => ToggleVariable(ref ShowEntries)">
                     ПЕРИОДЫ [@Report.Length] @GetToggleSymbol(ShowEntries)
                     <button @onclick="SaveCSVFileAsync" title="Экспортировать в CSV формат">
                         CSV
@@ -50,33 +92,39 @@
             @if (ShowEntries)
             {
                 <tr>
-                    <th class="text @CssIsEqual(Sorts[Sortings.Index],SortSelected, "cell-sorted", "cell-can-sort")"
+                    <th class="text @CssIsEqual(Sorts[Sortings.Index], SortSelected, "cell-sorted", "cell-can-sort")"
                         @onclick="() => ToggleSort(Sorts[Sortings.Index])">
-                        № 
-                    </th>
-                    <th class="text @CssIsEqual(Sorts[Sortings.Index],SortSelected, "cell-sorted", "cell-can-sort")" colspan="2"
-                        @onclick="() => ToggleSort(Sorts[Sortings.Index])">
-                        Периоды @GetSortSymbol(Sorts[Sortings.Index])
-                    </th>
-                    <th class="numbers @CssIsEqual(Sorts[Sortings.ValueTotal],SortSelected, "cell-sorted", "cell-can-sort")"
-                            @onclick="() => ToggleSort(Sorts[Sortings.ValueTotal])">
-                        @ValuesViewConfig.MeasureUnit.Name, всего @GetSortSymbol(Sorts[Sortings.ValueTotal])
-                    </th>
-                    <th class="numbers">
-                        <div style="display: flex; justify-content: flex-end">
-                            <CollectionSelect List="EnumValues.Units" Selected="ValuesViewConfig.MeasureUnit" T="MeasureUnit" OnSelectCallback="Set" />
-                            <CollectionSelect List="EnumValues.Methods" Selected="ValuesViewConfig.MeasureMethod" T="MeasureMethod" OnSelectCallback="Set" />
-                            <div style="margin: 1px 0;"
-                                    @onclick="() => ToggleSort(Sorts[Sortings.Value])">
-                                @GetSortSymbol(Sorts[Sortings.Value])
-                            </div>
+                        <div class="th-content">
+                            <span>№</span>
+                            <span>@GetSortSymbol(Sorts[Sortings.Index])</span>
                         </div>
                     </th>
-                    <th class="numbers @CssIsEqual(Sorts[Sortings.ValueTotal],SortSelected, "cell-sorted", "cell-can-sort")"
+                    <th class="numbers"
+                        @onclick="() => ToggleSort(Sorts[Sortings.Index])">
+                        <div class="th-content">
+                            <span>Период</span>
+                        </div>
+                    </th>
+                    <th class="numbers @CssIsEqual(Sorts[Sortings.ValueTotal], SortSelected, "cell-sorted", "cell-can-sort")"
                         @onclick="() => ToggleSort(Sorts[Sortings.ValueTotal])">
-                        % целого
-                        </th>
-                    <th class="numbers">Интервал</th>
+                        <div class="th-content">
+                            <span>Страниц всего</span>
+                            <span>@GetSortSymbol(Sorts[Sortings.ValueTotal])</span>
+                        </div>
+                    </th>
+                    <th class="numbers">
+                        <CollectionSelect List="EnumValues.Methods" Selected="ValuesViewConfig.MeasureMethod" T="MeasureMethod" OnSelectCallback="Set" />
+                    </th>
+                    <th class="numbers @CssIsEqual(Sorts[Sortings.ValueTotal], SortSelected, "cell-sorted", "cell-can-sort")"
+                        @onclick="() => ToggleSort(Sorts[Sortings.ValueTotal])">
+                        <div class="th-content">
+                            <span>Сообщений всего</span>
+                            <span>@GetSortSymbol(Sorts[Sortings.ValueTotal])</span>
+                        </div>
+                    </th>
+                    <th class="numbers">
+                        <CollectionSelect List="EnumValues.Methods" Selected="ValuesViewConfig.MeasureMethod" T="MeasureMethod" OnSelectCallback="Set" />
+                    </th>
                     <th class="text">
                         Точность
                     </th>
@@ -88,22 +136,24 @@
             {
                 @foreach (var entry in GetSortedEntries())
                 {
-                    <tr>
+                    <tr title="% целого - @entry.FractionMode.ToString("0.00%"), интервал @entry.Range.Diff.GetFullDifferenceName()">
                         <td style="@($"background-color: {ValuesViewConfig.Rules.GetFor(entry).Color}")">
                             @entry.Index
-                            </td>
-                        <td colspan="2">@entry.GetName()</td>
-                        <td class="numbers posts">
-                            @ValuesViewConfig.FormatEntryPosts(entry, MeasureMethods.Total)
-                        </td>
-                        <td class="numbers posts">
-                            @ValuesViewConfig.FormatEntryPosts(entry)
-                        </td>
-                        <td class="numbers posts">
-                            @entry.FractionMode.ToString("0.00%")
                         </td>
                         <td class="numbers">
-                            @entry.Range.Diff.GetFullDifferenceName()
+                            @entry.GetName()
+                        </td>
+                        <td class="numbers posts">
+                            @ValuesViewConfig.FormatEntryPosts(entry, MeasureMethods.Total, unitParam: MeasureUnits.Pages)
+                        </td>
+                        <td class="numbers posts">
+                            @ValuesViewConfig.FormatEntryPosts(entry, unitParam: MeasureUnits.Pages)
+                        </td>
+                        <td class="numbers posts">
+                            @ValuesViewConfig.FormatEntryPosts(entry, MeasureMethods.Total, unitParam: MeasureUnits.Messages)
+                        </td>
+                        <td class="numbers posts">
+                            @ValuesViewConfig.FormatEntryPosts(entry, unitParam: MeasureUnits.Messages)
                         </td>
                         <td class="text" title="@($"[{entry.PostBorders.GetMissedBeforeFirst()} - {entry.PostBorders.GetMissedAfterLast()}]")">
                             @(entry.PostBorders.Accuracy.Name)

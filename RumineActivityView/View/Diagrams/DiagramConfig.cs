@@ -44,37 +44,25 @@ namespace RumineActivity.View.Diagrams
         /// Количество боковых подсказок-легенд
         /// </summary>
         public int LegendItemsCount { get; set; }
-             
+
+        public bool IsLegendRightSideEnabled { get; set; }
+        public bool IsRoundingLegendNumbersEnabled { get; set; }
+
+        /// <summary>
+        /// Максимально допустимое количество подписей под диаграммой (больше не помещается).
+        /// Если число записей по выбранной группировке превышает это число, то надписи будут показываться через раз / два / три и т.д.
+        /// </summary>
+        public int MaxAllowedEntries { get; set; }
+
+
         public DiagramConfig()
         {
             WidthChart = 1070;
             WidthLegend = 50;
             HeightChart = 460;
             HeightWriting = 40;
-            MaxAllowedEntries = 18;
+            MaxAllowedEntries = 31;
             LegendItemsCount = 10;
-        }
-
-        /// <summary>
-        /// Максимально допустимое количество подписей (больше не помещается).
-        /// Если периодов больше, то записи будут пытаться группироваться по дате (если настроена сортировка).
-        /// Если группировка не сработала, то они будут показываться через раз / два / три и т.д.
-        /// </summary>
-        public int MaxAllowedEntries { get; set; }
-
-        /// <summary>
-        /// Проверка, нужно ли отображать легенду для указанной записи
-        /// </summary>
-        [Legacy]
-        public bool CheckShowBottomTitle(DiagramEntryObject obj, int length)
-        {
-            int entryIndex = obj.Index;
-            //13 - максимум, при котором отображается каждая запись
-            int entriesCount = length;
-            int maxAllowedEntries = MaxAllowedEntries;
-            double everyEntryN = Math.Ceiling((double)entriesCount / maxAllowedEntries);
-
-            return (entriesCount < maxAllowedEntries) || ((entryIndex % everyEntryN) < 1);
         }
     }
 }

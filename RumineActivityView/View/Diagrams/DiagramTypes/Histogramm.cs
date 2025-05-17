@@ -37,6 +37,11 @@ namespace RumineActivity.View.Diagrams
             }
             Rectangles = rects.ToArray();
 
+            if(GetMaxedValue() >= 8)
+            {
+                OwnLegendFormat = "#,0";
+            }
+
             FillLegendLines();
             FillLegendLabels(Rectangles);
             ReduceLegendLabels();

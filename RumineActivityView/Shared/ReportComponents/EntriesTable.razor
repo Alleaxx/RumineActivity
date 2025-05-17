@@ -4,7 +4,14 @@
     <thead>
         <tr>
             <th class="title">@Report.Period.Name</th>
-            <th class="sum-title" title="Суммарно написано за период">Σ</th>
+            @if (ValuesViewConfig.MeasureMethod.Type == MeasureMethods.Total)
+            {
+                <th class="sum-title" title="Суммарно написано за период">Σ</th>
+            }
+            else
+            {
+                <th class="sum-title" title="">В среднем</th>
+            }
             @foreach (var key in Table.ColGroups)
             {
                 <th class="secondary-key">@key</th>
@@ -16,15 +23,24 @@
         {
             <tr>
                 <th class="primary-key">@group.Key</th>
-                <td class="posts sum" title="Суммарно написано за период">
-                    @ValuesViewConfig.FormatValue(Table.TableSum[group.Key], Report.Period)
-                </td>
+                @if(ValuesViewConfig.MeasureMethod.Type == MeasureMethods.Total)
+                {
+                    <td class="posts sum" title="Суммарно написано за период">
+                        @ValuesViewConfig.FormatValue(Table.TableSum[group.Key], Report.Period)
+                    </td>
+                }
+                else
+                {
+                    <td class="posts sum" title="В среднем написано">
+                        @ValuesViewConfig.FormatValue(Table.TableAverage[group.Key], Report.Period)
+                    </td>
+                }
 
                 @foreach (var col in group.Value)
                 {
-                    if (col.Value == null)
+                    if (col.Value == null || col.Value.FromDate >= DateTime.Now)
                     {
-                        <td class="posts unknown">?</td>
+                        <td class="posts unknown"></td>
                     }
                     else
                     {

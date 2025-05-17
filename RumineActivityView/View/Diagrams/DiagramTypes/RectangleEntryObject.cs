@@ -17,6 +17,13 @@ namespace RumineActivity.View.Diagrams
         /// </summary>
         public Rect Filled { get; private set; } = new Rect();
 
+        public Point CenterAbove { get; set; } = new Point();
+
+        public string ValueText { get; set; }
+        public bool ShowValueAbove { get; set; }
+        public bool IsFirstGroup { get; set; }
+        public bool IsLastGroup { get; set; }
+
         /// <summary>
         /// Создать прямоугольник для записи
         /// </summary>
@@ -61,6 +68,15 @@ namespace RumineActivity.View.Diagrams
                 Y = empty,
                 Height = filled
             };
+
+            ValueText = chart.ValuesConfig.FormatEntryPosts(entry);
+            ShowValueAbove = width > ValueText.Length * 6.2;
+            CenterAbove = new Point()
+            {
+                X = x + width / 2,
+                Y = empty - 5
+            };
+
         }
 
         /// <summary>

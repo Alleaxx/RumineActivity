@@ -1,8 +1,37 @@
 ﻿@inherits ReportComponent
 
+<PageTitle>@Report.Name</PageTitle>
+
 @if(Report != null)
 {
     <div class="report">
+
+        <div class="report-navigation">
+            <a class="nav-link link-copy @CssIsNull(DeeperPeriod, "hidden")" href="statistics" @onclick="CreateThisDeeper">
+                @DeeperPeriod?.NameCategory ↓
+            </a>
+            <div class="row">
+                @if (PrevDateRange.IsInsideRumineBorders() && PrevDateRange.IsAnyPeriod())
+                {
+                    <a class="nav-link link-prev" href="statistics" @onclick="CreatePrev">
+                        ← @PrevDateRange.GetName()
+                    </a>
+                }
+                <a class="nav-link link-copy" href="create" @onclick="CreateFromThis">
+                    Создать новый отчет!
+                </a>
+                @if (NextDateRange.IsInsideRumineBorders() && NextDateRange.IsAnyPeriod())
+                {
+                    <a class="nav-link link-next" href="statistics" @onclick="CreateNext">
+                        @NextDateRange.GetName() →
+                    </a>
+                }
+            </div>
+            <a class="nav-link link-copy @CssIsNull(HeigherPeriod, "hidden")" href="statistics" @onclick="CreateThisHeigher">
+                @HeigherPeriod?.NameCategory ↑
+            </a>
+        </div>
+
         <header class="page-header">
             <img alt="Отчет" src="images/clipboard.svg" />
             <h2>@Report.Name</h2>
@@ -11,31 +40,6 @@
         <div class="content">
 
             <div class="report-info">
-                <div class="report-navigation">
-                    <a class="nav-link link-copy @CssIsNull(DeeperPeriod, "hidden")" href="statistics" @onclick="CreateThisDeeper">
-                        Глубже ↓
-                    </a>
-                    <div class="row">
-                        @if (PrevDateRange.IsInsideRumineBorders() && PrevDateRange.IsAnyPeriod())
-                        {
-                            <a class="nav-link link-prev" href="statistics" @onclick="CreatePrev">
-                                ← @PrevDateRange.GetName()
-                            </a>
-                        }
-                        <a class="nav-link link-copy" href="create" @onclick="CreateFromThis">
-                            Создать новый отчет!
-                        </a>
-                        @if (NextDateRange.IsInsideRumineBorders() && NextDateRange.IsAnyPeriod())
-                        {
-                            <a class="nav-link link-next" href="statistics" @onclick="CreateNext">
-                                @NextDateRange.GetName() →
-                            </a>
-                        }
-                    </div>
-                    <a class="nav-link link-copy @CssIsNull(HeigherPeriod, "hidden")" href="statistics" @onclick="CreateThisHeigher">
-                        Выше ↑
-                    </a>
-                </div>
 
                 <section class="stat-params-row">
                     <div class="parameter">
@@ -43,13 +47,17 @@
                         <span class="parameter-value">@Report.DateRangePosts.DaysDifference.ToString("#,0")</span>
                     </div>
                     <div class="parameter">
+                        <span class="parameter-name">Страниц:</span>
+                        <span class="parameter-value">@Report.GetTotalValue(MeasureUnits.Pages).ToString("#,0")</span>
+                    </div>
+                    <div class="parameter">
                         <span class="parameter-name">Сообщений:</span>
                         <span class="parameter-value">@Report.GetTotalValue(MeasureUnits.Messages).ToString("#,0")</span>
                     </div>
-                    <div class="parameter">
+                    @* <div class="parameter">
                         <span class="parameter-name">Записей:</span>
                         <span class="parameter-value">@Report.Length</span>
-                    </div>
+                    </div> *@
                 </section>
             </div>
 

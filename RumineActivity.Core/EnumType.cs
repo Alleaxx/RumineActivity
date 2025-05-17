@@ -18,6 +18,7 @@ namespace RumineActivity.Core
         public EnumType(T type)
         {
             Type = type;
+            Name = type.ToString();
         }
 
         public override bool Equals(object obj)

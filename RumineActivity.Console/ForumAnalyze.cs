@@ -20,6 +20,7 @@ namespace RumineActivity.ConsoleApp
         {
             Posts = new List<Post>(forum.Posts.OrderBy(p => p.Id));
             PostsDictionary = new Dictionary<int, Post>();
+
             foreach (var post in forum.Posts)
             {
                 if (!PostsDictionary.ContainsKey(post.Id))
@@ -46,7 +47,9 @@ namespace RumineActivity.ConsoleApp
         }
 
 
-        //Синхронизировать порядок следования ID и дат постов
+        /// <summary>
+        /// Синхронизировать порядок следования ID и дат постов
+        /// </summary>
         private void ClearErrorPosts()
         {
             int i = 0;
@@ -163,7 +166,7 @@ namespace RumineActivity.ConsoleApp
             {
                 WriteIndented = true,
             });
-            string FilePath = $"C:\\Users\\Alleaxx\\source\\repos\\Источники данных\\Статистика активности\\Обработанные данные\\{fileName}.json";
+            string FilePath = $"C:\\Users\\Alleaxx\\source\\repos\\Данные\\Статистика активности\\Обработанные данные\\{fileName}.json";
             Console.WriteLine($"Сохранение в {fileName}.json");
             File.WriteAllText(FilePath, json);
             Console.WriteLine("Файл сохранен, полный путь:");

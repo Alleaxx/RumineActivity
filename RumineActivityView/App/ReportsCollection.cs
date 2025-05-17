@@ -27,6 +27,7 @@ namespace RumineActivity.View
             }
         }
         private StatisticsReport selectedReport;
+
         /// <summary>
         /// Все созданные отчеты
         /// </summary>

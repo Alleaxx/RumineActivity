@@ -10,13 +10,28 @@ namespace RumineActivity.Core
     public static class EnumValues
     {
         //Измерение
-        public static MeasureMethod[] Methods { get; private set; } = Enum.GetValues<MeasureMethods>().Select(u => MeasureMethod.Create(u)).ToArray();
-        public static OutputValue[] Outs { get; private set; } = Enum.GetValues<PostOutputs>().Select(p => new OutputValue(p)).ToArray();
-        public static MeasureUnit[] Units { get; private set; } = Enum.GetValues<MeasureUnits>().Select(u => new MeasureUnit(u)).ToArray();
-        public static CompareDiffFormat[] CompareValues { get; private set; } = Enum.GetValues<CompareDiffFormats>().Select(v => CompareDiffFormat.Create(v)).ToArray();
+        public static MeasureMethod[] Methods { get; private set; } = Enum.GetValues<MeasureMethods>()
+            .Where(m => m != MeasureMethods.ByMonth)
+            .Select(MeasureMethod.Create)
+            .ToArray();
+        public static OutputValue[] Outs { get; private set; } = Enum.GetValues<PostOutputs>()
+            .Select(p => new OutputValue(p))
+            .ToArray();
+        public static MeasureUnit[] Units { get; private set; } = Enum.GetValues<MeasureUnits>()
+            .Select(u => new MeasureUnit(u))
+            .ToArray();
+        public static CompareDiffFormat[] CompareValues { get; private set; } = Enum.GetValues<CompareDiffFormats>()
+            .Select(v => CompareDiffFormat.Create(v))
+            .ToArray();
+        public static MaxValue[] MaximumValues { get; private set; } = Enum.GetValues<MaxValues>()
+            .Select(m => new MaxValue(m))
+            .ToArray();
 
         //Настройки отчета
-        public static Period[] Periods { get; private set; } = Enum.GetValues<Periods>().Select(d => Period.Create(d)).ToArray();
+        public static Period[] PeriodsList { get; private set; } = Enum.GetValues<Periods>()
+            .Where(p => p != Periods.Season && p != Periods.Own )
+            .Select(Period.Create)
+            .ToArray();
 
     }
 }

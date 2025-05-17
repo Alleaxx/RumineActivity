@@ -1,9 +1,9 @@
 ﻿@inherits DiagramComponent
 <section class="diagram">
-    <h4 class="diagram-header">@ValuesViewConfig.MeasureUnit.Name / @ValuesViewConfig.MeasureMethod.Name / за @Report.DateRangeAll.GetName(Report.Period.EntryDateFunc)</h4>
     <div class="diagram-settings" >
         <ViewSettingsLineComponent ShowRelativeValues="true"></ViewSettingsLineComponent>
     </div>
+    <h4 class="diagram-header">@ValuesViewConfig.MeasureUnit.Name / @ValuesViewConfig.MeasureMethod.Name / за @Report.DateRangeAll.GetName(Report.Period.EntryDateFunc)</h4>
     <svg height="@Config.Height" viewBox="@($"0 0 {Config.Width} {Config.Height}")">
         <line class="help-line" x1="0" x2="@Config.Width" y1="@(Config.HeightChart)" y2="@(Config.HeightChart)" />
 
@@ -40,21 +40,19 @@
                     x2="@(GetValueForAttr(entry.Line.X1))"
                     y1="@(GetValueForAttr(entry.Line.Y1))"
                     y2="@(GetValueForAttr(Config.HeightChart))" />
-                @if (CheckWriting(entry))
-                {
-                    <g>
-                        <text class="name"
-                            x="@GetValueForAttr(entry.Line.X1)"
-                            y="@GetValueForAttr((Config.HeightChart + 20))">
-                            @entry.TitleName
-                        </text>
-                        <text class="value"
-                            x="@GetValueForAttr(entry.Line.X1)"
-                            y="@GetValueForAttr((Config.HeightChart + 40))">
-                            @entry.TitleValue
-                        </text>
-                    </g>
-                }
+
+                <g>
+                    <text class="name"
+                          x="@GetValueForAttr(entry.Line.X1)"
+                          y="@GetValueForAttr((Config.HeightChart + 20))">
+                        @entry.TitleName
+                    </text>
+                    <text class="value"
+                          x="@GetValueForAttr(entry.Line.X1)"
+                          y="@GetValueForAttr((Config.HeightChart + 40))">
+                        @entry.TitleValue
+                    </text>
+                </g>
             </g>
         }
     </svg>
@@ -69,10 +67,6 @@
 
     private Graphic Graphic { get; set; }
 
-    private bool CheckWriting(DiagramEntryObject obj)
-    {
-        return Config.CheckShowBottomTitle(obj, Report.Length);
-    }
     protected override async Task OnParametersSetAsync()
     {
         await base.OnParametersSetAsync();

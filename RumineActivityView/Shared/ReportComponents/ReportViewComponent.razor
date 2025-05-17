@@ -36,6 +36,8 @@
                 <div class="diagram-settings">
                     <ViewSettingsLineComponent ShowRelativeValues="false"></ViewSettingsLineComponent>
                 </div>
+                <h4 class="diagram-header">@ValuesViewConfig.MeasureUnit.Name / Написано к сроку / @Report.DateRangeAll.GetName(Report.Period.EntryDateFunc)</h4>
+
                 <EntriesTable Report="Report" />
             }
             else if (Mode.Type == DisplayTypes.Values)

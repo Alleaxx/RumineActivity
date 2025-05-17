@@ -18,6 +18,9 @@
             <section class="options-section">
                 <Collection HeaderText="Сравнение значений:" List="EnumValues.CompareValues" Selected="ValuesViewConfig.CompareView" T="CompareDiffFormat" OnSelectCallback="Set" />
             </section>
+            <section class="options-section">
+                <Collection HeaderText="Максимум на диаграмме:" List="EnumValues.MaximumValues" Selected="ValuesViewConfig.MaxValue" T="MaxValue" OnSelectCallback="Set" />
+            </section>
 
 
 
@@ -30,16 +33,6 @@
                                 <span class="label-value-info">Точность округления: </span>
                                 <input type="number" min="0" max="10" @bind-value="ValuesViewConfig.RoundAccuracy" />
                                 <span>знака</span>
-                            </label>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="option-accuracy">
-                            <label>
-                                <span>
-                                    <label for="relative-values" class="label-value-info">Использовать относительные значения</label>
-                                    <input id="relative-values" type="checkbox" @bind="ValuesViewConfig.UseRelativeValues" />
-                                </span>
                             </label>
                         </div>
                     </li>
@@ -61,7 +54,7 @@
                     Цветовые правила:
                 </h4>
                 <table class="rules-table">
-                    <caption class="rules-header">используется некий усредненный показатель активности</caption>
+                    <caption class="rules-header">используемое значение: страниц в среднем в день <br /> изменения цветов не сохраняются после обновления страницы</caption>
                     <colgroup>
                         <col style="width:20%" />
                         <col style="width:20%" />
@@ -111,5 +104,9 @@
     private void Set(Core.Comparisons.CompareDiffFormat view)
     {
         ValuesViewConfig.CompareView = view;
+    }
+    private void Set(MaxValue maxValue)
+    {
+        ValuesViewConfig.MaxValue = maxValue;
     }
 }

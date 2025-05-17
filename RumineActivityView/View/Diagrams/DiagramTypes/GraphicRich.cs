@@ -34,6 +34,7 @@ namespace RumineActivity.View.Diagrams
             lines.Add(last);
             Lines = lines.ToArray();
 
+            OwnLegendFormat = "#,0";
             FillLegendLines();
             FillLegendLabels(Lines);
             ReduceLegendLabels();

@@ -10,7 +10,7 @@ namespace RumineActivity.Core
     //Период
     public enum Periods
     {
-        Day, Week, Month, Season, Year, Own
+        Day, Week, Month, Season, Quarter, Year, Own
     }
     public abstract class Period : EnumType<Periods>
     {
@@ -56,6 +56,8 @@ namespace RumineActivity.Core
                     return new PeriodMonth();
                 case Periods.Season:
                     return new PeriodSeason();
+                case Periods.Quarter:
+                    return new PeriodQuarter();
                 case Periods.Year:
                     return new PeriodYear();
                 default:
@@ -151,22 +153,52 @@ namespace RumineActivity.Core.Measures
     {
         public PeriodSeason() : base(Periods.Season)
         {
+            Name = "Сезон";
+            NameReport = "Ежесезонная";
+            NameCategory = "По сезонам";
+            TimeInterval = new TimeSpan(90, 0, 0, 0, 0);
+
+            EntryDateFunc = range => $"{DateExtensions.SeasonToString(DateExtensions.DefineSeason(range.From))} {range.From:yyyy}";
+            ChartDateFunc = range => $"{DateExtensions.SeasonToString(DateExtensions.DefineSeason(range.From))} {range.From:yy}";
+        }
+
+        //public override DateTime GetNextDate(DateTime date)
+        //{
+        //    int seasonIndex = DateExtensions.DefineQuarter(date);
+        //    int newSeasonIndex = seasonIndex;
+        //    for (int i = 1; i <= 12; i++)
+        //    {
+        //        var newDate = date.AddMonths(i);
+        //        newSeasonIndex = DateExtensions.DefineQuarter(newDate);
+        //        if (seasonIndex != newSeasonIndex)
+        //        {
+        //            return newDate;
+        //        }
+        //    }
+        //    throw new Exception("Не удалось найти новый квартал! Приехали!");
+        //}
+    }
+
+    class PeriodQuarter : Period
+    {
+        public PeriodQuarter() : base(Periods.Quarter)
+        {
             Name = "Квартал";
             NameReport = "Ежеквартальная";
             NameCategory = "По кварталам";
             TimeInterval = new TimeSpan(90, 0, 0, 0, 0);
 
-            EntryDateFunc = range => $"{DateExtensions.DefineSeasonSymbol(range.From)} квартал {range.From:yyyy}";
-            ChartDateFunc = range => $"{DateExtensions.DefineSeasonSymbol(range.From)} кв. {range.From:yy}";
+            EntryDateFunc = range => $"{DateExtensions.DefineQuarterSymbol(range.From)} квартал {range.From:yyyy}";
+            ChartDateFunc = range => $"{DateExtensions.DefineQuarterSymbol(range.From)} кв. {range.From:yy}";
         }
         public override DateTime GetNextDate(DateTime date)
         {
-            int seasonIndex = DateExtensions.DefineSeason(date);
+            int seasonIndex = DateExtensions.DefineQuarter(date);
             int newSeasonIndex = seasonIndex;
             for (int i = 1; i <= 12; i++)
             {
                 var newDate = date.AddMonths(i);
-                newSeasonIndex = DateExtensions.DefineSeason(newDate);
+                newSeasonIndex = DateExtensions.DefineQuarter(newDate);
                 if (seasonIndex != newSeasonIndex)
                 {
                     return newDate;

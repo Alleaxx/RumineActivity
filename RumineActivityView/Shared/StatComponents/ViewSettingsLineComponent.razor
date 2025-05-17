@@ -30,12 +30,9 @@
         <input id="accuracy" type="number" size="3" @bind-value="ValuesViewConfig.RoundAccuracy" />
     </div>
     <div class="setting @CssIsFalse(ShowRelativeValues, "collapsed")">
-        <label for="relative" class="setting-label">Относительные значения:</label>
-        <input id="relative" type="checkbox" @bind="ValuesViewConfig.UseRelativeValues" />
-    </div>
-    <div class="setting @CssIsFalse(ShowRelativeValues && !ValuesViewConfig.UseRelativeValues, "collapsed")">
-        <label for="absolute" class="setting-label" title="Возможный максимум написанных сообщений в день">Макс. значение:</label>
-        <input id="absolute" type="number" min="100" max="100000" step="20" @bind-value="ValuesViewConfig.AbsoluteValue" />
+        <label class="setting-label">Максимум:</label>
+        <CollectionSelect List="EnumValues.MaximumValues" Selected="ValuesViewConfig.MaxValue" T="MaxValue" OnSelectCallback="Set"
+                          BorderWidth="1" />
     </div>
     <div class="setting @CssIsFalse(ShowCompareDifference, "collapsed")">
         <label for="compare-values" class="setting-label">Показывать разницу значений в сравнении</label>
@@ -71,6 +68,10 @@
     private void Set(MeasureMethod method)
     {
         ValuesViewConfig.MeasureMethod = method;
+    }
+    private void Set(MaxValue maxValue)
+    {
+        ValuesViewConfig.MaxValue = maxValue;
     }
     private void Set(Sorting<Entry,object> sort)
     {

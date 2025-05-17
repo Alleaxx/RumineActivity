@@ -147,7 +147,7 @@ namespace RumineActivity.Core
         /// <summary>
         /// Определить квартал даты
         /// </summary>
-        public static int DefineSeason(DateTime date)
+        public static int DefineQuarter(DateTime date)
         {
             switch (date.Month)
             {
@@ -196,9 +196,38 @@ namespace RumineActivity.Core
             }
             return 0;
         }
-        public static string SeasonToSymbol(int season)
+
+        /// <summary>
+        /// Определить сезон даты
+        /// </summary>
+        public static int DefineSeason(DateTime date)
         {
-            switch (season)
+            switch (date.Month)
+            {
+                case 1:
+                case 2:
+                    return 1;
+                case 3:
+                case 4:
+                case 5:
+                    return 2;
+                case 6:
+                case 7:
+                case 8:
+                    return 3;
+                case 9:
+                case 10:
+                case 11:
+                    return 4;
+                case 12:
+                    return 5;
+            }
+            return 0;
+        }
+
+        public static string QuarterToSymbol(int quarter)
+        {
+            switch (quarter)
             {
                 case 1:
                     return "I";
@@ -212,13 +241,62 @@ namespace RumineActivity.Core
                     return string.Empty;
             }
         }
+        public static string SeasonToString(int season)
+        {
+            switch (season)
+            {
+                case 1:
+                    return "Зима";
+                case 2:
+                    return "Весна";
+                case 3:
+                    return "Лето";
+                case 4:
+                    return "Осень";
+                case 5:
+                    return "Конец";
+                default:
+                    return string.Empty;
+            }
+        }
 
         /// <summary>
         /// Определить символьное представление квартала для даты
         /// </summary>
-        public static string DefineSeasonSymbol(DateTime date)
+        public static string DefineQuarterSymbol(DateTime date)
         {
-            return SeasonToSymbol(DefineSeason(date));
+            return QuarterToSymbol(DefineQuarter(date));
+        }
+        /// <summary>
+        /// Определить символьное представление квартала для даты
+        /// </summary>
+        public static string DefineSeasonText(DateTime date)
+        {
+            var year = date;
+            if(date.Month == 12)
+            {
+                year = year.AddYears(1); 
+            }
+            switch (date.Month)
+            {
+                case 12:
+                case 1:
+                case 2:
+                    return $"Зима {year:yy}";
+                case 3:
+                case 4:
+                case 5:
+                    return $"Весна {date:yy}";
+                case 6:
+                case 7:
+                case 8:
+                    return $"Лето {date:yy}";
+                case 9:
+                case 10:
+                case 11:
+                    return $"Осень {date:yy}";
+            }
+            return string.Empty;
         }
 
         /// <summary>

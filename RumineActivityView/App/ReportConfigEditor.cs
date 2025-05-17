@@ -90,7 +90,7 @@ namespace RumineActivity.View
             var result = CurrentConfig.DateRange;
             if (!result.IsOkWithPeriod(CurrentConfig.Period))
             {
-                var firstFit = EnumValues.Periods.FirstOrDefault(p => result.IsOkWithPeriod(p));
+                var firstFit = EnumValues.PeriodsList.FirstOrDefault(p => result.IsOkWithPeriod(p));
                 CurrentConfig.Period = firstFit ?? Period.Create(Periods.Week);
             }
         }

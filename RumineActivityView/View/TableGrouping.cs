@@ -12,6 +12,7 @@ namespace RumineActivity.View
     {
         public Dictionary<string, Dictionary<string, Entry>> TableRows { get; private set; }
         public Dictionary<string, double> TableSum { get; private set; }
+        public Dictionary<string, double> TableAverage { get; private set; }
         public string[] ColGroups { get; private set; }
 
         private Func<Entry, string> GetFirstKey;
@@ -32,7 +33,7 @@ namespace RumineActivity.View
                 case Periods.Month:
                     SetMonth();
                     break;
-                case Periods.Season:
+                case Periods.Quarter:
                     SetSeason();
                     break;
                 case Periods.Week:
@@ -65,8 +66,8 @@ namespace RumineActivity.View
         private void SetSeason()
         {
             GetFirstKey = e => e.FromDate.ToString("yyyy");
-            GetSecondKey = e => $"{DateExtensions.DefineSeasonSymbol(e.FromDate)} сезон";
-            ColGroups = Enumerable.Range(1, 4).Select(m => $"{DateExtensions.SeasonToSymbol(m)} сезон").ToArray();
+            GetSecondKey = e => $"{DateExtensions.DefineQuarterSymbol(e.FromDate)} сезон";
+            ColGroups = Enumerable.Range(1, 4).Select(m => $"{DateExtensions.QuarterToSymbol(m)} сезон").ToArray();
         }
         private void SetDay(IEnumerable<Entry> entries)
         {
@@ -92,12 +93,14 @@ namespace RumineActivity.View
         private void CreateTable(IEnumerable<Entry> entries)
         {
             TableSum = new Dictionary<string, double>();
+            TableAverage = new Dictionary<string, double>();
             TableRows = new Dictionary<string, Dictionary<string, Entry>>();
             var grouped = entries.ToLookup(e => GetFirstKey(e));
             foreach (var firstGroup in grouped)
             {
                 string firstKey = firstGroup.Key;
                 TableSum.Add(firstKey, firstGroup.Sum(i => i.GetValueTotal(Config.MeasureUnit)));
+                TableAverage.Add(firstKey, firstGroup.Average(i => i.GetValue(Config.MeasureMethod, Config.MeasureUnit)));
                 TableRows.Add(firstKey, new Dictionary<string, Entry>());
                 foreach (var secondGroup in ColGroups)
                 {

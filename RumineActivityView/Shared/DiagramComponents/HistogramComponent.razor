@@ -1,9 +1,9 @@
 ﻿@inherits DiagramComponent
 <section class="diagram">
-    <h4 class="diagram-header">@ValuesViewConfig.MeasureUnit.Name / @ValuesViewConfig.MeasureMethod.Name / за @Report.DateRangeAll.GetName(Report.Period.EntryDateFunc)</h4>
     <div class="diagram-settings">
         <ViewSettingsLineComponent ShowRelativeValues="true" ShowSortingEntry="true"></ViewSettingsLineComponent>
     </div>
+    <h4 class="diagram-header">@ValuesViewConfig.MeasureUnit.Name / @ValuesViewConfig.MeasureMethod.Name / за @Report.DateRangeAll.GetName(Report.Period.EntryDateFunc)</h4>
     <svg height="@Config.Height"
          viewBox="@($"0 0 {Config.Width} {Config.Height}")">
         <line class="help-line" x1="0" x2="@Config.Width" y1="@(Config.HeightChart)" y2="@(Config.HeightChart)" />
@@ -34,6 +34,12 @@
                   y="@GetValueForAttr(entry.Empty.Y)"
                   height="@GetValueForAttr(entry.Empty.Height)"
                   width="@GetValueForAttr(entry.Empty.Width)" />
+                <text class="value above @entry.ShowValueAbove"
+                      text-anchor="middle"
+                      x="@GetValueForAttr(entry.CenterAbove.X)"
+                      y="@GetValueForAttr(entry.CenterAbove.Y)">
+                    @entry.TitleValue
+                </text>
                 <rect x="@GetValueForAttr(entry.Filled.X)"
                   y="@GetValueForAttr(entry.Filled.Y)"
                   height="@GetValueForAttr(entry.Filled.Height)"
