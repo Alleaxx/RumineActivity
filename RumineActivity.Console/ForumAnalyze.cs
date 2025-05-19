@@ -30,6 +30,9 @@ namespace RumineActivity.ConsoleApp
             }
         }
 
+        /// <summary>
+        /// Проанализировать посты форума, выделить ошибочные, выделить начальные + конечные посты для дней + записать
+        /// </summary>
         public void Analyze()
         {
             ClearErrorPosts();
@@ -45,7 +48,6 @@ namespace RumineActivity.ConsoleApp
 
             SavePostsToFile(newPosts);
         }
-
 
         /// <summary>
         /// Синхронизировать порядок следования ID и дат постов
@@ -111,7 +113,9 @@ namespace RumineActivity.ConsoleApp
             return errorPosts;
         }
         
-        //Выделить по два поста на каждый день с 27 июля 2011 по текущую дату: конечный и начальный
+        /// <summary>
+        /// Выделить по два поста на каждый день с 27 июля 2011 по текущую дату: конечный и начальный
+        /// </summary>
         public static List<(DateTime date, Post minPost, Post maxPost)> GetPostsGroupedByDay(IEnumerable<Post> Posts, Dictionary<int, Post> PostsDictionary)
         {
             DateTime startDate = new DateTime(2011, 7, 27);
@@ -157,7 +161,9 @@ namespace RumineActivity.ConsoleApp
             return results;
         }
 
-        //Сохранить итоговые посты в файл
+        /// <summary>
+        /// Сохранить итоговые посты в файл
+        /// </summary>
         public static void SavePostsToFile(IEnumerable<Post> savedPosts,string fileName = "ForumPostsV5")
         {
             Console.WriteLine();

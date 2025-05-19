@@ -11,9 +11,9 @@ namespace RumineActivity.Core.API
     {
         event Action OnLoaded;
         bool? IsLoaded { get; }
-        Task LoadData();
+        Task LoadDataAsync();
 
-        Task<IForum> GetForum();
-        Task<IForum> GetForum(DateRange range);
+        IForum GetForum();
+        IForum GetForum(DateRange range);
     }
 }

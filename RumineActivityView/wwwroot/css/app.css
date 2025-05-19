@@ -20,6 +20,7 @@
         - задний фон ячейки-заголовка в списке значений отчета
         - задний фон ячейки-заголовка в таблице отчета
         - задний фон выделенной строки в таблице сравнения
+        - задний фон блока загрузки
         rgb (240, 240, 240)
         - граница элемента списка фильтров в таблице рейджей
         #ebebeb
@@ -32,6 +33,7 @@
         - граница выделенного элемента списка
         - граница таблицы правил
         - цвет границы ячейки в списке значений отчета
+        - граница блока загрузки
         silver
         - границы выделенного пункта меню
         - активные границы выделенного пункта меню
@@ -64,6 +66,9 @@
 
         lightpink
         - цвет граничной выделенной ячейки в конфигураторе отчетов
+
+        lightyellow
+        - задний цвет фона ошибки
 
         #c9ffc9
         - цвет промежуточной выделенной ячейки в конфигураторе отчетов
@@ -98,6 +103,9 @@
 
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    margin: 0;
+}
+#app{
 }
 
 .column{
@@ -117,8 +125,6 @@ html, body {
 .content{
 
 }
-
-
 
 .visible{
     display: inherit !important;
@@ -146,7 +152,7 @@ td.numbers, th.numbers {
     justify-content: center;
     align-items: center;
 
-    width: 600px;
+    width: 50%;
     margin: auto;
     margin-top: 3em;
     padding: 0.5em;
@@ -161,7 +167,19 @@ td.numbers, th.numbers {
 }
 .loading img{
     height: 56px;
-    margin: 0 15px;
+    margin: 0 12px;
+    opacity: 0.8;
+}
+@media (max-device-width:480px) {
+    .loading{
+        width: auto;
+        font-size: 1.4em;
+        margin-top: 50%;
+    }
+    .loading img{
+        height: 36px;
+        margin: 0 4px;
+    }
 }
 
 #blazor-error-ui {
@@ -182,9 +200,8 @@ td.numbers, th.numbers {
 
     #blazor-error-ui .dismiss {
         cursor: pointer;
-        position: absolute;
-        right: 0.75rem;
-        top: 0.5rem;
+        width: 20px;
+        height: 20px;
     }
 
 
@@ -206,3 +223,34 @@ td.numbers, th.numbers {
         margin: 0;
         padding: 15px 0;
     }
+
+
+.menu-list a {
+    display: block;
+    padding: 5px;
+    border-radius: 2px;
+    text-decoration: none;
+    color: black;
+    text-align: left;
+    border: 5px solid transparent;
+    border-top: 1px solid transparent;
+    border-bottom: 1px solid transparent;
+}
+
+    .menu-list a.active {
+        border-left: 5px solid var(--selected-color);
+        border-right: 5px solid var(--selected-color);
+        border-top: 1px solid silver;
+        border-bottom: 1px solid silver;
+    }
+
+    .menu-list a:hover {
+        background-color: gainsboro;
+    }
+
+.menu-list .report-link.selected {
+    border-left: 2px solid var(--selected-color);
+    border-right: 2px solid var(--selected-color);
+    border-top: 1px solid silver;
+    border-bottom: 1px solid silver;
+}

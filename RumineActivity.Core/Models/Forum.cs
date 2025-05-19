@@ -8,20 +8,14 @@ namespace RumineActivity.Core.Models
     public interface IForum
     {
         public IEnumerable<Post> Posts { get; }
-        public IEnumerable<Topic> Topics { get; }
     }
     public class Forum : IForum
     {
         public IEnumerable<Post> Posts { get; init; }
-        [Legacy]
-        public IEnumerable<Topic> Topics { get; init; }
-        [Legacy]
-        public IEnumerable<User> Users { get; init; }
-        public Forum(IEnumerable<Post> posts, IEnumerable<Topic> topics, IEnumerable<User> users)
+
+        public Forum(IEnumerable<Post> posts)
         {
             Posts = posts;
-            Topics = topics;
-            Users = users ?? new List<User>();
         }
     }
 }

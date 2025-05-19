@@ -1,0 +1,89 @@
+﻿@inherits StatComponent
+
+<nav class="menu">
+    <section>
+        <header>
+            <img alt="Информация" src="images/clipboard.svg" />
+            <h2 class="menu-list-header">Информация</h2>
+        </header>
+        <ul class="menu-list">
+            <li class="menu-list-item">
+                <NavLink href="" Match="NavLinkMatch.All" class="menu-list-link">
+                    О приложении
+                </NavLink>
+            </li>
+            <li class="menu-list-item">
+                <NavLink href="configuration" Match="NavLinkMatch.All" class="menu-list-link">
+                    Легенда значений
+                </NavLink>
+            </li>
+            <li class="menu-list-item">
+                <NavLink href="lastchanges" Match="NavLinkMatch.All" class="menu-list-link">
+                    Последние изменения
+                </NavLink>
+            </li>
+        </ul>
+    </section>
+    <section>
+        <header>
+            <img alt="Данные" src="images/activity.svg" />
+            <h2 class="menu-list-header">Статистика</h2>
+        </header>
+        <ul class="menu-list">
+            <li class="menu-list-item">
+                <NavLink href="create" class="menu-list-link">
+                    Создать новый отчет
+                </NavLink>
+            </li>
+            <li class="menu-list-item">
+                <NavLink href="rages" class="menu-list-link">
+                    Статистика рейджей
+                </NavLink>
+            </li>
+            <li>
+                <hr />
+            </li>
+            @foreach (var reportGroup in this.App.ReportsCollection.ActiveReports.GroupBy(r => r.Period).OrderByDescending(r => r.Key.TimeInterval))
+            {
+                <li>
+                    <span class="menu-list-mini-header">@reportGroup.Key.NameCategory</span>
+                </li>
+                @foreach (var report in reportGroup.OrderBy(r => r.DateRangeAll.From))
+                {
+                    <li class="menu-list-item report-link selectable" style="display: flex;">
+                        <div class="menu-list-link" style="flex: 1">
+                            <NavLink href="@report.Configuration.GetLinkHref()">
+                                @report.DateRangeAll.GetName()
+                            </NavLink>
+                        </div>
+                        <a role="button" class="report-link-remove" @onclick="() => RemoveReport(report)">
+                            X
+                        </a>
+                    </li>
+                }
+            }
+        </ul>
+    </section>
+</nav>
+
+@code{
+    [Inject]
+    public NavigationManager Navigation { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        App.ReportsCollection.OnReportsCollectionChanged += report => StateHasChanged();
+        Navigation.LocationChanged += (e, a) => StateHasChanged();
+    }
+
+    private void ThrowException()
+    {
+        throw new Exception("Вызвано исключение! Всё ради теста, разумеется");
+    }
+
+    private void RemoveReport(StatisticsReport report)
+    {
+        App.ReportsCollection.RemoveReport(report);
+    }
+}

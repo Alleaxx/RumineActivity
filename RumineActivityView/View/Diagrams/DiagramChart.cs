@@ -35,17 +35,9 @@ namespace RumineActivity.View.Diagrams
         /// </summary>
         public virtual double GetMaxedValue()
         {
-
             if (ValuesConfig.MaxValue.Type == MaxValues.Relative)
             {
-                if(ValuesConfig.MeasureMethod.Type == MeasureMethods.Total)
-                {
-                    return Report.MostActiveTotal?.GetValue(ValuesConfig.MeasureMethod, ValuesConfig.MeasureUnit) * MaxedValueMod ?? 0;
-                }
-                else
-                {
-                    return Report.MostActiveAverage?.GetValue(ValuesConfig.MeasureMethod, ValuesConfig.MeasureUnit) * MaxedValueMod ?? 0;
-                }
+                return GetMaxedRelativeValue();
             }
             else
             {
@@ -92,10 +84,22 @@ namespace RumineActivity.View.Diagrams
                     maximumMessagesPerDay /= 10;
                 }
 
-                var relativeVal = Report.MostActiveAverage.GetValue(ValuesConfig.MeasureMethod, ValuesConfig.MeasureUnit) * MaxedValueMod;
+                var relativeVal = GetMaxedRelativeValue();
                 return maximumMessagesPerDay > relativeVal ? maximumMessagesPerDay : relativeVal;
             }
         }
+        private double GetMaxedRelativeValue()
+        {
+            if (ValuesConfig.MeasureMethod.Type == MeasureMethods.Total)
+            {
+                return Report.MostActiveTotal?.GetValue(ValuesConfig.MeasureMethod, ValuesConfig.MeasureUnit) * MaxedValueMod ?? 0;
+            }
+            else
+            {
+                return Report.MostActiveAverage?.GetValue(ValuesConfig.MeasureMethod, ValuesConfig.MeasureUnit) * MaxedValueMod ?? 0;
+            }
+        }
+
 
         public DiagramChart(ValuesViewConfig valuesConfig,StatisticsReport report, DiagramConfig size)
         {

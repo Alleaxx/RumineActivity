@@ -3,6 +3,9 @@ using RumineActivity.Core.Measures;
 
 namespace RumineActivity.View
 {
+    /// <summary>
+    /// Модель сохраненных настроек в LocalStorage
+    /// </summary>
     public class SavedViewSettings
     {
         public int RoundAccuracy { get; set; }

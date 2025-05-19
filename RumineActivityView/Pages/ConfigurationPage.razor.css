@@ -22,25 +22,36 @@
     width: 3em;
 }
 
+.table-section h4 {
+    margin: 10px 0px;
+}
+
 
 /* ТАБЛИЦА ЦВЕТОВЫХ ПРАВИЛ */
 
 .rules-table {
     width: 50%;
     border-collapse: collapse;
-    border: 1px solid silver;
+    border: 1px solid gainsboro;
     margin-left: 1em;
 }
 
     .rules-table th {
         text-align: left;
-        border-bottom: 1px solid gainsboro;
+        border-bottom: 1px solid silver;
         padding: 5px 10px;
         font-weight: 500;
     }
 
     .rules-table td {
         padding: 5px 10px;
+    }
+    .rates th{
+        padding: 4px;
+    }
+    .rates td{
+        padding: 4px;
+        font-size: 0.9em;
     }
 
     .rules-table input {
@@ -71,7 +82,18 @@
     display: inline-block;
     min-width: 20em;
 }
-
 .config-display-values h4 {
     margin: 10px 0;
+}
+
+@media (max-device-width:480px) {
+    .label-value-info {
+        min-width: 5em;
+    }
+    .rules-table{
+        width: 95%;
+    }
+    .rules-table input{
+        width: 6em;
+    }
 }

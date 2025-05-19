@@ -118,9 +118,9 @@
         await base.OnInitializedAsync();
         if(RagesApi.IsLoaded != true)
         {
-            await RagesApi.LoadData();
+            await RagesApi.LoadDataAsync();
         }
-        Rages = await RagesApi.GetRages();
+        Rages = RagesApi.GetRages();
 
         ShowNotMentionedRages = true;
         CreateFilters();

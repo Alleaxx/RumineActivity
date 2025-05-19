@@ -105,7 +105,7 @@ namespace RumineActivity.View.Diagrams
             Title = "По дням",
             Level = 0,
             EntriesLimit = 31,
-            GroupingFunc = entries => entries.GroupBy(e => $"{e.Entry.FromDate.Day}-{e.Entry.FromDate.Month.GetMonthName("MMM")[0]}"),
+            GroupingFunc = entries => entries.GroupBy(e => $"{e.Entry.FromDate.Day}"),
             AllowedPeriods = new Periods[] { Periods.Day }
         };
 
@@ -145,7 +145,6 @@ namespace RumineActivity.View.Diagrams
             }
 
             var grouped = GroupingFunc(entries).ToArray();
-            Console.WriteLine($"{this} - сгруппировано {entries.Count()} записей");
             return grouped.Count() <= EntriesLimit && grouped.Count() >= 3;
         }
     }

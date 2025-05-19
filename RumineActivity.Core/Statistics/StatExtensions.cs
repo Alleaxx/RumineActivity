@@ -4,13 +4,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RumineActivity.Core
 {
     public static class StatExtensions
     {
-        public static string GetCSVString(this StatisticsReport report, MeasureMethods method, MeasureUnits unit, string sep = ";")
+        /// <summary>
+        /// Преобразовать записи отчета в CSV-строку
+        /// </summary>
+        public static string GetCSVString(this StatisticsReport report, MeasureMethods method, string sep = ";")
         {
             StringBuilder sb = new StringBuilder();
 
@@ -60,59 +62,28 @@ namespace RumineActivity.Core
 
             return sb.ToString();
         }
-        public static string GetTrend(this Entry entry)
-        {
-            if (entry.PreviousEntry == null)
-            {
-                return "?";
-            }
 
-            double difference = entry.PostsWrittenTotal / entry.PreviousEntry.PostsWrittenTotal;
-            double diffMode;
-            double border = 0.05;
-            if (difference > 1)
-            {
-                diffMode = difference - 1;
-
-                if (diffMode > border)
-                {
-                    return "🡥";
-                }
-                else
-                {
-                    return "~=";
-                }
-            }
-            else if (difference < 1)
-            {
-                diffMode = 1 - difference;
-
-                if (diffMode > border)
-                {
-                    return "🡦";
-                }
-                else
-                {
-                    return "~";
-                }
-            }
-            else
-            {
-                return "=";
-            }
-        }
-
+        /// <summary>
+        /// Получить более детальное доступное деление для отчета 
+        /// </summary>
         public static Period? GetDeeperPeriod(this StatisticsReport report)
         {
             return EnumValues.PeriodsList.OrderByDescending(p => p.TimeInterval)
                 .FirstOrDefault(p => report.DateRangeAll.IsOkWithPeriod(p) && p.TimeInterval < report.Period.TimeInterval && p.Type != Periods.Own);
         }
+        
+        /// <summary>
+        /// Получить менее детальное доступное деление для отчета
+        /// </summary>
         public static Period? GetHeigherPeriod(this StatisticsReport report)
         {
             return EnumValues.PeriodsList.OrderBy(p => p.TimeInterval)
                 .FirstOrDefault(p => report.DateRangeAll.IsOkWithPeriod(p) && p.TimeInterval > report.Period.TimeInterval && p.Type != Periods.Own);
         }
 
+        /// <summary>
+        /// Получить число разрядов
+        /// </summary>
         public static int GetTens(double val)
         {
             int counter = 1;
@@ -130,12 +101,6 @@ namespace RumineActivity.Core
                 counter++;
             }
             return counter;
-        }
-
-        [Obsolete]
-        public static double FindNearestMultiFive(double val, double precision = 2)
-        {
-            return Math.Round(val * precision) / precision;
         }
     }
 }

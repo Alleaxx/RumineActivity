@@ -29,26 +29,4 @@ namespace RumineActivity.Core.Comparisons
         public abstract string GetValue(ICompareProp prop);
     }
 
-    class CompareFormatRelative : CompareDiffFormat
-    {
-        public CompareFormatRelative() : base(CompareDiffFormats.Relative)
-        {
-            Name = "Проценты";
-        }
-        public override string GetValue(ICompareProp prop)
-        {
-            return prop.GetModDiff().ToString("0%");
-        }
-    }
-    class CompareFormatAbsolute : CompareDiffFormat
-    {
-        public CompareFormatAbsolute() : base(CompareDiffFormats.Absolute)
-        {
-            Name = "Значения";
-        }
-        public override string GetValue(ICompareProp prop)
-        {
-            return prop.GetTotalDiff().ToString("+#,0;-#,0; 0");
-        }
-    }
 }

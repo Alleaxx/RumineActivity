@@ -9,7 +9,7 @@ using RumineActivity.Core.API;
 
 namespace RumineActivity.View
 {
-    public class StatComponent : ComponentBase
+    public class StatComponent : ComponentBase, IAsyncDisposable
     {
         [Inject]
         public IStatApp App { get; set; }
@@ -30,11 +30,14 @@ namespace RumineActivity.View
             }
         }
 
-        private void App_OnLoadEnded(StatisticsReport report)
+        private void App_OnLoadEnded()
         {
             StateHasChanged();
         }
+        public virtual async ValueTask DisposeAsync()
+        {
 
+        }
 
         #region Вспомогательные методы CSS
 

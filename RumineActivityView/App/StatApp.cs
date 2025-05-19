@@ -12,7 +12,7 @@ namespace RumineActivity.View
 {
     public interface IStatApp
     {
-        event Action<StatisticsReport> OnLoadEnded;
+        event Action OnLoadEnded;
 
         ReportsCollection ReportsCollection { get;}
         ReportConfigEditor ReportConfigEditor { get; }
@@ -31,10 +31,10 @@ namespace RumineActivity.View
         private readonly ILocalStorageService LocalStorageService;
         private readonly IJsonService JsonService;
 
-        public event Action<StatisticsReport> OnLoadEnded;
+        public event Action OnLoadEnded;
 
-        public DateTime LastUpdateInfo { get; init; } = new DateTime(2024, 12, 7);
-        public string VersionInfo { get; init; } = "0.98";
+        public DateTime LastUpdateInfo { get; init; } = new DateTime(2025, 5, 20);
+        public string VersionInfo { get; init; } = "1.00";
 
         public ReportsCollection ReportsCollection { get; init; }
         public ReportConfigEditor ReportConfigEditor { get; set; }
@@ -46,8 +46,8 @@ namespace RumineActivity.View
         {
             API = api;
             ReportsFactory = reportsFactory;
-            this.LocalStorageService = localStorage;
-            this.JsonService = jsonService;
+            LocalStorageService = localStorage;
+            JsonService = jsonService;
             ValuesViewConfig = new ValuesViewConfig(jsonService, localStorage);
             ReportsCollection = new ReportsCollection(ValuesViewConfig, reportsFactory, api);
             ReportConfigEditor = new ReportConfigEditor(this);
@@ -55,12 +55,9 @@ namespace RumineActivity.View
         public async Task InitReports()
         {
             IsLoaded = false;
-            //await API.LoadData();
-            //var classicConfig = new ConfigurationReport();
-            //await ReportsCollection.AddReport(classicConfig, true);
             await ValuesViewConfig.LoadSettings();
             IsLoaded = true;
-            OnLoadEnded?.Invoke(ReportsCollection.SelectedReport);
+            OnLoadEnded?.Invoke();
         }
     }
 

@@ -1,8 +1,7 @@
 ﻿.logo {
-    grid-area: logo;
     border-bottom: 1px solid var(--border-brush);
     background-color: var(--headers-color);
-    padding: var(--inner-padding);
+    padding: 8px;
 }
 .logo-link {
     display: flex;
@@ -12,9 +11,21 @@
 }
 
 .logo-image {
-    height: 60px;
+    height: 50px;
     margin: 0 1em;
 }
 .rumine{
     color: darkorange;
+}
+@media (max-device-width:480px) {
+    .logo{
+        padding: 8px;
+    }
+    .logo-link{
+        font-size: 0.8em;
+    }
+    .logo-image{
+        height: 55px;
+        margin: 0 0.5em;
+    }
 }

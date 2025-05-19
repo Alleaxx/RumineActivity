@@ -13,16 +13,8 @@ await CreateJsonPostsFileFromCsvAsync();
 
 await FullAnalyze();
 
-//await JsAnalyze();
-
 Console.ReadLine();
 
-async Task JsAnalyze()
-{
-    string path = "C:\\Users\\Alleaxx\\source\\repos\\Источники данных\\Статистика активности\\ForumPosts.txt";
-    var JsLogAnalyze = new JsLogFileAnalyze(logger, path);
-    await JsLogAnalyze.Start();
-}
 async Task FullAnalyze()
 {
     //Полный, из SQL
@@ -31,18 +23,20 @@ async Task FullAnalyze()
     //Краткий, из SQL
     //var fileInfo = JsonFileInfo.FromSqlJson("C:\Users\Alleaxx\source\repos\Данные\Статистика активности\\ForumPostsBaseDayStartEnd2.json", false);
 
-
     //Краткий, из объектов
     var fileInfo = JsonFileInfo.FromObjectJson("C:\\Users\\Alleaxx\\source\\repos\\Данные\\Статистика активности\\ForumPostsCsvUnited.json", false);
 
     var fileApi = new ActivityFileApi(httpClient, logger, fileInfo);
-    await fileApi.LoadData();
-    var forum = await fileApi.GetForum();
+    await fileApi.LoadDataAsync();
+    var forum = fileApi.GetForum();
 
     var forumAnalyze = new ForumAnalyze(forum);
     forumAnalyze.Analyze();
 }
 
+/// <summary>
+/// Преобразовать CSV-файлы сообщений в объединенный JSON 
+/// </summary>
 async Task<string> CreateJsonPostsFileFromCsvAsync()
 {
     string[] csvFiles = new string[]
@@ -71,7 +65,7 @@ async Task<string> CreateJsonPostsFileFromCsvAsync()
             DateTime? date = null;
             if(int.TryParse(dateText, out int timestamp))
             {
-                date = UnixTimeStampToDateTime(timestamp);
+                date = DateExtensions.UnixTimeStampToDateTime(timestamp);
             }
             else if(DateTime.TryParse(dateText, out DateTime dateTime))
             {
@@ -105,9 +99,4 @@ async Task<string> CreateJsonPostsFileFromCsvAsync()
     Console.WriteLine($"Посты записаны в JSON файл");
     return path;
 }
-static DateTime UnixTimeStampToDateTime(double unixTimeStamp)
-{
-    DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-    dateTime = dateTime.AddSeconds(unixTimeStamp).ToLocalTime();
-    return dateTime;
-}
+

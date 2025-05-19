@@ -49,8 +49,8 @@
                 </ul>
             </section>
 
-            <section>
-                <h4 style="margin: 10px 0px">
+            <section class="table-section">
+                <h4>
                     Цветовые правила:
                 </h4>
                 <table class="rules-table">
@@ -87,7 +87,35 @@
                     }
                 </table>
             </section>
+            <section class="table-section">
+                <h4>
+                    Определение точности:
+                </h4>
+                <table class="rules-table rates">
+                    <caption class="rules-header">Список характеристик точности активности в периоде</caption>
+                    <colgroup>
+                        <col style="width:30%" />
+                        <col style="width:70%" />
+                    </colgroup>
+                    <tr>
+                        <th colspan="1">Определение</th>
+                        <th colspan="1">Условие</th>
+                    </tr>
+                    @foreach (var rate in EnumValues.AccuracyRatesList)
+                    {
+                        <tr>
+                            <td class="rule-range">
+                                @rate.Name
+                            </td>
+                            <td class="rule-range">
+                                Не более @rate.MaxErrorPosts.ToString("#,0") неопределенных постов
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </section>
         </div>
+
     </section>
 </section>
 

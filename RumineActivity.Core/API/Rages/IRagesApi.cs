@@ -11,8 +11,8 @@ namespace RumineActivity.Core.API
     {
         event Action OnLoaded;
         bool? IsLoaded { get; }
-        Task LoadData();
+        Task LoadDataAsync();
 
-        Task<IEnumerable<Rage>> GetRages();
+        IEnumerable<Rage> GetRages();
     }
 }

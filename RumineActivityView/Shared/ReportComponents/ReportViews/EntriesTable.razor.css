@@ -55,3 +55,7 @@ th.sum-title{
 .unknown{
 
 }
+@media (max-device-width:480px) {
+    .table-activity{
+    }
+}

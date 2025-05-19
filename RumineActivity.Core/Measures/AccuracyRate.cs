@@ -49,7 +49,7 @@ namespace RumineActivity.Core.Measures
                     break;
                 case AccuracyRates.None:
                     Name = "Никакая";
-                    MaxErrorPosts = 50000000;
+                    MaxErrorPosts = 5000000;
                     break;
             }
         }
@@ -58,9 +58,11 @@ namespace RumineActivity.Core.Measures
         public static AccuracyRate GetAccuracyFor(int missed)
         {
             if(missed < 0)
+            {
                 return new AccuracyRate(AccuracyRates.None);
+            }
 
-            var rates = Enum.GetValues<AccuracyRates>().Select(v => new AccuracyRate(v)).OrderBy(r => r.MaxErrorPosts).ToArray();
+            var rates = EnumValues.AccuracyRatesList;
             return rates.First(r => missed <= r.MaxErrorPosts);
         }
     }

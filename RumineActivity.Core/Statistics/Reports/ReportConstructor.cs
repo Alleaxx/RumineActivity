@@ -22,6 +22,7 @@ namespace RumineActivity.Core
             Config = config ?? new ConfigurationReport();    
             Posts = Config.GetPostsSource(source);
         }
+
         public StatisticsReport Create()
         {
             List<Entry> periodicalEntries = new List<Entry>();
@@ -70,6 +71,7 @@ namespace RumineActivity.Core
 
             return new StatisticsReport(periodicalEntries.ToArray(), factEntries.ToArray(), Config);
         }
+
         private Entry CreateNewFactEntry(List<Entry> factEntries, Post firstPost, Post lastPost)
         {
             var dateRange = new DateRange(lastPost, firstPost);

@@ -17,21 +17,29 @@ namespace RumineActivity.Core
         public DateRange DateRangeAll => Configuration.DateRange;
         public Period Period => Configuration.Period;
 
-        //Периодические записи
+        /// <summary>
+        /// Периодические записи
+        /// </summary>
         public IReadOnlyList<Entry> Entries { get; private set; }
 
-        //Дополнительные фактические записи, которые не вписывают в указанные периоды
+        /// <summary>
+        /// Дополнительные фактические записи, которые не вписывают в указанные периоды
+        /// </summary>
         public IReadOnlyList<Entry> AdditionalEntries { get; private set; }
 
         public DateRange DateRangePosts { get; private set; }
 
 
-        //Статистика по данным
+        /// <summary>
+        /// Статистика по данным
+        /// </summary>
         public bool IsEmpty => Entries == null || !Entries.Any();
         public int Length => Entries.Count;
 
 
-        //статистика по количеству написанных постов по записям
+        /// <summary>
+        /// статистика по количеству написанных постов по записям
+        /// </summary>
         public double GetTotalValue(MeasureUnits unit)
         {
             return Entries.Sum(e => e.GetValueTotal(unit)) + AdditionalEntries.Where(e => !e.IsOuterPartial).Sum(e => e.GetValueTotal(unit));
@@ -43,15 +51,15 @@ namespace RumineActivity.Core
 
 
         //записи с самым низким и высоким значением средней активности
-        public Entry MostInactiveTotal { get; private set; }
-        public Entry MostActiveTotal { get; private set; }
-        public Entry MostInactiveAverage { get; private set; }
-        public Entry MostActiveAverage { get; private set; }
+        public Entry? MostInactiveTotal { get; private set; }
+        public Entry? MostActiveTotal { get; private set; }
+        public Entry? MostInactiveAverage { get; private set; }
+        public Entry? MostActiveAverage { get; private set; }
 
 
-        public StatisticsReport(IReadOnlyList<Entry> entries, IReadOnlyList<Entry> additionalEntries, ConfigurationReport config, string name = null)
+        public StatisticsReport(IReadOnlyList<Entry> entries, IReadOnlyList<Entry> additionalEntries, ConfigurationReport config)
         {
-            Name = name ?? config.GetReportName();
+            Name = config.GetReportName();
 
             Entries = entries;
             AdditionalEntries = additionalEntries;
@@ -78,10 +86,22 @@ namespace RumineActivity.Core
         }
         private void SetStat()
         {
-            MostInactiveAverage = Entries.Where(e => e.PostsWrittenAverage > 0).OrderBy(e => e.PostsWrittenAverage).FirstOrDefault();
-            MostActiveAverage = Entries.Where(e => e.PostsWrittenAverage > 0).OrderBy(e => e.PostsWrittenAverage).LastOrDefault();
-            MostInactiveTotal = Entries.Where(e => e.PostsWrittenAverage > 0).OrderBy(e => e.PostsWrittenTotal).FirstOrDefault();
-            MostActiveTotal = Entries.Where(e => e.PostsWrittenAverage > 0).OrderBy(e => e.PostsWrittenTotal).LastOrDefault();
+            MostInactiveAverage = Entries
+                .Where(e => e.PostsWrittenAverage > 0)
+                .OrderBy(e => e.PostsWrittenAverage)
+                .FirstOrDefault();
+            MostActiveAverage = Entries
+                .Where(e => e.PostsWrittenAverage > 0)
+                .OrderBy(e => e.PostsWrittenAverage)
+                .LastOrDefault();
+            MostInactiveTotal = Entries
+                .Where(e => e.PostsWrittenAverage > 0)
+                .OrderBy(e => e.PostsWrittenTotal)
+                .FirstOrDefault();
+            MostActiveTotal = Entries
+                .Where(e => e.PostsWrittenAverage > 0)
+                .OrderBy(e => e.PostsWrittenTotal)
+                .LastOrDefault();
             DateRangePosts = new DateRange(Entries.Min(e => e.FromDate), Entries.Max(e => e.ToDate));
         }
     }

@@ -45,9 +45,6 @@ namespace RumineActivity.View.Diagrams
         /// </summary>
         public int LegendItemsCount { get; set; }
 
-        public bool IsLegendRightSideEnabled { get; set; }
-        public bool IsRoundingLegendNumbersEnabled { get; set; }
-
         /// <summary>
         /// Максимально допустимое количество подписей под диаграммой (больше не помещается).
         /// Если число записей по выбранной группировке превышает это число, то надписи будут показываться через раз / два / три и т.д.
@@ -57,9 +54,9 @@ namespace RumineActivity.View.Diagrams
 
         public DiagramConfig()
         {
-            WidthChart = 1070;
+            WidthChart = 1150;
             WidthLegend = 50;
-            HeightChart = 460;
+            HeightChart = 500;
             HeightWriting = 40;
             MaxAllowedEntries = 31;
             LegendItemsCount = 10;

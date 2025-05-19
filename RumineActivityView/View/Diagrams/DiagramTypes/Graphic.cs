@@ -8,7 +8,7 @@ using RumineActivity.Core;
 namespace RumineActivity.View.Diagrams
 {
     /// <summary>
-    /// Обычный график, используется как основного для графика с накоплением
+    /// Обычный график, используется также для графика с накоплением
     /// </summary>
     public class Graphic : DiagramChart
     {

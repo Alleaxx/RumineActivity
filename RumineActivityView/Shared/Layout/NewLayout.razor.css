@@ -1,0 +1,37 @@
+﻿body {
+    background-color: var(--background-color);
+}
+
+.container {
+    margin: auto;
+    border-left: 2px solid var(--border-brush);
+    border-right: 2px solid var(--border-brush);
+    border-radius: 3px;
+    min-width: 1000px;
+    max-width: 1500px;
+
+    background-color: whitesmoke;
+}
+
+    .main-content{
+        display: flex;
+    }
+    main {
+        min-height: 80vh;
+        flex: 18;
+        border-left: 1px solid gainsboro;
+        background-color: white;
+    }
+
+@media (max-device-width:480px) {
+    .main-content {
+        flex-direction: column;
+    }
+    .container{
+        min-width: auto;
+    }
+    main{
+        border-top: 1px solid gainsboro;
+    }
+}
+

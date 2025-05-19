@@ -15,6 +15,21 @@
                 <h4 class="options-list-header">Временные рамки:</h4>
 
                 <table class="table-periods">
+                    <colgroup>
+                        <col style="width: auto;" />
+                        <col style="width: 7.5%" />
+                        <col style="width: 7.5%" />
+                        <col style="width: 7.5%" />
+                        <col style="width: 7.5%" />
+                        <col style="width: 7.5%" />
+                        <col style="width: 7.5%" />
+                        <col style="width: 7.5%" />
+                        <col style="width: 7.5%" />
+                        <col style="width: 7.5%" />
+                        <col style="width: 7.5%" />
+                        <col style="width: 7.5%" />
+                        <col style="width: 7.5%" />
+                    </colgroup>
                     <tr>
                         <th>Легенда:</th>
                         <td colspan="3" class="info-cell bordered picked">ЛКМ - выбрать начальный месяц</td>
@@ -36,7 +51,7 @@
                                 {
                                     <td class="month-cell-blocked">
                                         <div class="month-cell-content">
-                                            <span>@monthCell.GetName()</span>
+
                                         </div>
                                     </td>
                                 }
@@ -48,7 +63,12 @@
                                         @oncontextmenu:preventDefault="true"
                                         title="Выделить этот месяц">
                                         <div class="month-cell-content">
-                                            <span>@monthCell.GetName()</span>
+                                            <span class="month-cell-month-title">
+                                                @monthCell.Month.GetMonthName("MMM")
+                                            </span>
+                                            <span class="month-cell-year-title">
+                                                @monthCell.DateFrom.ToString("yy")
+                                            </span>
                                         </div>
                                     </td>
                                 }
@@ -111,12 +131,6 @@
                             @onclick="() =>Set(period)">
                             <span>
                                 @period.ToString()
-                                @if (ReportConfig.Period == period && period.Type == Periods.Own)
-                                {
-                                    <label for="input-days">(раз в</label>
-                                    <input id="input-days" class="entry-interval-input" type="number" min="1" step="1" max="3650" @bind:event="oninput" @bind="(period.Days)" />
-                                    <span>дней)</span>
-                                }
                             </span>
                         </li>
                     }
@@ -127,16 +141,24 @@
         <div>
             @if (ReportConfig.IsCorrect())
             {
-                <a href="statistics" class="create-report-button" @onclick="CreateReport">
-                    <span style="flex:1">Создать @ReportConfig.Period.NameReport.ToLower().Replace("ая","ый") отчет за @GetDateReportName()</span>
-                    <span>~ @EstPeriodsCount.ToString("0") периодов</span>
+                <a href="@ReportConfig.GetLinkHref()" class="create-report-button" @onclick="CopyCurrentConfig">
+                    <span class="report-title">
+                        Создать @ReportConfig.Period.NameReport.ToLower().Replace("ая","ый") отчет за @GetDateReportName()
+                    </span>
+                    <span class="periods-amount">
+                        ~ @EstPeriodsCount.ToString("0") периодов
+                    </span>
                 </a>
             }
             else
             {
                 <a class="create-report-button disabled">
-                    <span style="flex:1">@ReportConfig.Period.NameReport.Replace("ая","ый") отчет создать не выйдет, мало / много периодов</span>
-                    <span>~ @EstPeriodsCount.ToString("0") периодов</span>
+                    <span class="report-title">
+                        @ReportConfig.Period.NameReport.Replace("ая","ый") отчет создать не выйдет, мало / много периодов
+                    </span>
+                    <span class="periods-amount">
+                        ~ @EstPeriodsCount.ToString("0") периодов
+                    </span>
                 </a>
             }
         </div>
@@ -168,9 +190,8 @@
         return ReportConfig.DateRange.GetName().ToLower();
     }
 
-    private async Task CreateReport()
+    private void CopyCurrentConfig()
     {
-        await App.ReportsCollection.AddReport(ReportConfig);
         ReportConfigEditor.SetNewConfig(new ConfigurationReport(ReportConfig));
     }
 

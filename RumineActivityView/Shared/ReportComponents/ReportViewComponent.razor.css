@@ -5,6 +5,8 @@
 /* ВКЛАДКИ */
 .tabber {
     display: flex;
+    flex-wrap: wrap;
+
     margin: 0;
     padding: 0;
     border-bottom: 1px solid gainsboro;
@@ -41,3 +43,11 @@
         .debug-info-list p{
             margin: 2px 4px;
         }
+
+
+
+@media (max-device-width:480px) {
+    .tabber{
+        flex-direction: column;
+    }
+}

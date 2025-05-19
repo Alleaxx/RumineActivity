@@ -17,9 +17,7 @@ namespace RumineActivity.Core.API
 
         private string FilePath => FileInfo.Path;
 
-        private IEnumerable<Rage> Rages => rages ?? ragesDebug;
-        private IEnumerable<Rage> rages;
-        private IEnumerable<Rage> ragesDebug;
+        private IEnumerable<Rage> Rages { get; set; }
 
         public event Action OnLoaded;
         public bool? IsLoaded { get; private set; }
@@ -31,9 +29,7 @@ namespace RumineActivity.Core.API
             this.Logger = logger;
         }
 
-
-        //Процесс чтения файла и заполнения данными
-        public async Task LoadData()
+        public async Task LoadDataAsync()
         {
             if (IsLoaded.HasValue)
             {
@@ -41,16 +37,17 @@ namespace RumineActivity.Core.API
             }
 
             IsLoaded = false;
-            rages = await LoadRagesFromFile();
+            Rages = await LoadRagesFromFileAsync();
             IsLoaded = true;
             OnLoaded?.Invoke();
         }
-        public async Task<IEnumerable<Rage>> GetRages()
+
+        public IEnumerable<Rage> GetRages()
         {
             return Rages;
         }
 
-        private async Task<IEnumerable<Rage>> LoadRagesFromFile()
+        private async Task<IEnumerable<Rage>> LoadRagesFromFileAsync()
         {
             Logger.Log($"Читаем файл {FilePath}");
 

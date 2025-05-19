@@ -27,6 +27,11 @@ namespace RumineActivity.Core
             .Select(m => new MaxValue(m))
             .ToArray();
 
+        public static AccuracyRate[] AccuracyRatesList { get; private set; } = Enum.GetValues<AccuracyRates>()
+            .Select(v => new AccuracyRate(v))
+            .OrderBy(r => r.MaxErrorPosts)
+            .ToArray();
+
         //Настройки отчета
         public static Period[] PeriodsList { get; private set; } = Enum.GetValues<Periods>()
             .Where(p => p != Periods.Season && p != Periods.Own )

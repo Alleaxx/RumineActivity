@@ -15,23 +15,12 @@ namespace RumineActivity.View
 
         public event Action<StatisticsReport> OnReportsCollectionChanged;
         public event Action<StatisticsReport> OnReportsCompareCollectionChanged;
-        public event Action<StatisticsReport> OnReportSelected;
-
-        public StatisticsReport SelectedReport
-        {
-            get => selectedReport;
-            set
-            {
-                selectedReport = value;
-                OnReportSelected?.Invoke(selectedReport);
-            }
-        }
-        private StatisticsReport selectedReport;
 
         /// <summary>
         /// Все созданные отчеты
         /// </summary>
         public IReadOnlyCollection<StatisticsReport> ActiveReports => Reports;
+
         /// <summary>
         /// Все отчеты, выделенные для сравнения
         /// </summary>
@@ -51,48 +40,28 @@ namespace RumineActivity.View
         }
 
         /// <summary>
-        /// Добавляет отчет по конфигурации. Если отчет уже есть, то он просто выбирается
+        /// Добавляет отчет по конфигурации.
+        /// Если отчет уже есть, то он просто выбирается
         /// </summary>
-        public async Task AddReport(ConfigurationReport config, bool withSelection = true)
+        public async Task<StatisticsReport> AddReportAsync(ConfigurationReport config)
         {
             string name = config.GetReportName();
             var reportFound = Reports.FirstOrDefault(r => r.Name == name);
             if (reportFound != null)
             {
-                if (withSelection)
-                {
-                    SelectReport(reportFound);
-                }
-                return;
+                return reportFound;
             }
+
             if (!API.IsLoaded.HasValue)
             {
-                await API.LoadData();
+                await API.LoadDataAsync();
             }
-            var newReport = await ReportsFactory.CreateReport(config);
+
+            var newReport = ReportsFactory.CreateReport(config);
             Reports.Add(newReport);
             AddCompareReport(newReport);
             OnReportsCollectionChanged?.Invoke(newReport);
-            if (withSelection)
-            {
-                SelectReport(newReport);
-            }
-        }
-
-        /// <summary>
-        /// Выбирает отчет. Он должен быть в списке
-        /// </summary>
-        public void SelectReport(StatisticsReport report)
-        {
-            if(report == null || !Reports.Contains(report))
-            {
-                return;
-            }
-            if (!Config.DisplayType.IsOkWithReport(report))
-            {
-                Config.DisplayType = new DisplayType(DisplayTypes.Histogram);
-            }
-            SelectedReport = report;
+            return newReport;
         }
 
         /// <summary>
@@ -105,13 +74,8 @@ namespace RumineActivity.View
                 return;
             }
 
-
             Reports.Remove(report);
             RemoveCompareReport(report);
-            if (SelectedReport == report)
-            {
-                SelectReport(Reports.FirstOrDefault());
-            }
             OnReportsCollectionChanged?.Invoke(report);
         }
 

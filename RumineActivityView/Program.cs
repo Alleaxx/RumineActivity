@@ -28,24 +28,13 @@ namespace RumineActivity.View
             builder.Services.AddScoped<IFileService, FileService>();
             builder.Services.AddScoped<ILocalStorageService, LocalStorageService>();
 
-            bool onlineMode = false;
-
-            if (onlineMode)
-            {
-                builder.Services.AddScoped<IActivityApi, ActivityWebApi>();
-            }
-            else
-            {
-                var filePathV4 = JsonFileInfo.FromObjectJson("data/ForumPostsV4.json", true);
-
-                builder.Services.AddScoped<IActivityApi, ActivityFileApi>(sc =>
-                {
-                    return new ActivityFileApi(sc.GetService<HttpClient>(), sc.GetService<Core.Logging.ILogger>(), filePathV4);
-                });
-            }
-
+            var filePathV4 = JsonFileInfo.FromObjectJson("data/ForumPostsV4.json", true);
             var ragesFile = JsonFileInfo.FromObjectJson("data/RageStatisticsV1.json", true);
 
+            builder.Services.AddScoped<IActivityApi, ActivityFileApi>(sc =>
+            {
+                return new ActivityFileApi(sc.GetService<HttpClient>(), sc.GetService<Core.Logging.ILogger>(), filePathV4);
+            });
             builder.Services.AddScoped<IRagesApi, RagesFileApi>(sc =>
             {
                 return new RagesFileApi(sc.GetService<HttpClient>(), sc.GetService<Core.Logging.ILogger>(), ragesFile);

@@ -123,7 +123,7 @@
         cursor: pointer;
         color: rgb(64,64,64);
         border: 1px solid gainsboro;
-        margin: 0 2px;
+        margin: 2px;
         user-select: none;
     }
 
@@ -185,5 +185,31 @@
         border: 0;
     }
     .all-time:hover{
+        cursor: pointer;
         background-color: lightpink;
     }
+
+    .report-title{
+        flex: 1;
+    }
+    .periods-amount{
+        color: gray;
+    }
+
+@media (max-device-width:480px) {
+    .table-periods{
+        width: 100%;
+        margin-left: 0;
+        font-size: 0.9em;
+    }
+    .table-periods .month-cell{
+        padding-left: 2px;
+        padding-right: 2px;
+    }
+    .month-cell-year-title{
+        display: none;
+    }
+    .create-report-button{
+        font-size: 0.9em;
+    }
+}

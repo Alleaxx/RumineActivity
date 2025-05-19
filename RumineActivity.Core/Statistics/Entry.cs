@@ -36,10 +36,24 @@ namespace RumineActivity.Core
         public DateTime FromDate => Range.From;
         public DateTime ToDate => Range.To;
 
-
         public int Index { get; private set; }
         public Entry? PreviousEntry { get; private set; }
 
+        /// <summary>
+        /// Является ли запись фактической или периодической
+        /// </summary>
+        public bool IsPeriodical { get; private set; }
+
+        /// <summary>
+        /// Признак того, что граница частично выходит за границы отчета
+        /// </summary>
+        public bool IsOuterPartial { get; set; }
+        public DateRangePostBorders PostBorders { get; private set; }
+
+        private double PostsWritten { get; init; }
+        public double FractionMode { get; set; }
+        public double PostsWrittenTotal => GetValue(MeasureMethods.Total, MeasureUnits.Messages);
+        public double PostsWrittenAverage => GetValue(MeasureMethods.ByDay, MeasureUnits.Messages);
 
         public Entry(int index, DateRangePostBorders postBorders, ConfigurationReport config, Entry? prev, bool isPeriodical)
         {
@@ -53,25 +67,6 @@ namespace RumineActivity.Core
         }
 
 
-
-        /// <summary>
-        /// Является ли запись фактической или периодической
-        /// </summary>
-        public bool IsPeriodical { get; private set; }
-        /// <summary>
-        /// Признак того, что граница частично выходит за границы отчета
-        /// </summary>
-        public bool IsOuterPartial { get; set; }
-        public DateRangePostBorders PostBorders { get; private set; }
-
-
-
-        #region Получение значения
-
-        private double PostsWritten { get; init; }
-        public double FractionMode { get; set; }
-        public double PostsWrittenTotal => GetValue(MeasureMethods.Total, MeasureUnits.Messages);
-        public double PostsWrittenAverage => GetValue(MeasureMethods.ByDay, MeasureUnits.Messages);
         public double GetValueTotal(MeasureUnits units)
         {
             return GetValue(MeasureMethods.Total, units);
@@ -87,7 +82,5 @@ namespace RumineActivity.Core
             val = new MeasureUnit(unit).GetValue(val);
             return val;
         }
-        
-        #endregion
     }
 }

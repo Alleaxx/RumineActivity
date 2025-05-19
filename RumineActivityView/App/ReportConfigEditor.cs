@@ -29,6 +29,7 @@ namespace RumineActivity.View
             DateRangePickers = new IDateRangePicker[0];
             SetNewConfig(new ConfigurationReport());
         }
+
         public void SetNewConfig(ConfigurationReport config)
         {
             CurrentConfig = new ConfigurationReport(config);
@@ -94,7 +95,5 @@ namespace RumineActivity.View
                 CurrentConfig.Period = firstFit ?? Period.Create(Periods.Week);
             }
         }
-
-
     }
 }

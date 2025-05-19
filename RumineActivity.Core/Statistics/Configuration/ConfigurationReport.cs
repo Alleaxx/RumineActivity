@@ -99,12 +99,20 @@ namespace RumineActivity.Core
             return $"{Period.NameReport} статистика за {DateRange.GetName()}";
         }
 
+        public string GetLinkHref()
+        {
+            string dateFrom = dateRange.From.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+            string dateTo = dateRange.To.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+            return $"report?From={dateFrom}&To={dateTo}&Period={Period?.Type}";
+        }
+
         /// <summary>
         /// Сравнить фактические значения двух отчётов
+        /// </summary>
         public bool CompareEqual(ConfigurationReport other)
         {
             bool isRangeSame = DateRange.From == other.DateRange.From && DateRange.To == other.DateRange.To;
-            bool isPeriodSame = Period.Type == other.Period.Type && Period.TimeInterval == other.Period.TimeInterval;
+            bool isPeriodSame = Period?.Type == other.Period?.Type && Period?.TimeInterval == other.Period?.TimeInterval;
 
             return isRangeSame && isPeriodSame;
         }
@@ -118,7 +126,6 @@ namespace RumineActivity.Core
                 .OrderBy(d => d.Date)
                 .ToArray();
         }
-
 
         /// <summary>
         /// Признак корректного сочетания периодичности для выбранного интервала

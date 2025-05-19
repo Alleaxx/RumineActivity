@@ -225,6 +225,9 @@ namespace RumineActivity.Core
             return 0;
         }
 
+        /// <summary>
+        /// Преобразовать номер квартала в строку
+        /// </summary>
         public static string QuarterToSymbol(int quarter)
         {
             switch (quarter)
@@ -241,6 +244,10 @@ namespace RumineActivity.Core
                     return string.Empty;
             }
         }
+
+        /// <summary>
+        /// Преобразовать номер сезона в строку
+        /// </summary>
         public static string SeasonToString(int season)
         {
             switch (season)
@@ -267,6 +274,7 @@ namespace RumineActivity.Core
         {
             return QuarterToSymbol(DefineQuarter(date));
         }
+
         /// <summary>
         /// Определить символьное представление квартала для даты
         /// </summary>
@@ -336,6 +344,16 @@ namespace RumineActivity.Core
             {
                 return $"{timeSpan.TotalDays:#,0} дн.";
             }
+        }
+
+        /// <summary>
+        /// Преобразовать TimeStamp в дату
+        /// </summary>
+        public static DateTime UnixTimeStampToDateTime(double unixTimeStamp)
+        {
+            DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+            dateTime = dateTime.AddSeconds(unixTimeStamp).ToLocalTime();
+            return dateTime;
         }
 
     }

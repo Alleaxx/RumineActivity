@@ -1,0 +1,154 @@
+﻿@inherits StatComponent
+@page "/report"
+
+<div class="report-section">
+    <ReportFullComponent Report="Report" />
+</div>
+
+@code {
+    [Inject]
+    public NavigationManager Navigation { get; set; }
+
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public DateTime? From { get; set; }
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public DateTime? To { get; set; }
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public string? Period { get; set; }
+
+    private StatisticsReport? Report { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if(From == null)
+        {
+            From = RumineValues.FoundationDate;
+        }
+        if(To == null)
+        {
+            To = new DateTime(DateTime.Now.Year + 1, 1, 1);
+        }
+        if (From == To)
+        {
+            GotoConfigurationPage();
+            return;
+        }
+
+        ConfigurationReport uriConfig = GetUriConfig();
+        ConfigurationReport validatedConfig = GetValidatedConfig();
+
+        Console.WriteLine($"Обрабатываем URI-конфиг: {uriConfig.GetLinkHref()}");
+
+        if(validatedConfig.Period == null)
+        {
+            Console.WriteLine($"Не удалось найти подходящий период для переданного конфига {validatedConfig.GetLinkHref()}");
+            App.ReportConfigEditor.SetNewConfig(validatedConfig);
+            GotoConfigurationPage();
+            return;
+        }
+
+        if (!validatedConfig.CompareEqual(uriConfig))
+        {
+            Console.WriteLine($"URI-конфиг {uriConfig.GetLinkHref()} отличается от валидированного, переходим на валидированный {validatedConfig.GetLinkHref()}");
+            Navigation.NavigateTo(validatedConfig.GetLinkHref());
+            return;
+        }
+        Console.WriteLine("URI-конфиг и обработанный совпадают, добавляем / выбираем отчет");
+
+        if(API.IsLoaded != true)
+        {
+            API.OnLoaded += UpdateOnApiLoaded;
+            await API.LoadDataAsync();
+            return;
+        }
+
+        App.ReportConfigEditor.SetNewConfig(validatedConfig);
+        Report = await App.ReportsCollection.AddReportAsync(validatedConfig);
+        App.ReportsCollection.OnReportsCollectionChanged += OnReportCollectionChanged;
+    }
+    public async override ValueTask DisposeAsync()
+    {
+        API.OnLoaded -= UpdateOnApiLoaded;
+        App.ReportsCollection.OnReportsCollectionChanged -= OnReportCollectionChanged;
+    }
+
+    private void OnReportCollectionChanged(StatisticsReport report)
+    {
+        if(Report == null)
+        {
+            return;
+        }
+        App.ReportsCollection.OnReportsCollectionChanged -= OnReportCollectionChanged;
+
+        var found = App.ReportsCollection.ActiveReports.Contains(report);
+        if (!found)
+        {
+            var firstOther = App.ReportsCollection.ActiveReports.FirstOrDefault();
+            if(firstOther != null)
+            {
+                Navigation.NavigateTo(firstOther.Configuration.GetLinkHref());
+            }
+        }
+    }
+
+    /// <summary>
+    /// Получить необработанную конфигурацию по параметрам запроса
+    /// </summary>
+    private ConfigurationReport GetUriConfig()
+    {
+        ConfigurationReport uriConfig = new ConfigurationReport();
+        uriConfig.DateRange = new DateRange(From.Value, To.Value);
+        uriConfig.Period = EnumValues.PeriodsList.FirstOrDefault(p => p.Type.ToString() == Period);
+        return uriConfig;
+    }
+
+    /// <summary>
+    /// Обработать параметры запросы для получения проверенной конфигурации отчета
+    /// </summary>
+    private ConfigurationReport GetValidatedConfig()
+    {
+        var uriConfig = GetUriConfig();
+        var newFromDate = uriConfig.DateRange.From;
+        var newToDate = uriConfig.DateRange.To;
+
+        if (From < RumineValues.FoundationDate)
+        {
+            newFromDate = RumineValues.FoundationDate;
+        }
+        var thisYearEnd = new DateTime(DateTime.Now.Year + 1, 1, 1);
+        if (To > thisYearEnd)
+        {
+            newToDate = thisYearEnd;
+        }
+
+        if (newFromDate > newToDate)
+        {
+            var prev = newToDate;
+            newToDate = newFromDate;
+            newFromDate = prev;
+        }
+
+        var config = new ConfigurationReport();
+        config.DateRange = new DateRange(newFromDate, newToDate);
+        config.Period = uriConfig.Period != null && config.DateRange.IsOkWithPeriod(uriConfig.Period) 
+            ? uriConfig.Period
+            : EnumValues.PeriodsList.FirstOrDefault(p => config.DateRange.IsOkWithPeriod(p));
+        return config;
+    }
+
+    private void UpdateOnApiLoaded()
+    {
+        API.OnLoaded -= UpdateOnApiLoaded;
+
+        var config = GetValidatedConfig();
+        Navigation.NavigateTo(config.GetLinkHref());
+    }
+
+    private void GotoConfigurationPage()
+    {
+        Navigation.NavigateTo("create");
+    }
+}
