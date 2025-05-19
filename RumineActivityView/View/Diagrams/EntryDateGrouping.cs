@@ -93,6 +93,8 @@ namespace RumineActivity.View.Diagrams
         {
             Title = "По трети месяца",
             Level = 1,
+            EntriesLimit = 12,
+            EntriesMinLimit = 1,
             GroupingFunc = entries => entries.GroupBy(e => $"{DateExtensions.DefineDayMonthPartString(e.Entry.FromDate)} {e.Entry.FromDate.Month.GetMonthName("MMM")} {e.Entry.FromDate:yy}"),
             AllowedPeriods = new Periods[] { Periods.Day }
         };
@@ -106,7 +108,7 @@ namespace RumineActivity.View.Diagrams
             Level = 0,
             EntriesLimit = 31,
             GroupingFunc = entries => entries.GroupBy(e => $"{e.Entry.FromDate.Day}"),
-            AllowedPeriods = new Periods[] { Periods.Day }
+            AllowedPeriods = new Periods[] { }
         };
 
         /// <summary>
@@ -126,6 +128,7 @@ namespace RumineActivity.View.Diagrams
 
         public Func<IEnumerable<DiagramEntryObject>, IEnumerable<IGrouping<string, DiagramEntryObject>>> GroupingFunc { get; private set; }
         private int EntriesLimit {  get; set; }
+        private int EntriesMinLimit { get; set; }
         private Periods[] AllowedPeriods { get; set; }
 
 
@@ -133,6 +136,7 @@ namespace RumineActivity.View.Diagrams
         {
             Level = 10;
             EntriesLimit = 18;
+            EntriesMinLimit = 3;
             AllowedPeriods = Enum.GetValues<Periods>().ToArray();
         }
 
@@ -145,7 +149,7 @@ namespace RumineActivity.View.Diagrams
             }
 
             var grouped = GroupingFunc(entries).ToArray();
-            return grouped.Count() <= EntriesLimit && grouped.Count() >= 3;
+            return grouped.Count() <= EntriesLimit && grouped.Count() >= EntriesMinLimit;
         }
     }
 }

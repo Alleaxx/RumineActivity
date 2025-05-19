@@ -13,9 +13,10 @@
     }
 }
 
-header{
+header {
     display: flex;
     align-items: center;
+    margin-top: 8px;
 }
 header img{
     height: 22px;
@@ -42,7 +43,7 @@ header h2 {
     font-size: 0.8em;
     color: gray;
     text-align: left;
-    margin: 4px 0;
+    margin: 6px 2px;
 }
 
 .report-link {

@@ -65,8 +65,13 @@
             return;
         }
 
+
         App.ReportConfigEditor.SetNewConfig(validatedConfig);
         Report = await App.ReportsCollection.AddReportAsync(validatedConfig);
+        if (!ValuesViewConfig.DisplayType.IsOkWithReport(Report))
+        {
+            ValuesViewConfig.DisplayType = new DisplayType(DisplayTypes.Histogram);
+        }
         App.ReportsCollection.OnReportsCollectionChanged += OnReportCollectionChanged;
     }
     public async override ValueTask DisposeAsync()

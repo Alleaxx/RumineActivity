@@ -122,87 +122,15 @@ namespace RumineActivity.View
         private CompareDiffFormat compareView;
         private Sorting<Entry, object> sortingEntriesSelected;
 
-        public string FormatEntryPosts(Entry entry, MeasureMethods? methodParam = null, MeasureUnits? unitParam = null)
-        {
-            if (entry == null)
-            {
-                return "???";
-            }
-            var method = methodParam ?? MeasureMethod.Type;
-            var unit = unitParam ?? MeasureUnit.Type;
-            return FormatValue(entry.GetValue(method, unit), entry.Period, method, unit);
-        }
-        public string FormatValue(double value, Periods period, MeasureMethods? methodParam = null, MeasureUnits? unitParam = null, string ownFormat = null)
-        {
-            var method = methodParam ?? MeasureMethod.Type;
-            var unit = unitParam ?? MeasureUnit.Type;
+        private const string SettingsKey = "StatAppSettings";
 
-            if (value == 0)
-            {
-                return "???";
-            }
-
-            if (!string.IsNullOrEmpty(ownFormat))
-            {
-                return value.ToString(ownFormat);
-            }
-
-            string format = GetNumberFormatDouble();
-            if (method == MeasureMethods.Total && unit == MeasureUnits.Messages)
-            {
-                format = GetNumberFormatInt();
-            }
-            if (method == MeasureMethods.Total && (unit == MeasureUnits.Pages || unit == MeasureUnits.OldPages))
-            {
-                //return Math.Ceiling(value).ToString(GetNumberFormatInt());
-            }
-            if (method == MeasureMethods.ByDay && period == Periods.Day && (unit == MeasureUnits.Pages || unit == MeasureUnits.OldPages))
-            {
-                //return Math.Ceiling(value).ToString(GetNumberFormatInt());
-            }
-            if (method == MeasureMethods.ByDay && unit == MeasureUnits.Messages && period == Periods.Day)
-            {
-                format = GetNumberFormatInt();
-            }
-            if(value >= 50)
-            {
-                format = GetNumberFormatInt();
-            }
-
-            return value.ToString(format);
-        }
         
-
-        private string GetZeroFormat()
-        {
-            return CreateZeroFormatString(RoundAccuracy);
-        }
-        private string CreateZeroFormatString(int amount)
-        {
-            return string.Join("", Enumerable.Repeat("0", amount));
-        }
-       
-        private string GetNumberFormatDouble()
-        {
-            return $"#,0.{GetZeroFormat()}";
-        }
-        public string GetNumberFormatInt()
-        {
-            return $"#,0";
-        }
-
-        private async Task OnValueChanged()
-        {
-            await SaveSettings();
-            OnValuesChanged?.Invoke(this);
-        }
-
         public ValuesViewConfig(IJsonService jsonService, ILocalStorageService localStorage)
         {
             this.JsonService = jsonService;
             this.LocalStorageService = localStorage;
             Rules = new ViewRules();
-            roundAccuracy = 2;
+            roundAccuracy = 1;
             measureUnit = new MeasureUnit(MeasureUnits.Pages);
             measureMethod = MeasureMethod.Create(MeasureMethods.ByDay);
             displayType = new DisplayType(DisplayTypes.Histogram);
@@ -212,7 +140,7 @@ namespace RumineActivity.View
             sortingEntriesSelected = SortExtensions.EntrySorts.Values.FirstOrDefault();
             sortingEntriesSelected.OnSortDirectionChanged += EntrySorting_OnSortDirectionChanged;
         }
-        private const string SettingsKey = "StatAppSettings";
+
         public async Task SaveSettings()
         {
             try
@@ -268,11 +196,91 @@ namespace RumineActivity.View
             showCompareValueDifference = savedSettings.ShowCompareValueDifference;
 
             compareView = CompareDiffFormat.Create(savedSettings.CompareView);
-            measureMethod = EnumValues.Methods.FirstOrDefault(m => m.Type == savedSettings.MeasureMethod) ?? EnumValues.Methods.First();
-            measureUnit = EnumValues.Units.FirstOrDefault(m => m.Type == savedSettings.MeasureUnit) ?? EnumValues.Units.First();
-            maxValue = EnumValues.MaximumValues.FirstOrDefault(m => m.Type == savedSettings.MaxValue) ?? EnumValues.MaximumValues.First();
+            measureMethod = EnumValues.Methods.FirstOrDefault(m => m.Type == savedSettings.MeasureMethod)
+                ?? EnumValues.Methods.First();
+            measureUnit = EnumValues.Units.FirstOrDefault(m => m.Type == savedSettings.MeasureUnit)
+                ?? EnumValues.Units.First();
+            maxValue = EnumValues.MaximumValues.FirstOrDefault(m => m.Type == savedSettings.MaxValue)
+                ?? EnumValues.MaximumValues.First();
             displayType = new DisplayType(savedSettings.DisplayType);
+
             OnValuesChanged?.Invoke(this);
         }
+
+
+        public string FormatEntryPosts(Entry entry, MeasureMethods? methodParam = null, MeasureUnits? unitParam = null)
+        {
+            if (entry == null)
+            {
+                return "???";
+            }
+            var method = methodParam ?? MeasureMethod.Type;
+            var unit = unitParam ?? MeasureUnit.Type;
+            return FormatValue(entry.GetValue(method, unit), entry.Period, method, unit);
+        }
+        public string FormatValue(double value, Periods period, MeasureMethods? methodParam = null, MeasureUnits? unitParam = null, string ownFormat = null)
+        {
+            var method = methodParam ?? MeasureMethod.Type;
+            var unit = unitParam ?? MeasureUnit.Type;
+
+            if (value == 0)
+            {
+                return "???";
+            }
+
+            if (!string.IsNullOrEmpty(ownFormat))
+            {
+                return value.ToString(ownFormat);
+            }
+
+            string format = GetNumberFormatDouble();
+            if (method == MeasureMethods.Total && unit == MeasureUnits.Messages)
+            {
+                format = GetNumberFormatInt();
+            }
+            if (method == MeasureMethods.Total && (unit == MeasureUnits.Pages || unit == MeasureUnits.OldPages))
+            {
+                //return Math.Ceiling(value).ToString(GetNumberFormatInt());
+            }
+            if (method == MeasureMethods.ByDay && period == Periods.Day && (unit == MeasureUnits.Pages || unit == MeasureUnits.OldPages))
+            {
+                //return Math.Ceiling(value).ToString(GetNumberFormatInt());
+            }
+            if (method == MeasureMethods.ByDay && unit == MeasureUnits.Messages && period == Periods.Day)
+            {
+                format = GetNumberFormatInt();
+            }
+            if (value >= 50)
+            {
+                format = GetNumberFormatInt();
+            }
+
+            return value.ToString(format);
+        }
+
+
+        private string GetZeroFormat()
+        {
+            return CreateZeroFormatString(RoundAccuracy);
+        }
+        private string CreateZeroFormatString(int amount)
+        {
+            return string.Join("", Enumerable.Repeat("0", amount));
+        }
+
+        private string GetNumberFormatDouble()
+        {
+            return $"#,0.{GetZeroFormat()}";
+        }
+        public string GetNumberFormatInt()
+        {
+            return $"#,0";
+        }
+        private async Task OnValueChanged()
+        {
+            await SaveSettings();
+            OnValuesChanged?.Invoke(this);
+        }
+
     }
 }

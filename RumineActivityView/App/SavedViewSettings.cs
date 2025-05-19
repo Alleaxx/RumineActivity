@@ -17,5 +17,18 @@ namespace RumineActivity.View
         public Sortings SortingEntriesSelected { get; set; }
         public CompareDiffFormats CompareView { get; set; }
         public bool SortingEntriesDescending { get; set; }
+
+        public SavedViewSettings()
+        {
+            RoundAccuracy = 1;
+            MeasureUnit = MeasureUnits.Pages;
+            MeasureMethod = MeasureMethods.ByDay;
+            MaxValue = MaxValues.Relative;
+            ShowCompareValueDifference = true;
+            DisplayType = DisplayTypes.Histogram;
+            SortingEntriesSelected = Sortings.Index;
+            CompareView = CompareDiffFormats.Absolute;
+            SortingEntriesDescending = false;
+        }
     }
 }

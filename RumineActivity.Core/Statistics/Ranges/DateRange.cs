@@ -172,6 +172,7 @@ namespace RumineActivity.Core
         #endregion
 
         #region Создание новых интервалов
+
         /// <summary>
         /// Прибавить к датам от и до указанное число лет и вернуть новый временной промежуток
         /// </summary>

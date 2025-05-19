@@ -9,7 +9,6 @@ namespace RumineActivity.Core
 {
     public static class EnumValues
     {
-        //Измерение
         public static MeasureMethod[] Methods { get; private set; } = Enum.GetValues<MeasureMethods>()
             .Where(m => m != MeasureMethods.ByMonth)
             .Select(MeasureMethod.Create)
@@ -32,11 +31,9 @@ namespace RumineActivity.Core
             .OrderBy(r => r.MaxErrorPosts)
             .ToArray();
 
-        //Настройки отчета
         public static Period[] PeriodsList { get; private set; } = Enum.GetValues<Periods>()
             .Where(p => p != Periods.Season && p != Periods.Own )
             .Select(Period.Create)
             .ToArray();
-
     }
 }

@@ -38,8 +38,6 @@ namespace RumineActivity.Core
         /// <summary>
         /// Временной интервал полностью в границах истории Румине
         /// </summary>
-        /// <param name="range"></param>
-        /// <returns></returns>
         public static bool IsInsideRumineBorders(this DateRange range)
         {
             DateTime minDate = RumineValues.FoundationDate;
