@@ -40,11 +40,8 @@
         ConfigurationReport uriConfig = GetUriConfig();
         ConfigurationReport validatedConfig = GetValidatedConfig();
 
-        Console.WriteLine($"Обрабатываем URI-конфиг: {uriConfig.GetLinkHref()}");
-
         if(validatedConfig.Period == null)
         {
-            Console.WriteLine($"Не удалось найти подходящий период для переданного конфига {validatedConfig.GetLinkHref()}");
             App.ReportConfigEditor.SetNewConfig(validatedConfig);
             GotoConfigurationPage();
             return;
@@ -52,11 +49,9 @@
 
         if (!validatedConfig.CompareEqual(uriConfig))
         {
-            Console.WriteLine($"URI-конфиг {uriConfig.GetLinkHref()} отличается от валидированного, переходим на валидированный {validatedConfig.GetLinkHref()}");
             Navigation.NavigateTo(validatedConfig.GetLinkHref());
             return;
         }
-        Console.WriteLine("URI-конфиг и обработанный совпадают, добавляем / выбираем отчет");
 
         if(API.IsLoaded != true)
         {
